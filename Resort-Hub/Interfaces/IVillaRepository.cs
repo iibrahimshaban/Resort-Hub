@@ -1,5 +1,6 @@
 ﻿namespace Resort_Hub.Interfaces;
 
-public class IVillaRepository
+public interface IVillaRepository : IBaseRepository<Villa>
 {
+    Task<Villa?> GetVillaAsNoTracking(int id);
 }

@@ -1,5 +1,6 @@
 ﻿namespace Resort_Hub.Services;
 
-public class IVillaService
+public interface IVillaService
 {
+    Task<Villa?> ValidateVilla(int id);
 }
