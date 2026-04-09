@@ -1,8 +1,14 @@
+using Resort_Hub;
+using Serilog;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllersWithViews();
+builder.Services.AddAllDependacies(builder.Configuration);
 
+builder.Host.UseSerilog((context, configuration) =>
+    configuration.ReadFrom.Configuration(context.Configuration)
+);
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
