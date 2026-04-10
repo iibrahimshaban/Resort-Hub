@@ -1,6 +1,8 @@
-﻿namespace Resort_Hub.Services;
+﻿using Resort_Hub.Abstraction;
+
+namespace Resort_Hub.Services;
 
 public interface IVillaService
 {
-    Task<Villa?> ValidateVilla(int id);
+    Task<Result<Villa>> ValidateVilla(int id);
 }

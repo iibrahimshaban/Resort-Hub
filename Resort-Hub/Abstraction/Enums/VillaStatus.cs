@@ -1,4 +1,4 @@
-﻿namespace Resort_Hub.Abstraction;
+﻿namespace Resort_Hub.Abstraction.Enums;
 
 public enum VillaStatus
 {

@@ -1,13 +1,20 @@
-﻿using Resort_Hub.Interfaces;
+﻿using Resort_Hub.Abstraction;
+using Resort_Hub.Errors;
+using Resort_Hub.Interfaces;
 
 namespace Resort_Hub.Services;
 
-public class VillaService(IVillaRepository villaRepository) : IVillaService
+public class VillaService(IUnitOfWork unitOfWork) : IVillaService
 {
-    private readonly IVillaRepository _villaRepository = villaRepository;
+    private readonly IUnitOfWork _unitOfWork = unitOfWork;
 
-    public async Task<Villa?> ValidateVilla(int id)
+    public async Task<Result<Villa>> ValidateVilla(int id)
     {
-        return await _villaRepository.GetVillaAsNoTracking(id);
+        var villa = await _unitOfWork.Villas.GetVillaAsNoTracking(id);
+
+        if (villa == null)
+            return Result.Failure<Villa>(VillaErrors.NotFound);
+
+        return Result.Success(villa);
     }
 }

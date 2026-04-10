@@ -1,4 +1,4 @@
-﻿using Resort_Hub.Abstraction;
+﻿using Resort_Hub.Abstraction.Enums;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 

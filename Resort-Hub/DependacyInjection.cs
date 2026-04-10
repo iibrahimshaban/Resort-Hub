@@ -2,7 +2,10 @@
 using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
 using Resort_Hub.Entities;
+using Resort_Hub.Interfaces;
 using Resort_Hub.Persistence;
+using Resort_Hub.Repositories;
+using Resort_Hub.Services;
 using System.Reflection;
 
 namespace Resort_Hub;
@@ -16,7 +19,8 @@ public static class DependacyInjection
 
         services
             .AddDbContextConfiguration(configuration)
-            .AddMapsterConfig();
+            .AddMapsterConfig()
+            .AddRepositoryServices();
 
         return services;
     }
@@ -38,6 +42,12 @@ public static class DependacyInjection
         MappingConfig.Scan(Assembly.GetExecutingAssembly());
         services.AddSingleton<IMapper>(new Mapper(MappingConfig));
 
+        return services;
+    }
+    private static IServiceCollection AddRepositoryServices(this IServiceCollection services)
+    {
+        services.AddTransient<IUnitOfWork, UnitOfWork>();
+        services.AddScoped<IVillaService,VillaService>();
         return services;
     }
 }
