@@ -1,4 +1,4 @@
-﻿using Resort_Hub.Handlers.ErrorHandler;
+﻿using Resort_Hub.Abstraction;
 
 namespace Resort_Hub.Errors;
 

@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.ViewFeatures;
 
-namespace Resort_Hub.Handlers.ErrorHandler;
+namespace Resort_Hub.Abstraction;
 
 public static class TempDataExtensions
 {
