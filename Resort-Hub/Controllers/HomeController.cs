@@ -1,17 +1,21 @@
+
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Resort_Hub.Abstraction;
-using Resort_Hub.Abstraction.Enums;
+using Resort_Hub.Abstraction.Consts;
 using Resort_Hub.Models;
+using Resort_Hub.Services;
 using System.Diagnostics;
-using Resort_Hub.Handlers.ErrorHandler;
-using Resort_Hub.Errors;
+
 
 namespace Resort_Hub.Controllers;
 
-public class HomeController : Controller
+public class HomeController(IVillaService villaService) : Controller
 {
+    private readonly IVillaService _villaService = villaService;
+
     public IActionResult Index()
     {
+        
         return View();
     }
 
@@ -25,10 +29,13 @@ public class HomeController : Controller
     {
         return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
     }
-    public IActionResult Test()
+    public async Task<IActionResult> Test()
     {
-        var result = Result.Failure(TestError.NotFound);
-        TempData.SetError(result.Error);
+        var result = await _villaService.ValidateVilla(1);
+
+        if (!result.IsSuccess)
+            TempData.SetError(result.Error);
+
         return View("index");
     }
 }

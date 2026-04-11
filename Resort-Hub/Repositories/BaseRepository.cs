@@ -16,7 +16,6 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
     public void Add(T entity)
     {
         _entry.Add(entity);
-        _context.SaveChanges();
     }
 
     public bool Any(Func<T, bool> predicate)
@@ -27,7 +26,6 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
     public void Delete(T entity)
     {
         _context.Remove(entity);
-        _context.SaveChanges();
     }
 
     public List<T> GetAll()
@@ -43,6 +41,5 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
     public void Update(T entity)
     {
         _context.Update(entity);
-        _context.SaveChanges();
     }
 }

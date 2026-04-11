@@ -1,6 +1,4 @@
-﻿using Resort_Hub.Handlers.ErrorHandler;
-
-namespace Resort_Hub.Abstraction;
+﻿namespace Resort_Hub.Abstraction;
 
 public class Result
 {

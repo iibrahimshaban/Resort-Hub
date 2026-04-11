@@ -1,6 +1,6 @@
 ﻿using Resort_Hub.Abstraction.Enums;
 
-namespace Resort_Hub.Handlers.ErrorHandler;
+namespace Resort_Hub.Abstraction;
 
 public record Error(string Code, string Description, ErrorType Type)
 {
