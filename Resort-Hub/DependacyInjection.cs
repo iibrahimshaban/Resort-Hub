@@ -30,7 +30,14 @@ public static class DependacyInjection
             options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
 
 
-        services.AddIdentity<ApplicationUser,IdentityRole>()
+        services.AddIdentity<ApplicationUser,IdentityRole>(opt =>
+        {
+            opt.Password.RequireDigit = false;
+            opt.Password.RequiredLength = 6;
+            opt.Password.RequireUppercase = false;
+            opt.Password.RequireLowercase = false;
+            opt.Password.RequireNonAlphanumeric = false;
+        })
             .AddEntityFrameworkStores<ApplicationDbContext>();
 
         return services;
@@ -48,6 +55,8 @@ public static class DependacyInjection
     {
         services.AddTransient<IUnitOfWork, UnitOfWork>();
         services.AddScoped<IVillaService,VillaService>();
+        services.AddScoped<IAuthService,AuthService>();
+
         return services;
     }
 }

@@ -52,7 +52,7 @@
                 }
                 else
                 {
-                    <a class="btn-login" asp-controller="Account" asp-action="Login">Login</a>
+                    <a class="btn-login" asp-controller="Auth" asp-action="Login">Login</a>
                 }
 
                 <button class="btn d-md-none p-0 border-0" type="button"
@@ -89,7 +89,7 @@
                 </div>
                 <div class="ls-footer-cta text-md-end">
                     <h6>Become hotel Owner</h6>
-                    <a href="#" class="btn-register">Register Now</a>
+                    <a asp-controller="Auth" asp-action="Register" class="btn-register">Register Now</a>
                 </div>
             </div>
         </div>
