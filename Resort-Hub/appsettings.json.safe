@@ -1,0 +1,31 @@
+{
+    "ConnectionStrings": {
+        "DeployedConnection": "Server=db47164.public.databaseasp.net;Database=db47164;User Id=db47164;Password=Se5#9_bWn8M+;Encrypt=False;MultipleActiveResultSets=True;",
+        //"DefaultConnection": "Server=DESKTOP-GESLO5P\\SQLSERVER;DataBase=ResortHub;Trusted_Connection=True;Encrypt=False" //ibrahim
+        "DefaultConnection": "Server=MOHAMED-ASHOUR\\SQLEXPRESS;DataBase=ResortHub;Trusted_Connection=True;Encrypt=False" //rawda
+
+    },
+    "Serilog": {
+        "MinimumLevel": {
+            "Default": "Information",
+            "Override": {
+                "Microsoft.AspNetCore": "Warning"
+            }
+        },
+        "WriteTo": {
+            "Name": "Console"
+        },
+        "Properties": {
+            "ApplicationName": "ResortHub"
+        }
+    },
+    "AllowedHosts": "*",
+    "Authentication": {
+        "Google": {
+            "ClientId": "247462818748-d9i8a9hlcjes9lqiidf775sslkopeiqg.apps.googleusercontent.com",
+            "ClientSecret": "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"
+        }
+    }
+}
+
+

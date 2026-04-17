@@ -1,5 +1,4 @@
 using Resort_Hub;
-using ResortHub.Services;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,7 +9,6 @@ builder.Services.AddAllDependacies(builder.Configuration);
 builder.Host.UseSerilog((context, configuration) =>
     configuration.ReadFrom.Configuration(context.Configuration)
 );
-builder.Services.AddScoped<IAdminService, AdminService>();
 
 var app = builder.Build();
 
