@@ -1,0 +1,235 @@
+﻿*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'DM Sans', sans-serif;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #e8eaed; /* visible background behind the card */
+    overflow: hidden;
+}
+
+.auth-card {
+    display: flex;
+    width: 900px; /* total card width */
+    height: 600px; /* total card height */
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,.18);
+}
+
+/* ── Left panel ── */
+.panel-image {
+    flex: 1;
+    position: relative;
+    background: url('/images/resort-bg.jpg') center/cover no-repeat;
+    display: flex;
+    align-items: flex-end;
+    padding: 2.5rem;
+}
+
+    .panel-image::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to top, rgba(0,0,0,.55) 0%, rgba(0,0,0,.10) 60%);
+    }
+
+.brand {
+    position: relative;
+    z-index: 1;
+    font-family: 'Playfair Display', serif;
+    font-size: 2.4rem;
+    color: #fff;
+    letter-spacing: -0.5px;
+}
+
+    .brand span {
+        color: #4f8ef7;
+    }
+
+/* ── Right panel ── */
+.panel-form {
+    width: 420px;
+    flex-shrink: 0;
+    background: #f5f6f8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2.5rem 2.8rem;
+    overflow-y: auto;
+}
+
+.form-inner {
+    width: 100%;
+}
+
+    .form-inner h1 {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.9rem;
+        color: #111;
+        margin-bottom: 1.8rem;
+    }
+
+.field-group {
+    margin-bottom: 1rem;
+}
+
+    .field-group label {
+        display: block;
+        font-size: .78rem;
+        font-weight: 500;
+        color: #555;
+        margin-bottom: .35rem;
+        letter-spacing: .04em;
+        text-transform: uppercase;
+    }
+
+    .field-group input {
+        width: 100%;
+        padding: .65rem .9rem;
+        border: 1.5px solid #dde1e8;
+        border-radius: 8px;
+        background: #fff;
+        font-family: 'DM Sans', sans-serif;
+        font-size: .92rem;
+        color: #111;
+        transition: border-color .2s;
+        outline: none;
+    }
+
+        .field-group input:focus {
+            border-color: #4f8ef7;
+        }
+
+        .field-group input.input-validation-error {
+            border-color: #e53e3e;
+        }
+
+    .field-group .text-danger {
+        font-size: .76rem;
+        margin-top: .25rem;
+        display: block;
+    }
+
+.name-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: .75rem;
+}
+
+.pass-wrap {
+    position: relative;
+}
+
+    .pass-wrap input {
+        padding-right: 2.6rem;
+    }
+
+.pass-toggle {
+    position: absolute;
+    right: .75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    color: #aaa;
+    line-height: 1;
+}
+
+.btn-register {
+    width: 100%;
+    padding: .75rem;
+    background: #4f8ef7;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: .95rem;
+    font-weight: 500;
+    cursor: pointer;
+    margin-top: 1.4rem;
+    transition: background .2s, transform .1s;
+}
+
+    .btn-register:hover {
+        background: #3a7be0;
+    }
+
+    .btn-register:active {
+        transform: scale(.98);
+    }
+
+.login-link {
+    text-align: center;
+    margin-top: 1rem;
+    font-size: .88rem;
+    color: #666;
+}
+
+    .login-link a {
+        color: #4f8ef7;
+        text-decoration: none;
+        font-weight: 500;
+    }
+
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+
+.validation-summary-errors ul {
+    font-size: .8rem;
+    padding-left: 1.1rem;
+    margin-bottom: .75rem;
+    color: #e53e3e;
+}
+
+.modal-content.error-modal {
+    border: none;
+    border-radius: 14px;
+    overflow: hidden;
+}
+
+.error-modal .modal-header {
+    background: #EF4444;
+    color: #fff;
+    border: none;
+    padding: 1rem 1.25rem;
+}
+
+    .error-modal .modal-header .modal-title {
+        font-weight: 700;
+        font-size: 0.95rem;
+    }
+
+.error-modal .modal-body {
+    padding: 1.25rem;
+}
+
+    .error-modal .modal-body p {
+        margin: 0 0 0.4rem;
+        font-size: 0.9rem;
+    }
+
+.error-modal .modal-footer {
+    border: none;
+    padding: 0.75rem 1.25rem;
+}
+
+@@media (max-width: 700px) {
+    .panel-image {
+        display: none;
+    }
+
+    .panel-form {
+        width: 100%;
+        padding: 2rem 1.5rem;
+    }
+}

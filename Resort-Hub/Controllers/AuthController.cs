@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Resort_Hub.Services;
 using Resort_Hub.ViewModels.Auth;
+using System.Security.Claims;
 
 namespace Resort_Hub.Controllers;
 
@@ -57,6 +58,33 @@ public class AuthController(IAuthService authService) : Controller
         {
             TempData.SetError(result.Error);
             return View(model);
+        }
+    }
+    [HttpPost]
+    public async Task<IActionResult> Logout()
+    {
+        await _authService.LogoutAsync();
+        return RedirectToAction("Login", "Auth");
+    }
+    [HttpGet]
+    public async Task<IActionResult> ExternalLogin(string provider = "Google")
+    {
+        var properties = _authService.ExternalLoginAsync(Url.Action(nameof(ExternalLoginCallback)));
+        return Challenge(properties, provider);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> ExternalLoginCallback()
+    {
+        var result = await _authService.ExternalLoggingCallBackAsync();
+        if (result.IsSuccess)
+        {
+            return RedirectToAction("index", "Home");
+        }
+        else
+        {
+            TempData.SetError(result.Error);
+            return RedirectToAction(nameof(Login));
         }
     }
 }

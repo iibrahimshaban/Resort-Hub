@@ -5,6 +5,7 @@ namespace Resort_Hub.ViewModels.Auth;
 public class LoginVM
 {
     [Display(Name = "User Name"), Required(ErrorMessage = "*")]
+    [EmailAddress(ErrorMessage = "Invalid email address")]
     public string UserName { get; set; }
     [DataType(DataType.Password), Required(ErrorMessage = "*")]
     public string Password { get; set; }
