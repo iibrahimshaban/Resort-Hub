@@ -162,10 +162,10 @@ main {
     padding: 1rem 1.25rem;
 }
 
-    .error-modal .modal-header .modal-title {
-        font-weight: 700;
-        font-size: 0.95rem;
-    }
+ .error-modal .modal-header .modal-title {
+     font-weight: 700;
+     font-size: 0.95rem;
+ }
 
 .error-modal .modal-body {
     padding: 1.25rem;

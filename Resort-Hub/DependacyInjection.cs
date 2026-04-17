@@ -20,7 +20,8 @@ public static class DependacyInjection
         services
             .AddDbContextConfiguration(configuration)
             .AddMapsterConfig()
-            .AddRepositoryServices();
+            .AddRepositoryServices()
+            .AddGoogleAuthentication(configuration);
 
         return services;
     }
@@ -57,6 +58,19 @@ public static class DependacyInjection
         services.AddScoped<IVillaService,VillaService>();
         services.AddScoped<IAuthService,AuthService>();
 
+        return services;
+    }
+    public static IServiceCollection AddGoogleAuthentication(this IServiceCollection services,IConfiguration configuration)
+    {
+        services.AddAuthentication()
+            .AddGoogle(options =>
+            {
+                options.ClientId = configuration["Authentication:Google:ClientId"];
+                options.ClientSecret = configuration["Authentication:Google:ClientSecret"];
+
+                options.Scope.Add("profile");
+                options.Scope.Add("email");
+            });
         return services;
     }
 }
