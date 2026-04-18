@@ -1,0 +1,78 @@
+﻿@model Resort_Hub.Entities.Villa
+
+@{
+    ViewData["Title"] = "Delete Villa";
+    Layout = "_ApplicationLayout";
+}
+
+<section class="py-5">
+    <div class="container" style="max-width:520px;">
+
+        <div class="card border-0 shadow-sm" style="border-radius:20px;overflow:hidden;">
+
+            <!-- Red header -->
+            <div class="p-4 text-center" style="background:#fef2f2;border-bottom:1px solid #fee2e2;">
+                <div style="width:64px;height:64px;background:#fee2e2;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;">
+                    <i class="bi bi-exclamation-triangle-fill text-danger" style="font-size:1.8rem;"></i>
+                </div>
+                <h4 class="fw-700 text-danger mb-1" style="font-family:'Plus Jakarta Sans',sans-serif;">Delete Villa</h4>
+                <p class="text-muted mb-0 small">This action cannot be undone.</p>
+            </div>
+
+            <div class="card-body p-4">
+
+                <!-- Villa preview -->
+                <div class="d-flex align-items-center gap-3 p-3 mb-4 rounded-3" style="background:#f9fafb;border:1px solid #f3f4f6;">
+                    @{
+                        var img = Model.VillaImages?.FirstOrDefault(i => i.IsMain) ?? Model.VillaImages?.FirstOrDefault();
+                    }
+                    <div style="width:60px;height:60px;border-radius:10px;overflow:hidden;flex-shrink:0;background:#e5e7eb;">
+                        @if (img != null)
+                        {
+                            <img src="@img.ImageUrl" style="width:100%;height:100%;object-fit:cover;" />
+                        }
+                        else
+                        {
+                            <div class="d-flex align-items-center justify-content-center h-100">
+                                <i class="bi bi-house text-muted"></i>
+                            </div>
+                        }
+                    </div>
+                    <div>
+                        <div class="fw-700" style="font-family:'Plus Jakarta Sans',sans-serif;">@Model.Name</div>
+                        <div class="small text-muted">$@Model.PricePerNight / night &bull; @Model.Capacity guests &bull; @Model.Sqft sqft</div>
+                        @if (Model.VillaAmenity?.Any() == true)
+                        {
+                            <div class="small text-muted mt-1"><i class="bi bi-stars me-1"></i>@Model.VillaAmenity.Count amenities will be removed</div>
+                        }
+                        @if (Model.VillaImages?.Any() == true)
+                        {
+                            <div class="small text-muted"><i class="bi bi-images me-1"></i>@Model.VillaImages.Count image(s) will be deleted</div>
+                        }
+                    </div>
+                </div>
+
+                <p class="text-muted small mb-4">
+                    Are you sure you want to permanently delete <strong>@Model.Name</strong>?
+                    All associated amenities and images will also be removed.
+                </p>
+
+                <form asp-action="Delete" asp-route-id="@Model.Id" method="post">
+                    @Html.AntiForgeryToken()
+                    <div class="d-flex gap-2">
+                        <a asp-action="Index" class="btn btn-outline-secondary flex-fill py-2"
+                               style="border-radius:12px;font-family:'Plus Jakarta Sans',sans-serif;">
+                            Cancel
+                        </a>
+                        <button type="submit" class="btn btn-danger flex-fill py-2 fw-600"
+                                style="border-radius:12px;font-family:'Plus Jakarta Sans',sans-serif;">
+                            <i class="bi bi-trash me-2"></i>Yes, Delete
+                        </button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+
+    </div>
+</section>
