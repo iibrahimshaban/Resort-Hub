@@ -1,0 +1,193 @@
+﻿@model Resort_Hub.ViewModels.Villa.VillaFormVM
+
+@{
+    ViewData["Title"] = "Edit Villa";
+    Layout = "_ApplicationLayout";
+}
+
+<section class="py-5">
+    <div class="container" style="max-width:800px;">
+
+        <div class="mb-4">
+            <a asp-action="Index" class="text-muted text-decoration-none small">
+                <i class="bi bi-arrow-left me-1"></i>Back to Villas
+            </a>
+            <h2 class="fw-700 mt-2 mb-0" style="font-family:'Plus Jakarta Sans',sans-serif;">Edit Villa</h2>
+        </div>
+
+        <form asp-action="Edit" asp-route-id="@Model.Id" method="post" enctype="multipart/form-data">
+            @Html.AntiForgeryToken()
+
+            <div class="row g-4">
+
+                <!-- LEFT COLUMN -->
+                <div class="col-12 col-lg-8">
+
+                    <!-- Basic Info Card -->
+                    <div class="card border-0 shadow-sm mb-4" style="border-radius:16px;">
+                        <div class="card-body p-4">
+                            <h6 class="fw-700 mb-4" style="font-family:'Plus Jakarta Sans',sans-serif;">
+                                <i class="bi bi-house me-2"></i>Basic Information
+                            </h6>
+
+                            <div class="mb-3">
+                                <label asp-for="Name" class="form-label fw-600 small">Villa Name <span class="text-danger">*</span></label>
+                                <input asp-for="Name" class="form-control" style="border-radius:10px;border-color:#e5e7eb;" />
+                                <span asp-validation-for="Name" class="text-danger small"></span>
+                            </div>
+
+                            <div class="mb-3">
+                                <label asp-for="Description" class="form-label fw-600 small">Description</label>
+                                <textarea asp-for="Description" class="form-control" rows="4"
+                                          style="border-radius:10px;border-color:#e5e7eb;resize:none;"></textarea>
+                            </div>
+
+                            <div class="row g-3">
+                                <div class="col-6">
+                                    <label asp-for="PricePerNight" class="form-label fw-600 small">Price / Night ($) <span class="text-danger">*</span></label>
+                                    <div class="input-group">
+                                        <span class="input-group-text" style="border-radius:10px 0 0 10px;border-color:#e5e7eb;background:#f9fafb;">$</span>
+                                        <input asp-for="PricePerNight" class="form-control" type="number" step="0.01"
+                                               style="border-radius:0 10px 10px 0;border-color:#e5e7eb;" />
+                                    </div>
+                                    <span asp-validation-for="PricePerNight" class="text-danger small"></span>
+                                </div>
+                                <div class="col-6">
+                                    <label asp-for="Sqft" class="form-label fw-600 small">Area (sqft)</label>
+                                    <input asp-for="Sqft" class="form-control" type="number"
+                                           style="border-radius:10px;border-color:#e5e7eb;" />
+                                </div>
+                                <div class="col-6">
+                                    <label asp-for="Capacity" class="form-label fw-600 small">Capacity (guests)</label>
+                                    <input asp-for="Capacity" class="form-control" type="number"
+                                           style="border-radius:10px;border-color:#e5e7eb;" />
+                                </div>
+                                <div class="col-6 d-flex align-items-end">
+                                    <div class="form-check form-switch mb-2">
+                                        <input asp-for="IsAvilable" class="form-check-input" type="checkbox" role="switch" style="width:40px;height:22px;" />
+                                        <label asp-for="IsAvilable" class="form-check-label fw-600 ms-2 small">Available</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Existing Images -->
+                    @if (Model.ExistingImages.Any())
+                    {
+                        <div class="card border-0 shadow-sm mb-4" style="border-radius:16px;">
+                            <div class="card-body p-4">
+                                <h6 class="fw-700 mb-3" style="font-family:'Plus Jakarta Sans',sans-serif;">
+                                    <i class="bi bi-images me-2"></i>Current Images
+                                </h6>
+                                <div class="d-flex flex-wrap gap-2">
+                                    @foreach (var img in Model.ExistingImages)
+                                    {
+                                        <div style="position:relative;width:90px;height:90px;border-radius:10px;overflow:hidden;border:2px solid @(img.IsMain ? "#111" : "#e5e7eb");">
+                                            <img src="@img.ImageUrl" alt="Villa image"
+                                                 style="width:100%;height:100%;object-fit:cover;" />
+                                            @if (img.IsMain)
+                                            {
+                                                <span style="position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,.6);color:#fff;font-size:10px;text-align:center;padding:2px;">Main</span>
+                                            }
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                    <!-- Add New Images -->
+                    <div class="card border-0 shadow-sm mb-4" style="border-radius:16px;">
+                        <div class="card-body p-4">
+                            <h6 class="fw-700 mb-3" style="font-family:'Plus Jakarta Sans',sans-serif;">
+                                <i class="bi bi-cloud-upload me-2"></i>Add More Images
+                            </h6>
+                            <div style="border:2px dashed #e5e7eb;border-radius:12px;padding:30px;text-align:center;cursor:pointer;"
+                                 onclick="document.getElementById('img-input').click()"
+                                 onmouseenter="this.style.borderColor='#6b7280'"
+                                 onmouseleave="this.style.borderColor='#e5e7eb'">
+                                <i class="bi bi-plus-circle text-muted" style="font-size:2rem;"></i>
+                                <p class="mb-0 small text-muted mt-2">Click to add more images</p>
+                            </div>
+                            <input type="file" id="img-input" name="NewImages" multiple accept="image/*"
+                                   class="d-none" onchange="previewImages(this)" />
+                            <div id="img-preview" class="d-flex flex-wrap gap-2 mt-3"></div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- RIGHT COLUMN -->
+                <div class="col-12 col-lg-4">
+                    <div class="card border-0 shadow-sm sticky-top" style="border-radius:16px;top:20px;">
+                        <div class="card-body p-4">
+                            <h6 class="fw-700 mb-3" style="font-family:'Plus Jakarta Sans',sans-serif;">
+                                <i class="bi bi-stars me-2"></i>Amenities
+                            </h6>
+
+                            @if (!Model.AvailableAmenities.Any())
+                            {
+                                <p class="text-muted small">No amenities available.</p>
+                            }
+                            else
+                            {
+                                <div style="max-height:320px;overflow-y:auto;">
+                                    @foreach (var amenity in Model.AvailableAmenities)
+                                    {
+                                        <div class="form-check mb-2 p-3 rounded-3"
+                                             style="border:1px solid #f3f4f6;"
+                                             onmouseenter="this.style.background='#f9fafb'"
+                                             onmouseleave="this.style.background='transparent'">
+                                            <input class="form-check-input" type="checkbox"
+                                                   name="SelectedAmenityIds" value="@amenity.Id"
+                                                   id="amenity_@amenity.Id"
+                                            @(Model.SelectedAmenityIds.Contains(amenity.Id) ? "checked" : "") />
+                                            <label class="form-check-label w-100" for="amenity_@amenity.Id" style="cursor:pointer;">
+                                                @if (!string.IsNullOrEmpty(amenity.Icon))
+                                                {
+                                                    <i class="@amenity.Icon me-2 text-muted"></i>
+                                                }
+                                                <span class="fw-500" style="font-family:'Plus Jakarta Sans',sans-serif;">@amenity.Name</span>
+                                            </label>
+                                        </div>
+                                    }
+                                </div>
+                            }
+
+                            <hr class="my-3" />
+
+                            <button type="submit" class="btn btn-dark w-100 py-2 fw-600"
+                                    style="border-radius:12px;font-family:'Plus Jakarta Sans',sans-serif;">
+                                <i class="bi bi-check2 me-2"></i>Save Changes
+                            </button>
+                            <a asp-action="Index" class="btn btn-outline-secondary w-100 py-2 mt-2"
+                               style="border-radius:12px;">Cancel</a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </form>
+    </div>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        function previewImages(input) {
+            const preview = document.getElementById('img-preview');
+            preview.innerHTML = '';
+            Array.from(input.files).forEach(file => {
+                const reader = new FileReader();
+                reader.onload = e => {
+                    const wrap = document.createElement('div');
+                    wrap.style.cssText = 'width:90px;height:90px;border-radius:10px;overflow:hidden;border:2px solid #e5e7eb;';
+                    wrap.innerHTML = `<img src="${e.target.result}" style="width:100%;height:100%;object-fit:cover;">`;
+                    preview.appendChild(wrap);
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+    </script>
+}

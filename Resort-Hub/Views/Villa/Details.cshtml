@@ -1,0 +1,179 @@
+﻿@model Resort_Hub.Entities.Villa
+
+@{
+    ViewData["Title"] = Model.Name;
+    Layout = "_ApplicationLayout";
+}
+
+<section class="py-5">
+    <div class="container" style="max-width:900px;">
+
+        <!-- Breadcrumb -->
+        <div class="mb-4">
+            <a asp-action="Index" class="text-muted text-decoration-none small">
+                <i class="bi bi-arrow-left me-1"></i>Back to Villas
+            </a>
+        </div>
+
+        <div class="row g-4">
+
+            <!-- Images Gallery -->
+            <div class="col-12">
+                @{
+                    var images = Model.VillaImages?.OrderBy(i => i.DispalayOrder).ToList();
+                    var mainImg = images?.FirstOrDefault(i => i.IsMain) ?? images?.FirstOrDefault();
+                }
+
+                @if (images != null && images.Any())
+                {
+                    <div class="card border-0 shadow-sm" style="border-radius:16px;overflow:hidden;">
+                        <!-- Main image -->
+                        <div style="height:380px;overflow:hidden;background:#f5f5f5;">
+                            <img id="main-img" src="@mainImg!.ImageUrl" alt="@Model.Name"
+                                 style="width:100%;height:100%;object-fit:cover;transition:opacity .3s;" />
+                        </div>
+                        <!-- Thumbnails -->
+                        @if (images.Count > 1)
+                        {
+                            <div class="p-3 d-flex gap-2 flex-wrap">
+                                @foreach (var img in images)
+                                {
+                                    <div onclick="switchImage('@img.ImageUrl', this)"
+                                         style="width:70px;height:70px;border-radius:8px;overflow:hidden;cursor:pointer;
+                                        border:2px solid @(img.IsMain ? "#111" : "#e5e7eb");transition:border-color .2s;"
+                                         onmouseenter="this.style.borderColor='#111'"
+                                         onmouseleave="this.style.borderColor='@(img.IsMain ? "#111" : "#e5e7eb")'">
+                                        <img src="@img.ImageUrl" style="width:100%;height:100%;object-fit:cover;" />
+                                    </div>
+                                }
+                            </div>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <div class="card border-0 shadow-sm" style="border-radius:16px;height:300px;background:#f9fafb;">
+                        <div class="d-flex align-items-center justify-content-center h-100 text-muted">
+                            <div class="text-center">
+                                <i class="bi bi-image" style="font-size:3rem;"></i>
+                                <p class="mt-2 small">No images uploaded</p>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <!-- Villa Info -->
+            <div class="col-12 col-lg-8">
+                <div class="card border-0 shadow-sm" style="border-radius:16px;">
+                    <div class="card-body p-4">
+
+                        <div class="d-flex align-items-start justify-content-between mb-3">
+                            <h3 class="fw-700 mb-0" style="font-family:'Plus Jakarta Sans',sans-serif;">@Model.Name</h3>
+                            <span class="badge px-3 py-2"
+                                  style="border-radius:20px;font-size:12px;font-family:'Plus Jakarta Sans',sans-serif;
+                                background:@(Model.IsAvilable ? "#d1fae5" : "#fee2e2");
+                                color:@(Model.IsAvilable ? "#065f46" : "#991b1b");">
+                                @(Model.IsAvilable ? "Available" : "Unavailable")
+                            </span>
+                        </div>
+
+                        @if (!string.IsNullOrEmpty(Model.Description))
+                        {
+                            <p class="text-muted mb-4" style="line-height:1.7;">@Model.Description</p>
+                        }
+
+                        <!-- Stats -->
+                        <div class="row g-3 mb-4">
+                            <div class="col-4 text-center p-3 rounded-3" style="background:#f9fafb;">
+                                <i class="bi bi-people fs-4 text-muted d-block mb-1"></i>
+                                <div class="fw-700" style="font-family:'Plus Jakarta Sans',sans-serif;">@Model.Capacity</div>
+                                <div class="small text-muted">Guests</div>
+                            </div>
+                            <div class="col-4 text-center p-3 rounded-3" style="background:#f9fafb;">
+                                <i class="bi bi-rulers fs-4 text-muted d-block mb-1"></i>
+                                <div class="fw-700" style="font-family:'Plus Jakarta Sans',sans-serif;">@Model.Sqft</div>
+                                <div class="small text-muted">Sqft</div>
+                            </div>
+                            <div class="col-4 text-center p-3 rounded-3" style="background:#f9fafb;">
+                                <i class="bi bi-cash fs-4 text-muted d-block mb-1"></i>
+                                <div class="fw-700" style="font-family:'Plus Jakarta Sans',sans-serif;">$@Model.PricePerNight</div>
+                                <div class="small text-muted">/ Night</div>
+                            </div>
+                        </div>
+
+                        <!-- Amenities -->
+                        @if (Model.VillaAmenity?.Any() == true)
+                        {
+                            <h6 class="fw-700 mb-3" style="font-family:'Plus Jakarta Sans',sans-serif;">
+                                <i class="bi bi-stars me-2"></i>Amenities
+                            </h6>
+                            <div class="d-flex flex-wrap gap-2 mb-4">
+                                @foreach (var va in Model.VillaAmenity)
+                                {
+                                    <span class="badge px-3 py-2 fw-500"
+                                          style="border-radius:20px;background:#f3f4f6;color:#374151;font-size:13px;font-family:'Plus Jakarta Sans',sans-serif;">
+                                        @if (!string.IsNullOrEmpty(va.Amenity?.Icon))
+                                        {
+                                            <i class="@va.Amenity.Icon me-1"></i>
+                                        }
+                                        @va.Amenity?.Name
+                                    </span>
+                                }
+                            </div>
+                        }
+
+                        <!-- Dates -->
+                        <div class="small text-muted border-top pt-3">
+                            @if (Model.CreatedDate.HasValue)
+                            {
+                                <span class="me-3"><i class="bi bi-calendar-plus me-1"></i>Created: @Model.CreatedDate.Value.ToString("MMM dd, yyyy")</span>
+                            }
+                            @if (Model.UpdatedDate.HasValue)
+                            {
+                                <span><i class="bi bi-calendar-check me-1"></i>Updated: @Model.UpdatedDate.Value.ToString("MMM dd, yyyy")</span>
+                            }
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- Actions sidebar -->
+            <div class="col-12 col-lg-4">
+                <div class="card border-0 shadow-sm" style="border-radius:16px;">
+                    <div class="card-body p-4">
+                        <h6 class="fw-700 mb-3" style="font-family:'Plus Jakarta Sans',sans-serif;">Actions</h6>
+                        <a asp-action="Edit" asp-route-id="@Model.Id"
+                               class="btn btn-dark w-100 py-2 mb-2 fw-600" style="border-radius:12px;font-family:'Plus Jakarta Sans',sans-serif;">
+                            <i class="bi bi-pencil me-2"></i>Edit Villa
+                        </a>
+                        <a asp-action="Delete" asp-route-id="@Model.Id"
+                               class="btn btn-outline-danger w-100 py-2 mb-2" style="border-radius:12px;">
+                            <i class="bi bi-trash me-2"></i>Delete Villa
+                        </a>
+                        <a asp-action="Index"
+                               class="btn btn-outline-secondary w-100 py-2" style="border-radius:12px;">
+                            <i class="bi bi-arrow-left me-2"></i>Back to List
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script>
+        function switchImage(url, el) {
+            document.getElementById('main-img').style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('main-img').src = url;
+                document.getElementById('main-img').style.opacity = '1';
+            }, 150);
+            document.querySelectorAll('[onclick^="switchImage"]').forEach(t => t.style.borderColor = '#e5e7eb');
+            el.style.borderColor = '#111';
+        }
+    </script>
+}

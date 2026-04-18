@@ -1,0 +1,78 @@
+﻿@model Resort_Hub.Entities.Amenity
+
+@{
+    ViewData["Title"] = "Add Amenity";
+    Layout = "_ApplicationLayout";
+}
+
+<section class="py-5">
+    <div class="container" style="max-width:520px;">
+
+        <div class="mb-4">
+            <a asp-action="Index" class="text-muted text-decoration-none small">
+                <i class="bi bi-arrow-left me-1"></i>Back to Amenities
+            </a>
+            <h2 class="fw-700 mt-2 mb-0" style="font-family:'Plus Jakarta Sans',sans-serif;">Add Amenity</h2>
+        </div>
+
+        <div class="card border-0 shadow-sm" style="border-radius:16px;">
+            <div class="card-body p-4">
+
+                <form asp-action="Create" method="post">
+                    @Html.AntiForgeryToken()
+
+                    <div class="mb-3">
+                        <label asp-for="Name" class="form-label fw-600 small">Amenity Name <span class="text-danger">*</span></label>
+                        <input asp-for="Name" class="form-control" style="border-radius:10px;border-color:#e5e7eb;"
+                               placeholder="e.g. Swimming Pool" />
+                        <span asp-validation-for="Name" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Description" class="form-label fw-600 small">Description</label>
+                        <textarea asp-for="Description" class="form-control" rows="3"
+                                  style="border-radius:10px;border-color:#e5e7eb;resize:none;"
+                                  placeholder="Brief description..."></textarea>
+                    </div>
+
+                    <div class="mb-4">
+                        <label asp-for="Icon" class="form-label fw-600 small">
+                            Bootstrap Icon Class
+                            <a href="https://icons.getbootstrap.com/" target="_blank" class="ms-1 small text-muted">
+                                <i class="bi bi-box-arrow-up-right"></i> browse icons
+                            </a>
+                        </label>
+                        <div class="input-group">
+                            <span class="input-group-text" style="border-radius:10px 0 0 10px;border-color:#e5e7eb;background:#f9fafb;min-width:44px;justify-content:center;">
+                                <i id="icon-preview" class="bi bi-tag text-muted"></i>
+                            </span>
+                            <input asp-for="Icon" class="form-control" id="icon-input"
+                                   style="border-radius:0 10px 10px 0;border-color:#e5e7eb;"
+                                   placeholder="e.g. bi bi-water" oninput="previewIcon(this.value)" />
+                        </div>
+                        <div class="small text-muted mt-1">e.g. <code>bi bi-wifi</code>, <code>bi bi-water</code>, <code>bi bi-car-front</code></div>
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <a asp-action="Index" class="btn btn-outline-secondary flex-fill py-2" style="border-radius:12px;">Cancel</a>
+                        <button type="submit" class="btn btn-dark flex-fill py-2 fw-600"
+                                style="border-radius:12px;font-family:'Plus Jakarta Sans',sans-serif;">
+                            <i class="bi bi-plus-lg me-2"></i>Add Amenity
+                        </button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        function previewIcon(val) {
+            const el = document.getElementById('icon-preview');
+            el.className = val.trim() || 'bi bi-tag text-muted';
+        }
+    </script>
+}
