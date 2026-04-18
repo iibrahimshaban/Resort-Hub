@@ -8,6 +8,8 @@ public class UnitOfWork(ApplicationDbContext context) : IUnitOfWork
     private readonly ApplicationDbContext _context = context;
     public IVillaRepository Villas => new VillaRepository(_context);
 
+    public IBaseRepository<Amenity> Amenities => new BaseRepository<Amenity>(_context);
+
     public void Dispose()
     {
         _context.Dispose();

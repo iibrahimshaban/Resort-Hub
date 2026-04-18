@@ -10,7 +10,8 @@ public class Villa
     public int Capacity { get; set; }
     public DateTime? CreatedDate { get; set; }
     public DateTime? UpdatedDate { get; set; }
-    public virtual ICollection<VillaAmenity> VillaAmenity { get; set; } = new HashSet<VillaAmenity>();
-
     public bool IsAvilable { get; set; } = true;
+    public virtual ICollection<VillaAmenity> VillaAmenity { get; set; } = new HashSet<VillaAmenity>();
+    public virtual ICollection<VillaImage> VillaImages { get; set; } = new HashSet<VillaImage>();
+   
 }
