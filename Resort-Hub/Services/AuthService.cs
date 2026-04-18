@@ -11,7 +11,7 @@ public class AuthService(UserManager<ApplicationUser> userManager, SignInManager
     private readonly UserManager<ApplicationUser> _userManager = userManager;
     public async Task<Result> LoginAsync(LoginVM request)
     {
-        var current = await _userManager.FindByNameAsync(request.UserName);
+        var current = await _userManager.FindByEmailAsync(request.Email);
 
         if (current != null)
         {

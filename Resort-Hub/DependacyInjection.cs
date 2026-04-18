@@ -1,4 +1,5 @@
-﻿using Mapster;
+﻿using CloudinaryDotNet;
+using Mapster;
 using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
 using Resort_Hub.Entities;
@@ -21,7 +22,8 @@ public static class DependacyInjection
             .AddDbContextConfiguration(configuration)
             .AddMapsterConfig()
             .AddRepositoryServices()
-            .AddGoogleAuthentication(configuration);
+            .AddGoogleAuthentication(configuration)
+            .AddCloudinaryImageHosting(configuration);
 
         return services;
     }
@@ -57,6 +59,7 @@ public static class DependacyInjection
         services.AddTransient<IUnitOfWork, UnitOfWork>();
         services.AddScoped<IVillaService,VillaService>();
         services.AddScoped<IAuthService,AuthService>();
+        services.AddScoped<IAccountService, AccountService>();
 
         return services;
     }
@@ -71,6 +74,20 @@ public static class DependacyInjection
                 options.Scope.Add("profile");
                 options.Scope.Add("email");
             });
+        return services;
+    }
+    public static IServiceCollection AddCloudinaryImageHosting(this IServiceCollection services, IConfiguration configuration)
+    {
+        var cloudinarySettings = configuration.GetSection("Cloudinary");
+
+        var account = new Account(
+            cloudinarySettings["CloudName"],
+            cloudinarySettings["ApiKey"],
+            cloudinarySettings["ApiSecret"]
+        );
+        services.AddSingleton(new Cloudinary(account));
+
+        services.AddScoped<ICloudinaryService, CloudinaryService>();
         return services;
     }
 }
