@@ -1,0 +1,131 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject UserManager<ApplicationUser> UserManager
+
+@{
+    var user = await UserManager.GetUserAsync(User);
+    if (user is null) return;
+    var initials = $"{user.FirstName?.FirstOrDefault()}{user.LastName?.FirstOrDefault()}".ToUpper();
+    var hasCustomPhoto = !string.IsNullOrEmpty(user.ProfilePictureUrl)
+                     && user.ProfilePictureUrl != "/images/DefaultUserImage.png";
+}
+
+<!-- ── CROPPER MODAL ── -->
+<div class="modal fade" id="cropperModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content" style="border-radius:16px; overflow:hidden;">
+
+            <div class="modal-header" style="background:var(--primary); color:#fff; border:none;">
+                <h5 class="modal-title fw-bold" style="font-size:0.95rem;">
+                    <i class="bi bi-crop me-2"></i>Crop Your Photo
+                </h5>
+            </div>
+
+            <div class="modal-body p-3" style="background:#1a1a2e;">
+                <div style="max-height: 420px; overflow:hidden;">
+                    <img id="cropperImage" src="#" alt="crop"
+                         style="max-width:100%; display:block;" />
+                </div>
+            </div>
+
+            <div class="modal-footer" style="border:none; justify-content:space-between;">
+                <div class="d-flex gap-2">
+                    <!-- aspect ratio controls -->
+                    <button type="button" class="btn-crop-tool" id="ratio11">1:1</button>
+                    <button type="button" class="btn-crop-tool" id="ratio43">4:3</button>
+                    <button type="button" class="btn-crop-tool" id="ratioFree">Free</button>
+                </div>
+                <div class="d-flex gap-2">
+                    <button type="button" class="btn-delete-avatar" id="cancelCrop">Cancel</button>
+                    <button type="button" class="btn-save-profile" id="confirmCrop"
+                            style="width:auto; padding: 0.5rem 1.5rem;">
+                        <i class="bi bi-check2 me-1"></i>Crop & Upload
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="profileModal" tabindex="-1" aria-labelledby="profileModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content profile-modal">
+
+            <!-- Header -->
+            <div class="modal-header">
+                <h5 class="modal-title" id="profileModalLabel">
+                    <i class="bi bi-person-circle me-2"></i>My Profile
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body px-4 py-4">
+
+                <!-- ── AVATAR + INFO ROW ── -->
+                <div class="d-flex align-items-center gap-3 pb-3 mb-3" style="border-bottom: 0.5px solid var(--bs-border-color);">
+
+                    <div style="position:relative; flex-shrink:0;">
+                        @if (!string.IsNullOrEmpty(user.ProfilePictureUrl) && user.ProfilePictureUrl != "/images/DefaultUserIamge.png")
+                        {
+                            <img src="@user.ProfilePictureUrl" class="profile-avatar-img" id="avatarPreview" />
+                        }
+                        else
+                        {
+                            <div class="profile-avatar-initials" id="avatarInitials">@initials</div>
+                            <img src="#" class="profile-avatar-img d-none" id="avatarPreview" />
+                        }
+                        <!-- camera badge trigger -->
+                        <label for="profilePictureInput" class="avatar-camera-badge" title="Change photo">
+                            <i class="bi bi-camera-fill" style="font-size:10px;"></i>
+                        </label>
+                        <input type="file" id="profilePictureInput" accept="image/*" class="d-none" />
+                    </div>
+
+                    <div style="flex:1; min-width:0;">
+                        <p class="mb-0 fw-500" style="font-size:15px;">@user.FirstName @user.LastName</p>
+                        <p class="mb-2 text-muted" style="font-size:13px;">@user.Email</p>
+                        <div class="d-flex gap-2">
+                            <label for="profilePictureInput" class="btn-change-photo">
+                                <i class="bi bi-upload me-1" style="font-size:11px;"></i>Change photo
+                            </label>
+                            @if (hasCustomPhoto)
+                            {
+                                <form asp-controller="Account" asp-action="DeleteProfilePicture" method="post" class="mb-0">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="btn-delete-avatar">
+                                        <i class="bi bi-trash me-1" style="font-size:11px;"></i>Remove
+                                    </button>
+                                </form>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ── UPDATE DETAILS ── -->
+                <form asp-controller="Account" asp-action="UpdateProfile" method="post">
+                    @Html.AntiForgeryToken()
+                    <div class="row g-3 mb-3">
+                        <div class="col-6">
+                            <label class="profile-label">First name</label>
+                            <input type="text" name="FirstName" value="@user.FirstName" class="form-control profile-input" required />
+                        </div>
+                        <div class="col-6">
+                            <label class="profile-label">Last name</label>
+                            <input type="text" name="LastName" value="@user.LastName" class="form-control profile-input" required />
+                        </div>
+                        <div class="col-12">
+                            <label class="profile-label">Username</label>
+                            <input type="text" name="UserName" value="@user.UserName" class="form-control profile-input" required />
+                        </div>
+                    </div>
+                    <div class="d-grid">
+                        <button type="submit" class="btn-save-profile">
+                            <i class="bi bi-check2 me-1"></i>Save changes
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+

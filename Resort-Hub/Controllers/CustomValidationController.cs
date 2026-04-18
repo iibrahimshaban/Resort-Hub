@@ -15,4 +15,11 @@ public class CustomValidationController(ApplicationDbContext dbContext) : Contro
 
         return Json(!exists);
     }
+    [HttpGet]
+    public IActionResult CheckUsername(string UserName) 
+    {
+        var users = _context.Users.Where(s => s.UserName == UserName);
+        bool exists = users.Count() >= 1;
+        return Json(!exists);
+    }
 }
