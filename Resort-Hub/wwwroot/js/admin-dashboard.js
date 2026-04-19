@@ -1,7 +1,6 @@
 ﻿// Global chart instance
 let dashboardChart = null;
 
-// Initialize dashboard chart
 function initializeDashboardChart(data) {
     const ctx = document.getElementById('dashboardChart').getContext('2d');
 
@@ -133,7 +132,6 @@ function initializeDashboardChart(data) {
     });
 }
 
-// Update chart type (bookings only, members only, or both)
 function updateChartType(type) {
     if (!dashboardChart) return;
 
@@ -175,7 +173,6 @@ async function refreshChartData() {
 
         const newData = await response.json();
 
-        // Update chart data
         dashboardChart.data.labels = newData.dates;
         dashboardChart.data.datasets[0].data = newData.bookingCounts;
         dashboardChart.data.datasets[1].data = newData.memberCounts;
@@ -189,13 +186,11 @@ async function refreshChartData() {
     }
 }
 
-// Helper function to get anti-forgery token
 function getAntiForgeryToken() {
     const tokenInput = document.querySelector('input[name="__RequestVerificationToken"]');
     return tokenInput ? tokenInput.value : '';
 }
 
-// Show loading overlay
 function showLoading() {
     let overlay = document.querySelector('.loading-overlay');
     if (!overlay) {
@@ -207,7 +202,6 @@ function showLoading() {
     overlay.style.display = 'flex';
 }
 
-// Hide loading overlay
 function hideLoading() {
     const overlay = document.querySelector('.loading-overlay');
     if (overlay) {
@@ -215,19 +209,15 @@ function hideLoading() {
     }
 }
 
-// Show error message
 function showError(message) {
-    // You can implement a toast notification here
     console.error(message);
-    alert(message); // Simple fallback
+    alert(message);
 }
 
-// Auto-refresh chart every 5 minutes
 if (typeof autoRefresh !== 'undefined' && autoRefresh) {
     setInterval(refreshChartData, 300000); // 5 minutes
 }
 
-// Export functions for global use
 window.initializeDashboardChart = initializeDashboardChart;
 window.updateChartType = updateChartType;
 window.refreshChartData = refreshChartData;
