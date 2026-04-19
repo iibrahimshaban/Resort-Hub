@@ -16,29 +16,21 @@ public class AuthController(IAuthService authService) : Controller
     [HttpPost]
     public async Task<IActionResult> Register(RegisterVM model)
     {
-
         if (!ModelState.IsValid)
-        {
             return View(model);
-        }
 
-        var result =  await _authService.RegisterAsync(model);
+        var result = await _authService.RegisterAsync(model);
+
         if (result.IsSuccess)
-        {
-            return RedirectToAction("Index", "Home");
-        }
-        else
-        {
-            TempData.SetError(result.Error);
-            return View(model);
-        }
+            return RedirectToAction(nameof(ConfirmEmail), new { email = model.Email });
 
+        TempData.SetError(result.Error);
+        return View(model);
     }
 
     [HttpGet]
     public async Task<IActionResult> Login()
     {
-
         return View();
     }
 
@@ -64,7 +56,91 @@ public class AuthController(IAuthService authService) : Controller
     public async Task<IActionResult> Logout()
     {
         await _authService.LogoutAsync();
-        return RedirectToAction("Login", "Auth");
+        return RedirectToAction(nameof(Login));
+    }
+    [HttpGet]
+    public IActionResult ConfirmEmail(string email)
+    {
+        return View(new ConfirmEmailVM { Email = email });
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> ConfirmEmail(ConfirmEmailVM model)
+    {
+        if (!ModelState.IsValid)
+            return View(model);
+
+        var result = await _authService.ConfirmEmailAsync(model);
+
+        if (result.IsSuccess)
+            return RedirectToAction("Index", "Home");
+
+        TempData.SetError(result.Error);
+        return View(model);
+    }
+
+    // ── RESEND CONFIRMATION ──────────────────────────────────
+    [HttpPost]
+    public async Task<IActionResult> ResendConfirmation(string email,
+        CancellationToken cancellationToken)
+    {
+        await _authService.ReasendEmailConfiramtionCode(email, cancellationToken);
+        TempData["Info"] = "A new code has been sent to your email.";
+        return RedirectToAction(nameof(ConfirmEmail), new { email });
+    }
+
+    // ── FORGOT PASSWORD ──────────────────────────────────────
+    [HttpGet]
+    public IActionResult ForgotPassword() => View();
+
+    [HttpPost]
+    public async Task<IActionResult> ForgotPassword(ForgotPasswordVM model,
+        CancellationToken cancellationToken)
+    {
+        if (!ModelState.IsValid)
+            return View(model);
+
+        await _authService.SendResetPasswordCodeAsync(model.Email, cancellationToken);
+
+        return RedirectToAction(nameof(ResetPassword), new { email = model.Email });
+    }
+    [HttpGet]
+    public IActionResult ResetPassword(string email, string otp = null)
+    {
+        return View(new ResetPasswordVM { Email = email, Otp = otp });
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> ResetPassword(ResetPasswordVM model,
+        CancellationToken cancellationToken)
+    {
+        if (!ModelState.IsValid)
+            return View(model);
+
+        var result = await _authService.ResetPasswordAsync(model, cancellationToken);
+
+        if (result.IsSuccess)
+        {
+            TempData["Info"] = "Password reset successfully. Please log in.";
+            return RedirectToAction(nameof(Login));
+        }
+
+        TempData.SetError(result.Error);
+        return View(model);
+    }
+    [HttpPost]
+    public async Task<IActionResult> VerifyResetOtp(string email, string otp, CancellationToken cancellationToken)
+    {
+        var result = await _authService.VerifyResetOtpAsync(email, otp, cancellationToken);
+
+        if (result.IsSuccess)
+        {
+            // Pass email + verified otp to the password step
+            return RedirectToAction(nameof(ResetPassword), new { email, otp });
+        }
+
+        TempData.SetError(result.Error);
+        return RedirectToAction(nameof(ResetPassword), new { email });
     }
     [HttpGet]
     public async Task<IActionResult> ExternalLogin(string provider = "Google")
