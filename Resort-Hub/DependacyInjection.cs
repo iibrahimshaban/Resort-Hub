@@ -6,6 +6,7 @@ using Resort_Hub.Interfaces;
 using Resort_Hub.Persistence;
 using Resort_Hub.Repositories;
 using Resort_Hub.Services;
+using ResortHub.Services;
 using System.Reflection;
 
 namespace Resort_Hub;
@@ -57,6 +58,7 @@ public static class DependacyInjection
         services.AddTransient<IUnitOfWork, UnitOfWork>();
         services.AddScoped<IVillaService,VillaService>();
         services.AddScoped<IAuthService,AuthService>();
+        services.AddScoped<IAdminService, AdminService>();
 
         return services;
     }

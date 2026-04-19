@@ -60,14 +60,14 @@ namespace ResortHub.Services
                 .Include(b => b.User)
                 .OrderByDescending(b => b.BookingDate)
                 .Take(5)
-                .Select(b => new RecentBookingViewModel
+                .Select(b => new BookingViewModel
                 {
-                    BookingId = b.Id,
-                    CustomerName = b.User.FirstName + " " + b.User.LastName,
-                    CustomerEmail = b.User.Email,
+                    Id = b.Id,
+                    UserFullName = b.User.FirstName + " " + b.User.LastName,
+                    UserEmail = b.User.Email,
                     CheckInDate = b.CheckInDate,
                     CheckOutDate = b.CheckOutDate,
-                    TotalAmount = b.TotalCost,
+                    TotalCost = b.TotalCost,
                     Status = b.Status
                 })
                 .ToListAsync();
@@ -132,6 +132,134 @@ namespace ResortHub.Services
             }
 
             return chartData;
+
         }
+
+        public async Task<BookingListViewModel> GetBookingsAsync(int page = 1, int pageSize = 10, string? search = null, VillaStatus? status = null, string? sortBy = null, bool descending = false)
+        {
+            var query = _context.Bookings
+                .Include(b => b.User)
+                .Include(b => b.Villa)
+                .AsQueryable();
+
+            // Apply search filter
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+                query = query.Where(b =>
+                    b.User.FirstName.Contains(search) ||
+                    b.User.LastName.Contains(search) ||
+                    b.User.Email.Contains(search) ||
+                    b.Villa.Name.Contains(search));
+            }
+
+            // Apply status filter
+            if (status.HasValue)
+            {
+                query = query.Where(b => b.Status == status.Value);
+            }
+
+            // Apply sorting
+            query = sortBy?.ToLower() switch
+            {
+                "bookingdate" => descending ? query.OrderByDescending(b => b.BookingDate) : query.OrderBy(b => b.BookingDate),
+                "checkindate" => descending ? query.OrderByDescending(b => b.CheckInDate) : query.OrderBy(b => b.CheckInDate),
+                "checkoutdate" => descending ? query.OrderByDescending(b => b.CheckOutDate) : query.OrderBy(b => b.CheckOutDate),
+                "totalcost" => descending ? query.OrderByDescending(b => b.TotalCost) : query.OrderBy(b => b.TotalCost),
+                "status" => descending ? query.OrderByDescending(b => b.Status) : query.OrderBy(b => b.Status),
+                "villa" => descending ? query.OrderByDescending(b => b.Villa.Name) : query.OrderBy(b => b.Villa.Name),
+                "customer" => descending ? query.OrderByDescending(b => b.User.FirstName) : query.OrderBy(b => b.User.FirstName),
+                _ => query.OrderByDescending(b => b.BookingDate) // Default sort by newest
+            };
+
+            var totalCount = await query.CountAsync();
+
+            var bookings = await query
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .Select(b => new BookingViewModel
+                {
+                    Id = b.Id,
+                    BookingDate = b.BookingDate,
+                    CheckInDate = b.CheckInDate,
+                    CheckOutDate = b.CheckOutDate,
+                    Nights = b.Nights,
+                    TotalCost = b.TotalCost,
+                    Status = b.Status,
+                    VillaId = b.VillaId,
+                    VillaName = b.Villa.Name,
+                    VillaImageUrl =  "/images/resort-bg.jpg",
+                    UserId = b.UserId,
+                    UserFullName = $"{b.User.FirstName} {b.User.LastName}",
+                    UserEmail = b.User.Email ?? string.Empty
+                })
+                .ToListAsync();
+
+            return new BookingListViewModel
+            {
+                Bookings = bookings,
+                TotalCount = totalCount,
+                PageSize = pageSize,
+                CurrentPage = page,
+                SearchTerm = search,
+                StatusFilter = status,
+                SortBy = sortBy,
+                SortDescending = descending
+            };
+        }
+
+        public async Task<BookingViewModel?> GetBookingByIdAsync(int id)
+        {
+            var booking = await _context.Bookings
+                .Include(b => b.User)
+                .Include(b => b.Villa)
+                .FirstOrDefaultAsync(b => b.Id == id);
+
+            if (booking == null) return null;
+
+            return new BookingViewModel
+            {
+                Id = booking.Id,
+                BookingDate = booking.BookingDate,
+                CheckInDate = booking.CheckInDate,
+                CheckOutDate = booking.CheckOutDate,
+                Nights = booking.Nights,
+                TotalCost = booking.TotalCost,
+                Status = booking.Status,
+                VillaId = booking.VillaId,
+                VillaName = booking.Villa.Name,
+                VillaImageUrl = "/images/resort-bg.jpg",
+                UserId = booking.UserId,
+                UserFullName = $"{booking.User.FirstName} {booking.User.LastName}",
+                UserEmail = booking.User.Email ?? string.Empty
+            };
+        }
+
+        public async Task<bool> UpdateBookingStatusAsync(int bookingId, VillaStatus newStatus, string? notes = null)
+        {
+            var booking = await _context.Bookings.FindAsync(bookingId);
+            if (booking == null) return false;
+
+            booking.Status = newStatus;
+
+            // Optionally log the status change
+            if (!string.IsNullOrWhiteSpace(notes))
+            {
+                // You can add audit logging here
+            }
+
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<int> GetBookingsCountAsync(VillaStatus? status = null)
+        {
+            var query = _context.Bookings.AsQueryable();
+            if (status.HasValue)
+            {
+                query = query.Where(b => b.Status == status.Value);
+            }
+            return await query.CountAsync();
+        }
+
     }
 }
