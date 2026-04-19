@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Resort_Hub.Persistence;
+﻿using Resort_Hub.Persistence;
 using Resort_Hub.ViewModels.Admin;
 
 

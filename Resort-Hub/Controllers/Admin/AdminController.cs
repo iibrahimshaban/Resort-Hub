@@ -6,7 +6,7 @@ using Resort_Hub.ViewModels.Admin;
 
 namespace ResortHub.Controllers
 {
-    [Authorize(Roles = "Admin")]
+   // [Authorize(Roles = "Admin")]
     public class AdminController : Controller
     {
         private readonly IAdminService _adminService;
