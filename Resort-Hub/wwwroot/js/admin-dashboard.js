@@ -215,7 +215,7 @@ function showError(message) {
 }
 
 if (typeof autoRefresh !== 'undefined' && autoRefresh) {
-    setInterval(refreshChartData, 300000); // 5 minutes
+    setInterval(refreshChartData, 300000); 
 }
 
 window.initializeDashboardChart = initializeDashboardChart;

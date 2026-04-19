@@ -145,40 +145,7 @@
             </div>
         </div>
 
-        <!-- Status Update Section -->
-        <div class="details-section-modern update-section">
-            <div class="section-header">
-                <div class="section-icon update-icon">
-                    <i class="fas fa-edit"></i>
-                </div>
-                <h4>Update Booking Status</h4>
-            </div>
-            <div class="status-update-container">
-                <div class="status-select-wrapper">
-                    <select id="newStatus" class="status-select-modern">
-                        <option value="0" selected="@(Model.Status == Resort_Hub.Abstraction.Enums.VillaStatus.Pending)">
-                            <i class="fas fa-clock"></i> Pending
-                        </option>
-                        <option value="1" selected="@(Model.Status == Resort_Hub.Abstraction.Enums.VillaStatus.Approved)">
-                            <i class="fas fa-check-circle"></i> Approved
-                        </option>
-                        <option value="2" selected="@(Model.Status == Resort_Hub.Abstraction.Enums.VillaStatus.CheckedIn)">
-                            <i class="fas fa-sign-in-alt"></i> Checked-In
-                        </option>
-                        <option value="3" selected="@(Model.Status == Resort_Hub.Abstraction.Enums.VillaStatus.Completed)">
-                            <i class="fas fa-check-double"></i> Completed
-                        </option>
-                        <option value="4" selected="@(Model.Status == Resort_Hub.Abstraction.Enums.VillaStatus.Cancelled)">
-                            <i class="fas fa-ban"></i> Cancelled
-                        </option>
-                    </select>
-                    <i class="fas fa-chevron-down select-arrow"></i>
-                </div>
-                <button onclick="updateBookingStatus(@Model.Id)" class="btn-update-status-modern">
-                    <i class="fas fa-save"></i> Update Status
-                </button>
-            </div>
-        </div>
+      
     </div>
 </div>
 

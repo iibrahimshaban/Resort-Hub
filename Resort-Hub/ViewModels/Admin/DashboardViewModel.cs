@@ -15,6 +15,9 @@ namespace Resort_Hub.ViewModels.Admin
         public decimal RevenueChange { get; set; } 
 
         public decimal AverageBookingValue { get; set; }
+        public int TotalVillas { get; set; }
+        public double AverageRating { get; set; }
+       
 
         public ChartDataViewModel ChartData { get; set; }
 
