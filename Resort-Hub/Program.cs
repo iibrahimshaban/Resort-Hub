@@ -1,7 +1,6 @@
 using Hangfire;
 using HangfireBasicAuthenticationFilter;
 using Resort_Hub;
-using ResortHub.Services;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);

@@ -1,7 +1,7 @@
 ﻿using Resort_Hub.ViewModels.Admin;
 using System.Threading.Tasks;
 
-namespace ResortHub.Services
+namespace Resort_Hub.Services
 {
     public interface IAdminService
     {

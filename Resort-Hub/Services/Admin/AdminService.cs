@@ -2,7 +2,7 @@
 using Resort_Hub.ViewModels.Admin;
 
 
-namespace ResortHub.Services
+namespace Resort_Hub.Services
 {
     public class AdminService : IAdminService
     {

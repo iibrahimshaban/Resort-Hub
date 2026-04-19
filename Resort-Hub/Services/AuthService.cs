@@ -43,7 +43,9 @@ public class AuthService(UserManager<ApplicationUser> userManager, SignInManager
             Email = request.Email,
             UserName = request.Email,
             FirstName = request.FirstName,
-            LastName = request.LastName
+            LastName = request.LastName,
+            CreatedAt = DateTime.UtcNow
+
         };
 
         var result = await _userManager.CreateAsync(user, request.Password);
@@ -276,7 +278,8 @@ public class AuthService(UserManager<ApplicationUser> userManager, SignInManager
             FirstName = firstName,
             LastName = lastName,
             ProfilePictureUrl = picture,
-            EmailConfirmed = true
+            EmailConfirmed = true,
+            CreatedAt = DateTime.UtcNow
         };
 
         var createResult = await _userManager.CreateAsync(user);

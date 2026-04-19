@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
-using ResortHub.Services;
+using Resort_Hub.Services;
 using Resort_Hub.ViewModels.Admin;
 
-namespace ResortHub.Controllers
+namespace Resort_Hub.Controllers
 {
    // [Authorize(Roles = "Admin")]
     public class AdminController : Controller
