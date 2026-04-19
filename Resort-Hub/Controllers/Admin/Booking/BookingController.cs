@@ -1,20 +1,19 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Resort_Hub.Abstraction.Enums;
-using Resort_Hub.Services;
 using Resort_Hub.ViewModels.Admin;
-using ResortHub.Services;
+using Resort_Hub.Services;
 using System.Threading.Tasks;
 
-namespace Resort_Hub.Controllers.Admin
+namespace Resort_Hub.Controllers.Admin.Booking
 {
     [Authorize(Roles = "Admin")]
     [Route("Admin/Bookings")]
-    public class BookingsController : Controller
+    public class BookingController : Controller
     {
         private readonly IAdminService _adminService;
 
-        public BookingsController(IAdminService adminService)
+        public BookingController(IAdminService adminService)
         {
             _adminService = adminService;
         }
@@ -23,7 +22,7 @@ namespace Resort_Hub.Controllers.Admin
         public async Task<IActionResult> Index(int page = 1, string? search = null, VillaStatus? status = null, string? sortBy = null, bool descending = false)
         {
             var model = await _adminService.GetBookingsAsync(page, 10, search, status, sortBy, descending);
-            return View(model);
+            return View("~/Views/Admin/Booking/Index.cshtml", model);
         }
 
         [HttpGet("Details/{id}")]
@@ -34,7 +33,7 @@ namespace Resort_Hub.Controllers.Admin
             {
                 return NotFound();
             }
-            return View(booking);
+            return PartialView("~/Views/Admin/Booking/Details.cshtml", booking);
         }
 
         [HttpPost("UpdateStatus")]

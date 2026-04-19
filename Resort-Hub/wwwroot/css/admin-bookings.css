@@ -50,6 +50,15 @@
         background: rgba(78, 115, 223, 0.1);
         color: #4e73df;
     }
+    .stat-badge.cancelled {
+        background: rgba(231, 74, 59, 0.1);
+        color: #e74a3b;
+    }
+
+.status-cancelled {
+    background: rgba(231, 74, 59, 0.1);
+    color: #e74a3b;
+}
 
 /* Filters Card */
 .filters-card {

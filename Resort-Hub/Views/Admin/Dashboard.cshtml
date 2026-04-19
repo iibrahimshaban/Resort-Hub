@@ -1,7 +1,11 @@
-﻿@model Resort_Hub.ViewModels.Admin.DashboardViewModel
+﻿@using System.Globalization
+@model Resort_Hub.ViewModels.Admin.DashboardViewModel
 @{
     ViewData["Title"] = "Dashboard";
     Layout = "_AdminLayout";
+    var egCulture = new CultureInfo("en-EG");
+    egCulture.NumberFormat.CurrencySymbol = "EGP";
+    egCulture.NumberFormat.CurrencyDecimalDigits = 2;
 }
 
 @section Styles {
@@ -25,7 +29,7 @@
                     </div>
                 </div>
                 <div class="col-md-4">
-                    <div class="date-time-widget">
+                    <div class="date-time-widget d-flex justify-content-center">
                         <i class="fas fa-calendar-alt me-2"></i>
                         <span id="currentDateTime" class="mx-2"></span>
                     </div>
@@ -64,7 +68,7 @@
                     </div>
                     <div class="kpi-content">
                         <p class="kpi-label">Total Users</p>
-                        <h2 class="kpi-value">@Model.TotalUsers.ToString("N0")</h2>
+                        <h2 class="kpi-value">@Model.TotalUsers.ToString()</h2>
                         <div class="kpi-trend @(Model.UsersChange >= 0 ? "trend-up" : "trend-down")">
                             <i class="fas @(Model.UsersChange >= 0 ? "fa-arrow-up" : "fa-arrow-down")"></i>
                             <span>@Math.Abs(Model.UsersChange).ToString("N0") vs last month</span>
@@ -83,10 +87,10 @@
                     </div>
                     <div class="kpi-content">
                         <p class="kpi-label">Total Revenue</p>
-                        <h2 class="kpi-value">@Model.TotalRevenue.ToString("C2")</h2>
+                        <h2 class="kpi-value">@Math.Abs(Model.TotalRevenue).ToString("C2", egCulture)</h2>
                         <div class="kpi-trend @(Model.RevenueChange >= 0 ? "trend-up" : "trend-down")">
                             <i class="fas @(Model.RevenueChange >= 0 ? "fa-arrow-up" : "fa-arrow-down")"></i>
-                            <span>@Math.Abs(Model.RevenueChange).ToString("C2") vs last month</span>
+                            <span>@Math.Abs(Model.RevenueChange).ToString("C2", egCulture) vs last month</span>
                         </div>
                     </div>
                 </div>
@@ -102,7 +106,7 @@
                     </div>
                     <div class="kpi-content">
                         <p class="kpi-label">Avg. Booking Value</p>
-                        <h2 class="kpi-value">@Model.AverageBookingValue.ToString("C2")</h2>
+                        <h2 class="kpi-value">@Math.Abs(Model.AverageBookingValue).ToString("C2", egCulture)</h2>
                         <div class="kpi-trend">
                             <i class="fas fa-calendar-week"></i>
                             <span>Last 30 days</span>
@@ -123,19 +127,6 @@
                                 Booking & Member Analytics
                             </h5>
                             <p class="chart-subtitle">Daily trends over the past 30 days</p>
-                        </div>
-                        <div class="chart-controls">
-                            <div class="btn-group-toggle" data-toggle="buttons">
-                                <button type="button" class="chart-toggle-btn active" data-chart="bookings">
-                                    <i class="fas fa-calendar"></i> Bookings
-                                </button>
-                                <button type="button" class="chart-toggle-btn" data-chart="members">
-                                    <i class="fas fa-user-plus"></i> Members
-                                </button>
-                                <button type="button" class="chart-toggle-btn" data-chart="both">
-                                    <i class="fas fa-chart-line"></i> Both
-                                </button>
-                            </div>
                         </div>
                     </div>
                     <div class="chart-card-body">
@@ -162,9 +153,13 @@
                                 <span class="stat-number">@Model.ActiveBookings.ToString("N0")</span>
                             </div>
                             <div class="progress-bar-modern">
-                                <div class="progress-fill" style="width: 75%"></div>
+                                @{
+                                    var activePercentage = Model.TotalBookings > 0 ? (double)Model.ActiveBookings / Model.TotalBookings * 100 : 0;
+                                }
+                                <div class="progress-fill" style="width: @activePercentage%"></div>
                             </div>
                         </div>
+        
                         <div class="stat-item">
                             <div class="stat-info">
                                 <span class="stat-name">Occupancy Rate</span>
@@ -174,15 +169,34 @@
                                 <div class="progress-fill" style="width: @Model.OccupancyRate%"></div>
                             </div>
                         </div>
+        
+                        <div class="stat-item">
+                            <div class="stat-info">
+                                <span class="stat-name">Total Villas</span>
+                                <span class="stat-number">@Model.TotalVillas.ToString("N0")</span>
+                            </div>
+                            <div class="progress-bar-modern">
+                                @{
+                                    var availableVillasPercentage = Model.TotalVillas > 0 ? (double)(Model.TotalVillas - Model.ActiveBookings) / Model.TotalVillas * 100 : 100;
+                                }
+                                <div class="progress-fill" style="width: @availableVillasPercentage%; background: linear-gradient(90deg, #1cc88a, #2ecc71);"></div>
+                            </div>
+                        </div>
+        
                         <div class="stat-divider"></div>
+        
                         <div class="stat-summary">
                             <div class="summary-item">
                                 <i class="fas fa-building"></i>
-                                <span>20 Properties</span>
+                                <span>@Model.TotalVillas.ToString("N0") Properties</span>
                             </div>
                             <div class="summary-item">
                                 <i class="fas fa-star"></i>
-                                <span>4.8 Rating</span>
+                                <span>@Model.AverageRating.ToString("F1") Rating</span>
+                            </div>
+                            <div class="summary-item">
+                                <i class="fas fa-calendar-check"></i>
+                                <span>@Model.TotalBookings.ToString("N0") Bookings</span>
                             </div>
                         </div>
                     </div>
@@ -216,8 +230,8 @@
                                     </p>
                                 </div>
                                 <div class="booking-amount">
-                                    <span class="amount">@booking.TotalCost.ToString("C2")</span>
-                                    <span class="status-badge status-confirmed">Confirmed</span>
+                                    <span class="amount">@booking.TotalCost.ToString("C2", egCulture)</span>
+                                    <span class="status-badge status-confirmed">@booking.Status</span>
                                 </div>
                             </div>
                         }
