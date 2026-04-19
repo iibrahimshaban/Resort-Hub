@@ -7,5 +7,7 @@
         public string Email { get; set; }
         public DateTime JoinDate { get; set; }
         public int BookingsCount { get; set; }
+        public string UserFullName => FullName;
+        public DateTime CreatedAt => JoinDate;
     }
 }

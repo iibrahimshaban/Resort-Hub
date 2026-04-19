@@ -17,6 +17,8 @@
     <!-- Admin Custom CSS -->
     <link rel="stylesheet" href="~/css/admin-layout.css" />
     <link rel="stylesheet" href="~/css/admin-dashboard.css" />
+    <link rel="stylesheet" href="~/css/admin-booking.css" />
+    
     
     @await RenderSectionAsync("Styles", required: false)
 </head>
@@ -33,15 +35,16 @@
             </div>
             
             <nav class="sidebar-nav">
-                <a href="/Admin/Dashboard" class="nav-link active">
+                <a asp-controller="Admin" asp-action="Dashboard" class="nav-link active">
                     <i class="fas fa-chart-line"></i>
                     <span>Dashboard</span>
                 </a>
-                <a href="/Admin/Bookings" class="nav-link">
+                <a asp-controller="Booking" asp-action="Index" class="nav-link">
                     <i class="fas fa-calendar-check"></i>
                     <span>Bookings</span>
                 </a>
-                <a href="/Admin/Users" class="nav-link">
+                
+                <a asp-controller="Admin" asp-action="Users" class="nav-link">
                     <i class="fas fa-users"></i>
                     <span>Users</span>
                 </a>
