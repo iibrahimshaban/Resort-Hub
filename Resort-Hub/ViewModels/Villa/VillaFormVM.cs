@@ -23,11 +23,9 @@ public class VillaFormVM
 
     public bool IsAvilable { get; set; } = true;
 
-    // Amenities
     public List<int> SelectedAmenityIds { get; set; } = [];
     public List<Amenity> AvailableAmenities { get; set; } = [];
 
-    // Images
     public List<IFormFile>? NewImages { get; set; }
     public List<VillaImage> ExistingImages { get; set; } = [];
 }
