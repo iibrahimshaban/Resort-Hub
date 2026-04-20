@@ -1,0 +1,96 @@
+﻿@model Resort_Hub.Entities.Amenity
+
+@{
+    ViewData["Title"] = "Add Amenity";
+    Layout = "_ApplicationLayout";
+}
+
+<section class="py-5">
+    <div class="container" style="max-width:520px;">
+
+        <div class="mb-4">
+            <a asp-action="Index" class="text-decoration-none small"
+                   style="color:#003DFC;">
+                <i class="bi bi-arrow-left me-1"></i>Back to Amenities
+            </a>
+            <h2 class="fw-700 mt-2 mb-0" style="font-family:'Plus Jakarta Sans',sans-serif;">Add Amenity</h2>
+        </div>
+
+        <div class="card border-0" style="border-radius:16px;box-shadow:0 2px 16px rgba(0,61,252,.08);">
+            <div class="card-body p-4">
+
+                <!-- Icon preview header -->
+                <div class="text-center mb-4">
+                    <div id="icon-circle"
+                         style="width:72px;height:72px;background:#f0f3ff;border-radius:50%;
+                        display:flex;align-items:center;justify-content:center;
+                        margin:0 auto 10px;border:2px solid #dce3ff;">
+                        <i id="icon-preview" class="bi bi-tag-fill" style="font-size:1.8rem;color:#003DFC;"></i>
+                    </div>
+                    <div class="small text-muted">Icon preview</div>
+                </div>
+
+                <form asp-action="Create" method="post">
+                    @Html.AntiForgeryToken()
+
+                    <div class="mb-3">
+                        <label asp-for="Name" class="form-label fw-600 small">
+                            Amenity Name <span class="text-danger">*</span>
+                        </label>
+                        <input asp-for="Name" class="form-control"
+                               style="border-radius:10px;border-color:#dce3ff;border-width:1.5px;"
+                               placeholder="e.g. Swimming Pool" />
+                        <span asp-validation-for="Name" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Description" class="form-label fw-600 small">Description</label>
+                        <textarea asp-for="Description" class="form-control" rows="3"
+                                  style="border-radius:10px;border-color:#dce3ff;border-width:1.5px;resize:none;"
+                                  placeholder="Brief description..."></textarea>
+                    </div>
+
+                    <div class="mb-4">
+                        <label asp-for="Icon" class="form-label fw-600 small">
+                            Bootstrap Icon Class
+                            <a href="https://icons.getbootstrap.com/" target="_blank"
+                                   class="ms-1 small" style="color:#3252DF;">
+                                <i class="bi bi-box-arrow-up-right"></i> browse
+                            </a>
+                        </label>
+                        <input asp-for="Icon" class="form-control" id="icon-input"
+                               style="border-radius:10px;border-color:#dce3ff;border-width:1.5px;"
+                               placeholder="e.g. bi bi-water"
+                               oninput="previewIcon(this.value)" />
+                        <div class="small text-muted mt-1">
+                            e.g. <code>bi bi-wifi</code> &bull; <code>bi bi-water</code> &bull; <code>bi bi-car-front</code>
+                        </div>
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <a asp-action="Index" class="btn btn-outline-secondary flex-fill py-2"
+                           style="border-radius:12px;">Cancel</a>
+                        <button type="submit" class="btn text-white flex-fill py-2 fw-600"
+                                style="background:#3252DF;border-radius:12px;border:none;
+                            font-family:'Plus Jakarta Sans',sans-serif;">
+                            <i class="bi bi-plus-lg me-2"></i>Add Amenity
+                        </button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        function previewIcon(val) {
+            const el = document.getElementById('icon-preview');
+            el.className = val.trim() ? val.trim() : 'bi bi-tag-fill';
+            el.style.fontSize = '1.8rem';
+            el.style.color = '#003DFC';
+        }
+    </script>
+}
