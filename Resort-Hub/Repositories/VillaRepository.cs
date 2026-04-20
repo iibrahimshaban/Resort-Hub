@@ -1,9 +1,12 @@
-﻿using Resort_Hub.Interfaces;
+﻿using Microsoft.EntityFrameworkCore;
+using Resort_Hub.Entities;
+using Resort_Hub.Interfaces;
 using Resort_Hub.Persistence;
 
 namespace Resort_Hub.Repositories;
 
-public class VillaRepository(ApplicationDbContext dbContext) : BaseRepository<Villa>(dbContext), IVillaRepository
+public class VillaRepository(ApplicationDbContext dbContext)
+    : BaseRepository<Villa>(dbContext), IVillaRepository
 {
     public new List<Villa> GetAll()
     {
@@ -17,6 +20,7 @@ public class VillaRepository(ApplicationDbContext dbContext) : BaseRepository<Vi
     {
         return await _context.Villas
             .Include(v => v.VillaAmenity)
+                .ThenInclude(va => va.Amenity)
             .Include(v => v.VillaImages)
             .AsNoTracking()
             .FirstOrDefaultAsync(v => v.Id == id);

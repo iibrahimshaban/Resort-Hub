@@ -1,8 +1,10 @@
-﻿namespace Resort_Hub.Interfaces;
+﻿using Resort_Hub.Entities;
+
+namespace Resort_Hub.Interfaces;
 
 public interface IUnitOfWork : IDisposable
 {
     IVillaRepository Villas { get; }
-    IBaseRepository<Amenity> Amenities { get; } 
+    IBaseRepository<Amenity> Amenities { get; }
     Task SaveAsync();
 }

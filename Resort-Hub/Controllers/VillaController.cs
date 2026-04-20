@@ -6,16 +6,17 @@ using Resort_Hub.ViewModels.Villa;
 
 namespace Resort_Hub.Controllers;
 
-public class VillaController(IUnitOfWork unitOfWork, IVillaService villaService, IWebHostEnvironment env) : Controller
+public class VillaController(
+    IUnitOfWork unitOfWork,
+    IVillaService villaService,
+    IWebHostEnvironment env) : Controller
 {
- 
     public IActionResult Index()
     {
         var villas = unitOfWork.Villas.GetAll();
         return View(villas);
     }
 
-    
     public IActionResult Create()
     {
         var vm = new VillaFormVM
@@ -46,15 +47,13 @@ public class VillaController(IUnitOfWork unitOfWork, IVillaService villaService,
             CreatedDate = DateTime.Now
         };
 
-        // ── Amenities
-        villa.VillaAmenity = vm.SelectedAmenityIds
-            .Select(id => new VillaAmenity { AmenityId = id })
-            .ToHashSet();
+        // Amenities
+        foreach (var amenityId in vm.SelectedAmenityIds)
+            villa.VillaAmenity.Add(new VillaAmenity { AmenityId = amenityId });
 
-        // ── Images
+        // Images
         if (vm.NewImages != null && vm.NewImages.Count > 0)
         {
-            villa.VillaImages = new HashSet<VillaImage>();
             int order = 1;
             foreach (var img in vm.NewImages)
             {
@@ -81,7 +80,6 @@ public class VillaController(IUnitOfWork unitOfWork, IVillaService villaService,
         return RedirectToAction(nameof(Index));
     }
 
-    
     public async Task<IActionResult> Edit(int id)
     {
         var result = await villaService.ValidateVilla(id);
@@ -101,11 +99,9 @@ public class VillaController(IUnitOfWork unitOfWork, IVillaService villaService,
             SelectedAmenityIds = villa.VillaAmenity.Select(va => va.AmenityId).ToList(),
             ExistingImages = villa.VillaImages.ToList()
         };
-
         return View(vm);
     }
 
-   
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Edit(int id, VillaFormVM vm)
@@ -117,7 +113,7 @@ public class VillaController(IUnitOfWork unitOfWork, IVillaService villaService,
             return View(vm);
         }
 
-        var result = await villaService.ValidateVilla(id);
+        var result = await villaService.GetVillaForEdit(id);
         if (result.IsFailur) return NotFound();
 
         var villa = result.Value;
@@ -129,12 +125,12 @@ public class VillaController(IUnitOfWork unitOfWork, IVillaService villaService,
         villa.IsAvilable = vm.IsAvilable;
         villa.UpdatedDate = DateTime.Now;
 
-        // ── update Amenities
-        villa.VillaAmenity = vm.SelectedAmenityIds
-            .Select(aid => new VillaAmenity { VillaId = id, AmenityId = aid })
-            .ToHashSet();
 
-        // ── add new photo
+        villa.VillaAmenity.Clear();
+        foreach (var amenityId in vm.SelectedAmenityIds)
+            villa.VillaAmenity.Add(new VillaAmenity { VillaId = id, AmenityId = amenityId });
+
+       
         if (vm.NewImages != null && vm.NewImages.Count > 0)
         {
             int order = villa.VillaImages.Count + 1;
@@ -151,7 +147,7 @@ public class VillaController(IUnitOfWork unitOfWork, IVillaService villaService,
                 {
                     VillaId = id,
                     ImageUrl = $"/images/villas/{fileName}",
-                    IsMain = !villa.VillaImages.Any(),
+                    IsMain = !villa.VillaImages.Any(i => i.IsMain),
                     DispalayOrder = order++
                 });
             }
@@ -171,7 +167,6 @@ public class VillaController(IUnitOfWork unitOfWork, IVillaService villaService,
         return View(result.Value);
     }
 
-    
     [HttpPost, ActionName("Delete")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> DeleteConfirmed(int id)
@@ -186,7 +181,6 @@ public class VillaController(IUnitOfWork unitOfWork, IVillaService villaService,
         return RedirectToAction(nameof(Index));
     }
 
-    
     public async Task<IActionResult> Details(int id)
     {
         var result = await villaService.ValidateVilla(id);

@@ -11,18 +11,22 @@ public class AmenityController(IUnitOfWork unitOfWork) : Controller
         return View(unitOfWork.Amenities.GetAll());
     }
 
-    public IActionResult Create() => View(new Amenity());
+    public IActionResult Create()
+    {
+        return View(new Amenity());
+    }
 
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(Amenity amenity)
     {
-        if (!ModelState.IsValid) return View(amenity);
+        if (!ModelState.IsValid)
+            return View(amenity);
 
         unitOfWork.Amenities.Add(amenity);
         await unitOfWork.SaveAsync();
 
-        TempData["Success"] = "Amenity created!";
+        TempData["Success"] = "Amenity created successfully!";
         return RedirectToAction(nameof(Index));
     }
 
@@ -37,12 +41,13 @@ public class AmenityController(IUnitOfWork unitOfWork) : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Edit(Amenity amenity)
     {
-        if (!ModelState.IsValid) return View(amenity);
+        if (!ModelState.IsValid)
+            return View(amenity);
 
         unitOfWork.Amenities.Update(amenity);
         await unitOfWork.SaveAsync();
 
-        TempData["Success"] = "Amenity updated!";
+        TempData["Success"] = "Amenity updated successfully!";
         return RedirectToAction(nameof(Index));
     }
 
@@ -56,7 +61,7 @@ public class AmenityController(IUnitOfWork unitOfWork) : Controller
         unitOfWork.Amenities.Delete(amenity);
         await unitOfWork.SaveAsync();
 
-        TempData["Success"] = "Amenity deleted!";
+        TempData["Success"] = "Amenity deleted successfully!";
         return RedirectToAction(nameof(Index));
     }
 }
