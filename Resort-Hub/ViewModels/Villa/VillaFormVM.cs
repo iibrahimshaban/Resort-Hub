@@ -28,4 +28,6 @@ public class VillaFormVM
 
     public List<IFormFile>? NewImages { get; set; }
     public List<VillaImage> ExistingImages { get; set; } = [];
+    public int MainImageIndex { get; set; } = 0;
+    public int? MainExistingImageId { get; set; }
 }
