@@ -4,9 +4,10 @@ using Resort_Hub.ViewModels.Auth;
 
 namespace Resort_Hub.Controllers;
 
-public class AuthController(IAuthService authService) : Controller
+public class AuthController(IAuthService authService, UserManager<ApplicationUser> userManager) : Controller
 {
     private readonly IAuthService _authService = authService;
+    private readonly UserManager<ApplicationUser> _userManager = userManager;
     [HttpGet]
     public async Task<IActionResult> Register()
     {
@@ -43,7 +44,7 @@ public class AuthController(IAuthService authService) : Controller
         var result = await _authService.LoginAsync(model);
         if (result.IsSuccess)
         {
-            return RedirectToAction("Index", "Home");
+            return await RedirectToAdminIfApplicable();
         }
         else
         {
@@ -156,12 +157,32 @@ public class AuthController(IAuthService authService) : Controller
         var result = await _authService.ExternalLoggingCallBackAsync();
         if (result.IsSuccess)
         {
-            return RedirectToAction("index", "Home");
+            return await RedirectToAdminIfApplicable();
         }
         else
         {
             TempData.SetError(result.Error);
             return RedirectToAction(nameof(Login));
         }
+    }
+
+
+
+    private async Task<IActionResult> RedirectToAdminIfApplicable()
+    {
+        var user = await _userManager.GetUserAsync(User);
+        if (user != null)
+        {
+            var roles = await _userManager.GetRolesAsync(user);
+
+            var isAdmin = roles.Contains("Admin");
+
+            if (isAdmin)
+            {
+                return RedirectToAction("Dashboard", "Admin");
+            }
+        }
+
+        return RedirectToAction("Index", "Home");
     }
 }
