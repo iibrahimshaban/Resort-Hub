@@ -6,5 +6,8 @@ public interface IUnitOfWork : IDisposable
 {
     IVillaRepository Villas { get; }
     IBaseRepository<Amenity> Amenities { get; }
+    IBookingRepository Bookings { get; }
+    IUserRepository Users { get; }
+    
     Task SaveAsync();
 }

@@ -11,6 +11,10 @@ public class UnitOfWork(ApplicationDbContext context) : IUnitOfWork
     public IVillaRepository Villas => new VillaRepository(_context);
     public IBaseRepository<Amenity> Amenities => new BaseRepository<Amenity>(_context);
 
+    public IBookingRepository Bookings => new BookingRepository(_context);
+
+    public IUserRepository Users => new UserRepository(_context);
+
     public void Dispose() => _context.Dispose();
 
     public async Task SaveAsync() => await _context.SaveChangesAsync();

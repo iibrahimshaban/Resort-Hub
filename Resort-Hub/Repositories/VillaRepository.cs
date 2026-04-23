@@ -25,4 +25,18 @@ public class VillaRepository(ApplicationDbContext dbContext)
             .AsNoTracking()
             .FirstOrDefaultAsync(v => v.Id == id);
     }
+    public async Task<int> GetTotalVillasCountAsync()
+    {
+        return await _context.Villas.CountAsync();
+    }
+
+    public async Task<int> GetAvailableVillasCountAsync()
+    {
+        return await _context.Villas.CountAsync(v => v.IsAvilable);
+    }
+
+    public async Task<double> GetAverageRatingAsync()
+    {
+        return 4.5;
+    }
 }
