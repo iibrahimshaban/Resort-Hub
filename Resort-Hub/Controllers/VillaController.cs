@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Resort_Hub.Entities;
 using Resort_Hub.Interfaces;
 using Resort_Hub.Services;
 using Resort_Hub.ViewModels.Villa;
