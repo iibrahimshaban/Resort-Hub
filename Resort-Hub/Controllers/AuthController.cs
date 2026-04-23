@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Resort_Hub.Services;
 using Resort_Hub.ViewModels.Auth;
-using System.Security.Claims;
 
 namespace Resort_Hub.Controllers;
 
@@ -73,7 +72,10 @@ public class AuthController(IAuthService authService) : Controller
         var result = await _authService.ConfirmEmailAsync(model);
 
         if (result.IsSuccess)
-            return RedirectToAction("Index", "Home");
+        {
+            TempData["ClearHistory"] = true;
+            return RedirectToAction(nameof(Login));
+        }
 
         TempData.SetError(result.Error);
         return View(model);
@@ -85,7 +87,6 @@ public class AuthController(IAuthService authService) : Controller
         CancellationToken cancellationToken)
     {
         await _authService.ReasendEmailConfiramtionCode(email, cancellationToken);
-        TempData["Info"] = "A new code has been sent to your email.";
         return RedirectToAction(nameof(ConfirmEmail), new { email });
     }
 
@@ -121,7 +122,7 @@ public class AuthController(IAuthService authService) : Controller
 
         if (result.IsSuccess)
         {
-            TempData["Info"] = "Password reset successfully. Please log in.";
+            TempData["ClearHistory"] = true;
             return RedirectToAction(nameof(Login));
         }
 
