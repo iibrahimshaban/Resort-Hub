@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Resort_Hub.Persistence;
 
@@ -11,9 +12,11 @@ using Resort_Hub.Persistence;
 namespace Resort_Hub.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260419154332_AddCreatedAtToUser")]
+    partial class AddCreatedAtToUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -290,7 +293,7 @@ namespace Resort_Hub.Persistence.Migrations
                             Id = "6dc6528a-b280-4770-9eae-82671ee81ef7",
                             AccessFailedCount = 0,
                             ConcurrencyStamp = "99d2bbc6-bc54-4248-a172-a77de3ae4430",
-                            CreatedAt = new DateTime(2026, 4, 17, 0, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedAt = new DateTime(2026, 4, 19, 17, 43, 31, 379, DateTimeKind.Local).AddTicks(8983),
                             Email = "Admin@ResortHub.com",
                             EmailConfirmed = true,
                             FirstName = "Admin",

@@ -65,6 +65,7 @@ public static class DependacyInjection
         services.AddTransient<IUnitOfWork, UnitOfWork>();
         services.AddScoped<IVillaService,VillaService>();
         services.AddScoped<IAuthService,AuthService>();
+        services.AddScoped<IAdminService, AdminService>();
         services.AddScoped<IAccountService, AccountService>();
         services.AddTransient<ICustomEmailService, EmailService>();
 

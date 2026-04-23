@@ -26,7 +26,8 @@ public class ApplicationUserConfiguration : IEntityTypeConfiguration<Application
             PasswordHash = DefaultUsers.AdminHashedPassword,
             SecurityStamp = DefaultUsers.AdminSequrityStamp,
             ConcurrencyStamp = DefaultUsers.AdminConcurrencyStamp,
-            EmailConfirmed = true
+            EmailConfirmed = true,
+            CreatedAt = new DateTime(2026, 4, 17, 0, 0, 0, DateTimeKind.Utc)
         });
     }
 }

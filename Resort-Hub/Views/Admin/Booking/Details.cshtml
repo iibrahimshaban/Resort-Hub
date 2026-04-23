@@ -1,0 +1,653 @@
+﻿@model Resort_Hub.ViewModels.Admin.BookingViewModel
+@{
+    Layout = null;
+}
+
+<div class="booking-details-container">
+    <!-- Header with Gradient Background -->
+    <div class="details-header-gradient">
+        <div class="header-content">
+            <div class="booking-info">
+                <span class="booking-label">Booking Information</span>
+                <h2 class="booking-number">Booking #@Model.Id</h2>
+            </div>
+            <div class="status-container">
+                   <div class="booking-status">
+            <span class="status-badge @Model.StatusBadgeClass">@Model.StatusDisplay</span>
+        </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="details-body">
+        <!-- Customer Section with Avatar -->
+        <div class="details-section-modern customer-section">
+            <div class="section-header">
+                <div class="section-icon customer-icon">
+                    <i class="fas fa-user-circle"></i>
+                </div>
+                <h4>Customer Information</h4>
+            </div>
+            <div class="customer-profile">
+                <div class="customer-avatar-large">
+                    <span>@(Model.UserFullName.Substring(0, 1))</span>
+                </div>
+                <div class="customer-details">
+                    <div class="detail-row">
+                        <div class="detail-item">
+                            <span class="detail-label">Full Name</span>
+                            <span class="detail-value">@Model.UserFullName</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Email Address</span>
+                            <span class="detail-value">@Model.UserEmail</span>
+                        </div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-item">
+                            <span class="detail-label">Booking Date</span>
+                            <span class="detail-value">@Model.BookingDate.ToString("MMMM dd, yyyy 'at' hh:mm tt")</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Booking Reference</span>
+                            <span class="detail-value">#@Model.Id</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Villa Section -->
+        <div class="details-section-modern villa-section">
+            <div class="section-header">
+                <div class="section-icon villa-icon">
+                    <i class="fas fa-home"></i>
+                </div>
+                <h4>Villa Information</h4>
+            </div>
+            <div class="villa-details-modern">
+                <div class="villa-image-modern">
+                    <img src="@Model.VillaImageUrl" alt="@Model.VillaName" onerror="this.src='/images/default-villa.jpg'" />
+                    <div class="villa-badge">
+                        <i class="fas fa-crown"></i> Premium
+                    </div>
+                </div>
+                <div class="villa-info-modern">
+                    <h3 class="villa-name">@Model.VillaName</h3>
+                    <div class="villa-stats">
+                        <div class="stat">
+                            <i class="fas fa-hashtag"></i>
+                            <span>ID: #@Model.VillaId</span>
+                        </div>
+                        <div class="stat">
+                            <i class="fas fa-star"></i>
+                            <span>4.8 Rating</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Booking Timeline -->
+        <div class="details-section-modern timeline-section">
+            <div class="section-header">
+                <div class="section-icon calendar-icon">
+                    <i class="fas fa-calendar-alt"></i>
+                </div>
+                <h4>Booking Timeline</h4>
+            </div>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-icon">
+                        <i class="fas fa-calendar-check"></i>
+                    </div>
+                    <div class="timeline-content">
+                        <h5>Check-In Date</h5>
+                        <p>@Model.CheckInDate.ToString("dddd, MMMM dd, yyyy")</p>
+                        <span class="timeline-time">From 3:00 PM</span>
+                    </div>
+                </div>
+                <div class="timeline-line"></div>
+                <div class="timeline-item">
+                    <div class="timeline-icon">
+                        <i class="fas fa-calendar-times"></i>
+                    </div>
+                    <div class="timeline-content">
+                        <h5>Check-Out Date</h5>
+                        <p>@Model.CheckOutDate.ToString("dddd, MMMM dd, yyyy")</p>
+                        <span class="timeline-time">Until 11:00 AM</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pricing Summary -->
+        <div class="details-section-modern pricing-section">
+            <div class="section-header">
+                <div class="section-icon price-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <h4>Pricing Summary</h4>
+            </div>
+            <div class="pricing-grid">
+                <div class="pricing-card">
+                    <div class="pricing-label">Nights Stay</div>
+                    <div class="pricing-value">@Model.Nights <span>nights</span></div>
+                </div>
+                <div class="pricing-card">
+                    <div class="pricing-label">Total Cost</div>
+                    <div class="pricing-value total">@Model.TotalCost.ToString("C2")</div>
+                </div>
+                <div class="pricing-card">
+                    <div class="pricing-label">Average / Night</div>
+                    <div class="pricing-value">@((Model.TotalCost / Model.Nights).ToString("C2"))</div>
+                </div>
+            </div>
+        </div>
+
+      
+    </div>
+</div>
+
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    .booking-details-container {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        background: #f8f9fa;
+        border-radius: 20px;
+        overflow: hidden;
+
+    }
+
+    .details-header-gradient {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding: 2rem;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .details-header-gradient::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+        background-size: 50px 50px;
+        animation: moveBackground 20s linear infinite;
+    }
+
+    @@keyframes moveBackground {
+        0% { transform: translate(0, 0); }
+        100% { transform: translate(50px, 50px); }
+    }
+
+    .header-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: relative;
+        z-index: 1;
+    }
+
+    .booking-label {
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        color: rgba(255,255,255,0.8);
+        display: block;
+        margin-bottom: 0.5rem;
+    }
+
+    .booking-number {
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: white;
+        margin: 0;
+    }
+
+    /* Status Badge Modern */
+    .status-badge-modern {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        border-radius: 50px;
+        font-size: 0.875rem;
+        font-weight: 600;
+        backdrop-filter: blur(10px);
+        background: rgba(255,255,255,0.2);
+        color: white;
+    }
+
+    /* Details Body */
+    .details-body {
+        padding: 1.5rem;
+    }
+
+    /* Modern Sections */
+    .details-section-modern {
+        background: white;
+        border-radius: 16px;
+        margin-bottom: 1.5rem;
+        padding: 1.5rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        transition: all 0.3s ease;
+    }
+
+    .details-section-modern:hover {
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        transform: translateY(-2px);
+    }
+
+    .section-header {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        margin-bottom: 1.5rem;
+        padding-bottom: 0.75rem;
+        border-bottom: 2px solid #f0f0f0;
+    }
+
+    .section-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+    }
+
+    .customer-icon { background: linear-gradient(135deg, #667eea20, #764ba220); color: #667eea; }
+    .villa-icon { background: linear-gradient(135deg, #1cc88a20, #36b9cc20); color: #1cc88a; }
+    .calendar-icon { background: linear-gradient(135deg, #f6c23e20, #f39c1220); color: #f6c23e; }
+    .price-icon { background: linear-gradient(135deg, #4e73df20, #36b9cc20); color: #4e73df; }
+    .update-icon { background: linear-gradient(135deg, #e74a3b20, #f39c1220); color: #e74a3b; }
+
+    .section-header h4 {
+        font-size: 1.125rem;
+        font-weight: 600;
+        color: #2c3e50;
+        margin: 0;
+    }
+
+    /* Customer Profile */
+    .customer-profile {
+        display: flex;
+        gap: 1.5rem;
+        align-items: flex-start;
+    }
+
+    .customer-avatar-large {
+        width: 80px;
+        height: 80px;
+        border-radius: 20px;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        font-weight: 700;
+        color: white;
+    }
+
+    .customer-details {
+        flex: 1;
+    }
+
+    .detail-row {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .detail-row:last-child {
+        margin-bottom: 0;
+    }
+
+    .detail-item {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .detail-label {
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: #6c757d;
+        margin-bottom: 0.25rem;
+    }
+
+    .detail-value {
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: #2c3e50;
+    }
+
+    /* Villa Details Modern */
+    .villa-details-modern {
+        display: flex;
+        gap: 1.5rem;
+        align-items: center;
+    }
+
+    .villa-image-modern {
+        position: relative;
+        width: 120px;
+        height: 120px;
+        border-radius: 16px;
+        overflow: hidden;
+    }
+
+    .villa-image-modern img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .villa-badge {
+        position: absolute;
+        top: 0.5rem;
+        left: 0.5rem;
+        background: rgba(0,0,0,0.7);
+        backdrop-filter: blur(5px);
+        padding: 0.25rem 0.5rem;
+        border-radius: 8px;
+        font-size: 0.625rem;
+        color: white;
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+    }
+
+    .villa-name {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #2c3e50;
+        margin-bottom: 0.5rem;
+    }
+
+    .villa-stats {
+        display: flex;
+        gap: 1rem;
+    }
+
+    .villa-stats .stat {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.875rem;
+        color: #6c757d;
+    }
+
+    .villa-stats .stat i {
+        color: #667eea;
+    }
+
+    /* Timeline */
+    .timeline {
+        position: relative;
+        padding-left: 2rem;
+    }
+
+    .timeline-item {
+        display: flex;
+        gap: 1.5rem;
+        position: relative;
+        margin-bottom: 2rem;
+    }
+
+    .timeline-item:last-child {
+        margin-bottom: 0;
+    }
+
+    .timeline-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: white;
+        border: 2px solid #667eea;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #667eea;
+        position: relative;
+        z-index: 2;
+    }
+
+    .timeline-line {
+        position: absolute;
+        left: 20px;
+        top: 40px;
+        bottom: 40px;
+        width: 2px;
+        background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
+    }
+
+    .timeline-content h5 {
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: #6c757d;
+        margin-bottom: 0.25rem;
+    }
+
+    .timeline-content p {
+        font-size: 1rem;
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 0.25rem;
+    }
+
+    .timeline-time {
+        font-size: 0.75rem;
+        color: #adb5bd;
+    }
+
+    /* Pricing Grid */
+    .pricing-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1rem;
+    }
+
+    .pricing-card {
+        text-align: center;
+        padding: 1rem;
+        background: #f8f9fa;
+        border-radius: 12px;
+        transition: all 0.3s ease;
+    }
+
+    .pricing-card:hover {
+        transform: translateY(-3px);
+        background: linear-gradient(135deg, #667eea10, #764ba210);
+    }
+
+    .pricing-label {
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        color: #6c757d;
+        margin-bottom: 0.5rem;
+    }
+
+    .pricing-value {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #2c3e50;
+    }
+
+    .pricing-value.total {
+        font-size: 1.5rem;
+        color: #28a745;
+    }
+
+    .pricing-value span {
+        font-size: 0.75rem;
+        font-weight: normal;
+        color: #6c757d;
+    }
+
+    /* Status Update Section */
+    .status-update-container {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+    }
+
+    .status-select-wrapper {
+        position: relative;
+        flex: 1;
+    }
+
+    .status-select-modern {
+        width: 100%;
+        padding: 0.75rem 2.5rem 0.75rem 1rem;
+        border: 2px solid #e9ecef;
+        border-radius: 12px;
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: #2c3e50;
+        background: white;
+        cursor: pointer;
+        appearance: none;
+        transition: all 0.3s ease;
+    }
+
+    .status-select-modern:hover {
+        border-color: #667eea;
+    }
+
+    .status-select-modern:focus {
+        outline: none;
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    .select-arrow {
+        position: absolute;
+        right: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #adb5bd;
+        pointer-events: none;
+    }
+
+    .btn-update-status-modern {
+        padding: 0.75rem 1.5rem;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        border: none;
+        border-radius: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: all 0.3s ease;
+    }
+
+    .btn-update-status-modern:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    }
+
+    /* Status Colors */
+    .status-pending { background: #f6c23e; color: #fff; }
+    .status-approved { background: #1cc88a; color: #fff; }
+    .status-checkedin { background: #36b9cc; color: #fff; }
+    .status-completed { background: #4e73df; color: #fff; }
+    .status-cancelled { background: #e74a3b; color: #fff; }
+
+    /* Responsive */
+    @@media (max-width: 768px) {
+        .details-header-gradient {
+            padding: 1.5rem;
+        }
+        
+        .booking-number {
+            font-size: 1.25rem;
+        }
+        
+        .customer-profile {
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+        
+        .detail-row {
+            grid-template-columns: 1fr;
+            gap: 0.75rem;
+        }
+        
+        .villa-details-modern {
+            flex-direction: column;
+            text-align: center;
+        }
+        
+        .pricing-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .status-update-container {
+            flex-direction: column;
+        }
+        
+        .btn-update-status-modern {
+            width: 100%;
+            justify-content: center;
+        }
+        
+        .timeline {
+            padding-left: 1rem;
+        }
+    }
+</style>
+
+<script>
+    function updateBookingStatus(bookingId) {
+        const newStatus = document.getElementById('newStatus').value;
+        
+        fetch('/Admin/Bookings/UpdateStatus', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]')?.value || ''
+            },
+            body: JSON.stringify({
+                bookingId: bookingId,
+                newStatus: parseInt(newStatus)
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            } else {
+                alert('Failed to update status: ' + (data.message || 'Unknown error'));
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred while updating the status');
+        });
+    }
+
+    function getStatusIcon(status) {
+        switch(status) {
+            case 0: return 'fa-clock';
+            case 1: return 'fa-check-circle';
+            case 2: return 'fa-sign-in-alt';
+            case 3: return 'fa-check-double';
+            case 4: return 'fa-ban';
+            default: return 'fa-question';
+        }
+    }
+</script>
