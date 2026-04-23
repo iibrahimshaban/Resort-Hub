@@ -11,12 +11,14 @@ public class VillaController(
     IVillaService villaService,
     IWebHostEnvironment env) : Controller
 {
+    // ─── INDEX ────────────────────────────────────────────────────────────────
     public IActionResult Index()
     {
         var villas = unitOfWork.Villas.GetAll();
         return View(villas);
     }
 
+    // ─── CREATE GET ───────────────────────────────────────────────────────────
     public IActionResult Create()
     {
         var vm = new VillaFormVM
@@ -26,6 +28,7 @@ public class VillaController(
         return View(vm);
     }
 
+    // ─── CREATE POST ──────────────────────────────────────────────────────────
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(VillaFormVM vm)
@@ -67,7 +70,7 @@ public class VillaController(
                 villa.VillaImages.Add(new VillaImage
                 {
                     ImageUrl = $"/images/villas/{fileName}",
-                    IsMain = order == 1,
+                    IsMain = (order - 1) == vm.MainImageIndex,
                     DispalayOrder = order++
                 });
             }
@@ -80,6 +83,7 @@ public class VillaController(
         return RedirectToAction(nameof(Index));
     }
 
+    // ─── EDIT GET ─────────────────────────────────────────────────────────────
     public async Task<IActionResult> Edit(int id)
     {
         var result = await villaService.ValidateVilla(id);
@@ -97,11 +101,13 @@ public class VillaController(
             IsAvilable = villa.IsAvilable,
             AvailableAmenities = unitOfWork.Amenities.GetAll(),
             SelectedAmenityIds = villa.VillaAmenity.Select(va => va.AmenityId).ToList(),
-            ExistingImages = villa.VillaImages.ToList()
+            ExistingImages = villa.VillaImages.OrderBy(i => i.DispalayOrder).ToList(),
+            MainExistingImageId = villa.VillaImages.FirstOrDefault(i => i.IsMain)?.Id
         };
         return View(vm);
     }
 
+    // ─── EDIT POST ────────────────────────────────────────────────────────────
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Edit(int id, VillaFormVM vm)
@@ -109,7 +115,8 @@ public class VillaController(
         if (!ModelState.IsValid)
         {
             vm.AvailableAmenities = unitOfWork.Amenities.GetAll();
-            vm.ExistingImages = unitOfWork.Villas.GetById(id)?.VillaImages.ToList() ?? [];
+            vm.ExistingImages = unitOfWork.Villas.GetById(id)?.VillaImages
+                                        .OrderBy(i => i.DispalayOrder).ToList() ?? [];
             return View(vm);
         }
 
@@ -125,12 +132,19 @@ public class VillaController(
         villa.IsAvilable = vm.IsAvilable;
         villa.UpdatedDate = DateTime.Now;
 
-
+        // Amenities — امسح القديمة وحط الجديدة
         villa.VillaAmenity.Clear();
         foreach (var amenityId in vm.SelectedAmenityIds)
             villa.VillaAmenity.Add(new VillaAmenity { VillaId = id, AmenityId = amenityId });
 
-       
+        // تحديث الـ main للصور الموجودة
+        if (vm.MainExistingImageId.HasValue)
+        {
+            foreach (var image in villa.VillaImages)
+                image.IsMain = image.Id == vm.MainExistingImageId.Value;
+        }
+
+        // صور جديدة
         if (vm.NewImages != null && vm.NewImages.Count > 0)
         {
             int order = villa.VillaImages.Count + 1;
@@ -147,7 +161,7 @@ public class VillaController(
                 {
                     VillaId = id,
                     ImageUrl = $"/images/villas/{fileName}",
-                    IsMain = !villa.VillaImages.Any(i => i.IsMain),
+                    IsMain = false,
                     DispalayOrder = order++
                 });
             }
@@ -160,6 +174,7 @@ public class VillaController(
         return RedirectToAction(nameof(Index));
     }
 
+    // ─── DELETE GET ───────────────────────────────────────────────────────────
     public async Task<IActionResult> Delete(int id)
     {
         var result = await villaService.ValidateVilla(id);
@@ -167,6 +182,7 @@ public class VillaController(
         return View(result.Value);
     }
 
+    // ─── DELETE POST ──────────────────────────────────────────────────────────
     [HttpPost, ActionName("Delete")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> DeleteConfirmed(int id)
@@ -181,6 +197,7 @@ public class VillaController(
         return RedirectToAction(nameof(Index));
     }
 
+    // ─── DETAILS ──────────────────────────────────────────────────────────────
     public async Task<IActionResult> Details(int id)
     {
         var result = await villaService.ValidateVilla(id);
