@@ -11,6 +11,7 @@
         Task<ApplicationUser?> GetUserWithDetailsAsync(string userId);
         Task<bool> ToggleUserStatusAsync(string userId);
         Task<int> GetUserBookingsCountAsync(string userId);
+
         Task<List<string>> GetUserRolesAsync(ApplicationUser user);
         Task<bool> UpdateUserRoleAsync(string userId, string roleName);
     }

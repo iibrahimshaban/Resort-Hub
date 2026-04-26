@@ -32,11 +32,29 @@
         public string StatusDisplay => IsActive ? "Active" : "Inactive";
     }
 
-    public class UpdateUserRoleViewModel
+    public class ToggleUserStatusRequest
+    {
+        public string UserId { get; set; } = string.Empty;
+    }
+
+    public class UpdateUserRoleRequest
     {
         public string UserId { get; set; } = string.Empty;
         public string Role { get; set; } = string.Empty;
     }
 
- 
+    public class UpdateBookingStatusRequest
+    {
+        public int BookingId { get; set; }
+        public VillaStatus NewStatus { get; set; }
+        public string? Notes { get; set; }
+    }
+
+    public class CancelBookingRequest
+    {
+        public int BookingId { get; set; }
+        public string? Reason { get; set; }
+    }
+
+
 }
