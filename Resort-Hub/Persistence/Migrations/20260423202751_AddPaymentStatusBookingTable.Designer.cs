@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Resort_Hub.Persistence;
 
@@ -11,9 +12,11 @@ using Resort_Hub.Persistence;
 namespace Resort_Hub.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260423202751_AddPaymentStatusBookingTable")]
+    partial class AddPaymentStatusBookingTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -216,9 +219,6 @@ namespace Resort_Hub.Persistence.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("Email")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
@@ -290,7 +290,6 @@ namespace Resort_Hub.Persistence.Migrations
                             Id = "6dc6528a-b280-4770-9eae-82671ee81ef7",
                             AccessFailedCount = 0,
                             ConcurrencyStamp = "99d2bbc6-bc54-4248-a172-a77de3ae4430",
-                            CreatedAt = new DateTime(2026, 4, 17, 0, 0, 0, 0, DateTimeKind.Utc),
                             Email = "Admin@ResortHub.com",
                             EmailConfirmed = true,
                             FirstName = "Admin",
@@ -348,39 +347,6 @@ namespace Resort_Hub.Persistence.Migrations
                     b.HasIndex("VillaId");
 
                     b.ToTable("Bookings");
-                });
-
-            modelBuilder.Entity("Resort_Hub.Entities.OtpEntry", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Code")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("ExpiresAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsUsed")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("Purpose")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("OtpEntries");
                 });
 
             modelBuilder.Entity("Resort_Hub.Entities.Villa", b =>

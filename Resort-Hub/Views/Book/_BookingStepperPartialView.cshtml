@@ -1,0 +1,27 @@
+﻿@model int
+
+<div class="row justify-content-center">
+    <div class="col-lg-6">
+
+        <div class="booking-steps d-flex justify-content-center align-items-center">
+
+            <div class="step @(Model >= 1 ? "active-step" : "")">
+                @(Model >= 1 ? Html.Raw("<i class='bi bi-check-lg'></i>") : "1")
+            </div>
+
+            <div class="step-line"></div>
+
+            <div class="step @(Model >= 2 ? "active-step" : "")">
+                @(Model >= 2 ? Html.Raw("<i class='bi bi-check-lg'></i>") : "2")
+            </div>
+
+            <div class="step-line"></div>
+
+            <div class="step @(Model >= 3 ? "active-step" : "")">
+                @(Model >= 3 ? Html.Raw("<i class='bi bi-check-lg'></i>") : "3")
+            </div>
+
+        </div>
+
+    </div>
+</div>

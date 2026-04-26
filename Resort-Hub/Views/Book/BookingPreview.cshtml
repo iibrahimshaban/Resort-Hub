@@ -1,0 +1,165 @@
+﻿@using Resort_Hub.ViewModels.Booking
+@model BookingPreviewViewModel
+
+@{
+    Layout = "_BookingLayout";
+    ViewData["Title"] = $"{Model.Name} - Booking";
+}
+
+@section Styles
+{
+    <link rel="stylesheet" href="~/css/BookingStyle.css" asp-append-version="true" />
+}
+
+<div id="main-container" class="container booking-page d-none">
+
+    <partial name="_BookingStepperPartialView" model="1"/>
+
+    <!-- Heading -->
+    <div class="row justify-content-center text-center mt-4">
+        <div class="col-lg-6">
+            <h1 class="booking-title">Booking Information</h1>
+            <p class="booking-subtitle">Please fill up the blank fields below</p>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="row justify-content-center mt-5">
+
+        <div class="col-xl-10">
+
+            <form asp-action="Payment" asp-controller="Book" method="post" asp-antiforgery="true">
+
+                <div class="row g-5 align-items-start">
+
+                    <!-- LEFT SIDE -->
+                    <div class="col-lg-6">
+
+                        <div class="villa-card">
+
+                            <img src="@Model.Image"
+                                 class="img-fluid villa-image"
+                                 alt="@Model.Name" />
+
+                            <div class="d-flex justify-content-between mt-3">
+                                <h4 class="villa-name">@Model.Name</h4>
+                                @* <span class="villa-location">
+                                    Galle, Sri Lanka
+                                </span> *@
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <!-- RIGHT SIDE -->
+                    <div class="col-lg-6">
+
+                        <!-- Duration -->
+                        <div class="mb-4">
+
+                            <label class="booking-label">
+                                How long you will stay?
+                            </label>
+
+                            <div class="duration-box">
+
+                                <button type="button" class="duration-btn minus-btn">
+                                    -
+                                </button>
+
+                                <div class="duration-value">
+                                    <span id="daysText">1 Day</span>
+                                </div>
+
+                                <button type="button" class="duration-btn plus-btn">
+                                    +
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                        <!-- Date -->
+                        <div class="mb-4">
+
+                            <label class="booking-label">
+                                Pick a Date
+                            </label>
+
+                            <div class="date-box">
+
+                                <div class="date-icon">
+                                    <i class="bi bi-calendar3"></i>
+                                </div>
+
+                                <input type="text"
+                                       id="dateRange"
+                                       name="DateRange"
+                                       class="date-input"
+                                       placeholder="Select booking date"
+                                       readonly />
+                            </div>
+                        </div>
+
+                        <!-- Price -->
+                        <div class="price-box">
+
+                            <span class="pay-text">You will pay</span>
+
+                            <span class="price-text"
+                                  id="totalPrice" data-Price-per-night="@Model.PricePerNight">
+                                $@Model.PricePerNight
+                            </span>
+
+                            <br />
+
+                            <span class="per-text"
+                                  id="perDays">
+                                per 1 Day
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- HIDDEN VALUES -->
+                <input id="villaId" name="Id" value="@Model.Id" type="hidden" />
+                <input id="dateStart" name="DateStart" value="" type="hidden"/>
+                <input id="dateEnd" name="DateEnd" value="" type="hidden" />
+
+                <!-- Buttons -->
+                <div class="row justify-content-center mt-5">
+                    <div class="col-lg-4 col-md-6">                        
+
+                        <button id="submit-btn" type="submit" class="btn-book">
+                            Book Now
+                        </button>
+                        
+                        <a asp-controller="Villa"
+                               asp-action="Details"
+                               asp-route-id="@Model.Id"
+                               class="btn-cancel-book mt-3">
+                            Cancel
+                        </a>
+
+                    </div>
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+@section Scripts
+{
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+    <script src="~/js/booking.js" type="module"></script>
+}

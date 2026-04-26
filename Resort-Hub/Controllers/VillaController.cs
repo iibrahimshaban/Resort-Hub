@@ -1,4 +1,3 @@
-﻿using Microsoft.AspNetCore.Mvc;
 using Resort_Hub.Entities;
 using Resort_Hub.Interfaces;
 using Resort_Hub.Services;
@@ -200,5 +199,19 @@ public class VillaController(
         var result = await villaService.ValidateVilla(id);
         if (result.IsFailur) return NotFound();
         return View(result.Value);
+    }
+
+    public async Task<IActionResult> Details([FromRoute] int id)
+        {
+            var villaResult = await _villaService.GetAllVillaData(id);
+
+            if (!villaResult.IsSuccess)
+            {
+                TempData.SetError(villaResult.Error);
+                return RedirectToAction("Index", "Home");
+            }
+
+            return View(villaResult.Value.Adapt<VillaDetailsViewModel>());
+        }
     }
 }
