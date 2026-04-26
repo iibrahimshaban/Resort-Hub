@@ -8,5 +8,7 @@ public class BookingConfiguration : IEntityTypeConfiguration<Booking>
             .HasColumnType("decimal(18,2)");
 
         builder.Ignore(b => b.Nights);
+
+        builder.Property(b => b.PaymentStatus).HasDefaultValue(PaymentStatus.Pending);
     }
 }

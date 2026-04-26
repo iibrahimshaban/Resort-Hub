@@ -2,6 +2,8 @@
 
 public interface IVillaRepository : IBaseRepository<Villa>
 {
+    Task<Villa?> GetVillaByIdWithPics(int id);
+    Task<Villa?> IncludeAllData(int id);
     Task<Villa?> GetVillaAsNoTracking(int id);
     Task<int> GetTotalVillasCountAsync();
     Task<int> GetAvailableVillasCountAsync();

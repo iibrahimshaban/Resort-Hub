@@ -1,15 +1,14 @@
+﻿using MapsterMapper;
 ﻿using CloudinaryDotNet;
 using Hangfire;
-using Mapster;
-using MapsterMapper;
-using Microsoft.EntityFrameworkCore;
-using Resort_Hub.Entities;
 using Resort_Hub.Interfaces;
 using Resort_Hub.Persistence;
 using Resort_Hub.Repositories;
 using Resort_Hub.Services;
+using Resort_Hub.Services.Book;
 using Resort_Hub.Settings;
 using System.Reflection;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace Resort_Hub;
 
@@ -27,6 +26,7 @@ public static class DependacyInjection
             .AddMapsterConfig()
             .AddRepositoryServices()
             .AddGoogleAuthentication(configuration)
+            .AddSession()     
             .AddCloudinaryImageHosting(configuration)
             .AddHangfireBGJobs(configuration);
 
@@ -46,8 +46,14 @@ public static class DependacyInjection
             opt.Password.RequireLowercase = false;
             opt.Password.RequireNonAlphanumeric = false;
         })
-            .AddEntityFrameworkStores<ApplicationDbContext>()
-            .AddDefaultTokenProviders();
+        .AddEntityFrameworkStores<ApplicationDbContext>()
+        .AddDefaultTokenProviders();
+
+        services.ConfigureApplicationCookie(options =>
+        {
+            options.LoginPath = "/Auth/Login";
+            options.AccessDeniedPath = "/Auth/Login";
+        });
 
         return services;
     }
@@ -64,6 +70,7 @@ public static class DependacyInjection
     {
         services.AddTransient<IUnitOfWork, UnitOfWork>();
         services.AddScoped<IVillaService,VillaService>();
+        services.AddScoped<IBookingService,BookingService>();
         services.AddScoped<IBookingRepository, BookingRepository>();
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IAuthService,AuthService>();
@@ -73,6 +80,7 @@ public static class DependacyInjection
 
         return services;
     }
+  
     public static IServiceCollection AddGoogleAuthentication(this IServiceCollection services,IConfiguration configuration)
     {
         services.AddAuthentication()
@@ -86,6 +94,19 @@ public static class DependacyInjection
             });
         return services;
     }
+
+    public static IServiceCollection AddSession(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddSession().AddSession(options=>
+        {
+            options.IdleTimeout = TimeSpan.FromMinutes(20);
+            options.Cookie.HttpOnly = true;
+            options.Cookie.IsEssential = true;
+        });
+
+        return services;
+    }
+  
     public static IServiceCollection AddCloudinaryImageHosting(this IServiceCollection services, IConfiguration configuration)
     {
         var cloudinarySettings = configuration.GetSection("Cloudinary");
@@ -100,6 +121,7 @@ public static class DependacyInjection
         services.AddScoped<ICloudinaryService, CloudinaryService>();
         return services;
     }
+  
     public static IServiceCollection AddHangfireBGJobs(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddHangfire(config => config

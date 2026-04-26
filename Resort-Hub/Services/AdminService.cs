@@ -21,7 +21,7 @@ namespace Resort_Hub.Services
             var lastMonthStart = currentMonthStart.AddMonths(-1);
             var lastMonthEnd = currentMonthStart.AddDays(-1);
 
-            // Get current month stats using repositories
+            // Get current month stats 
             var currentBookings = await _unitOfWork.Bookings
                 .CountAsync(b => b.BookingDate >= currentMonthStart);
 
@@ -40,10 +40,8 @@ namespace Resort_Hub.Services
             var lastMonthRevenue = await _unitOfWork.Bookings
                 .GetTotalRevenueAsync(lastMonthStart, lastMonthEnd, VillaStatus.Approved);
 
-            // Calculate averages
             var averageBookingValue = currentBookings > 0 ? currentRevenue / currentBookings : 0;
 
-            // Get total counts using repositories
             var totalVillas = await _unitOfWork.Villas.GetTotalVillasCountAsync();
             var totalBookings = await _unitOfWork.Bookings.CountAsync();
             var activeBookings = await _unitOfWork.Bookings.GetActiveBookingsCountAsync();
@@ -56,19 +54,15 @@ namespace Resort_Hub.Services
 
             var availableVillas = totalVillas - activeBookings;
 
-            // Get Completed and Cancelled Bookings
             var completedBookings = await _unitOfWork.Bookings.GetBookingsByStatusCountAsync(VillaStatus.Completed);
             var cancelledBookings = await _unitOfWork.Bookings.GetBookingsByStatusCountAsync(VillaStatus.Cancelled);
 
-            // Calculate Booking Completion Rates
             var bookingCompletionRate = totalBookings > 0
                 ? (double)completedBookings / totalBookings * 100
                 : 0;
 
-            // Get chart data
             var chartData = await GetChartDataAsync(30);
 
-            // Get recent bookings (last 5) using repository
             var recentBookingsList = await _unitOfWork.Bookings
                 .GetBookingsWithDetailsAsync(0, 5);
 
@@ -83,7 +77,6 @@ namespace Resort_Hub.Services
                 Status = b.Status
             }).ToList();
 
-            // Get recent users (last 5) using repository
             var recentUsersList = await _unitOfWork.Users.GetRecentUsersAsync(5);
             var recentUsers = recentUsersList.Select(u => new RecentUserViewModel
             {
@@ -128,7 +121,6 @@ namespace Resort_Hub.Services
                 .Select(i => startDate.AddDays(i))
                 .ToList();
 
-            // Use repositories to get data
             var bookingData = await _unitOfWork.Bookings
                 .GetBookingsCountByDateRangeAsync(startDate, endDate);
 
@@ -149,7 +141,6 @@ namespace Resort_Hub.Services
         {
             var skip = (page - 1) * pageSize;
 
-            // Get total count with filters
             var totalCount = await _unitOfWork.Bookings.GetCountWithFilterAsync(search, status);
 
             // Get bookings with details
@@ -227,6 +218,81 @@ namespace Resort_Hub.Services
             return await _unitOfWork.Bookings.CountAsync();
         }
 
-        
+        public async Task<UserListViewModel> GetUsersAsync(int page = 1, int pageSize = 10, string? search = null, string? role = null, string? sortBy = null, bool descending = false)
+        {
+            var skip = (page - 1) * pageSize;
+
+            var totalCount = await _unitOfWork.Users.GetUsersCountWithFiltersAsync(search, role);
+
+            var usersList = await _unitOfWork.Users.GetUsersWithFiltersAsync(skip, pageSize, search, role, sortBy, descending);
+
+            var users = new List<UserViewModel>();
+
+            foreach (var u in usersList)
+            {
+                var bookingsCount = await _unitOfWork.Users.GetUserBookingsCountAsync(u.Id);
+                var roles = await _unitOfWork.Users.GetUserRolesAsync(u); 
+
+                users.Add(new UserViewModel
+                {
+                    Id = u.Id,
+                    FirstName = u.FirstName,
+                    LastName = u.LastName,
+                    Email = u.Email ?? string.Empty,
+                    PhoneNumber = u.PhoneNumber,
+                    CreatedAt = u.CreatedAt,
+                    EmailConfirmed = u.EmailConfirmed,
+                    IsActive = true, 
+                    Roles = roles,
+                    BookingsCount = bookingsCount
+                });
+            }
+
+            return new UserListViewModel
+            {
+                Users = users,
+                TotalCount = totalCount,
+                PageSize = pageSize,
+                CurrentPage = page,
+                SearchTerm = search,
+                RoleFilter = role,
+                SortBy = sortBy,
+                SortDescending = descending
+            };
+        }
+        public async Task<UserViewModel?> GetUserByIdAsync(string userId)
+        {
+            var user = await _unitOfWork.Users.GetByIdAsync(userId);
+            if (user == null) return null;
+
+            var bookingsCount = await _unitOfWork.Users.GetUserBookingsCountAsync(user.Id);
+            var roles = await _unitOfWork.Users.GetUserRolesAsync(user); 
+
+            return new UserViewModel
+            {
+                Id = user.Id,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Email = user.Email ?? string.Empty,
+                PhoneNumber = user.PhoneNumber,
+                CreatedAt = user.CreatedAt,
+                EmailConfirmed = user.EmailConfirmed,
+                IsActive = true, 
+                Roles = roles,
+                BookingsCount = bookingsCount
+            };
+        }
+
+        public async Task<bool> UpdateUserRoleAsync(string userId, string role)
+        {
+            return await _unitOfWork.Users.UpdateUserRoleAsync(userId, role);
+        }
+        public async Task<bool> ToggleUserStatusAsync(string userId)
+        {
+            return await _unitOfWork.Users.ToggleUserStatusAsync(userId);
+        }
+
+      
+
     }
 }

@@ -1,7 +1,5 @@
 
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Resort_Hub.Abstraction.Consts;
 using Resort_Hub.Models;
 using Resort_Hub.Services;
 using System.Diagnostics;
@@ -31,7 +29,7 @@ public class HomeController(IVillaService villaService) : Controller
     }
     public async Task<IActionResult> Test()
     {
-        var result = await _villaService.ValidateVilla(1);
+        var result = await _villaService.ValidateVilla(100);
 
         if (!result.IsSuccess)
             TempData.SetError(result.Error);

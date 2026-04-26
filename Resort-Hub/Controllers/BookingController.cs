@@ -1,9 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Resort_Hub.Abstraction.Enums;
 using Resort_Hub.ViewModels.Admin;
 using Resort_Hub.Services;
-using System.Threading.Tasks;
 
 namespace Resort_Hub.Controllers
 {

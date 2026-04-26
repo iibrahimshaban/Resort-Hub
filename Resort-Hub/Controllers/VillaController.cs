@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Resort_Hub.Entities;
+using Microsoft.AspNetCore.Mvc;
 using Resort_Hub.Interfaces;
 using Resort_Hub.Services;
 using Resort_Hub.ViewModels.Villa;
@@ -10,6 +9,7 @@ public class VillaController(
     IUnitOfWork unitOfWork,
     IVillaService villaService,
     ICloudinaryService cloudinaryService) : Controller
+
 {
     public IActionResult Index()
     {
@@ -83,7 +83,7 @@ public class VillaController(
 
     public async Task<IActionResult> Edit(int id)
     {
-        var result = await villaService.ValidateVilla(id);
+        var result = await _villaService.ValidateVilla(id);
         if (result.IsFailur) return NotFound();
 
         var villa = result.Value;
@@ -116,7 +116,7 @@ public class VillaController(
             return View(vm);
         }
 
-        var result = await villaService.GetVillaForEdit(id);
+        var result = await _villaService.GetVillaForEdit(id);
         if (result.IsFailur) return NotFound();
 
         var villa = result.Value;
@@ -187,7 +187,7 @@ public class VillaController(
 
     public async Task<IActionResult> Delete(int id)
     {
-        var result = await villaService.ValidateVilla(id);
+        var result = await _villaService.ValidateVilla(id);
         if (result.IsFailur) return NotFound();
         return View(result.Value);
     }
@@ -196,7 +196,7 @@ public class VillaController(
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> DeleteConfirmed(int id)
     {
-        var result = await villaService.ValidateVilla(id);
+        var result = await _villaService.ValidateVilla(id);
         if (result.IsFailur) return NotFound();
 
         var villa = result.Value;
@@ -218,8 +218,22 @@ public class VillaController(
 
     public async Task<IActionResult> Details(int id)
     {
-        var result = await villaService.ValidateVilla(id);
+        var result = await _villaService.ValidateVilla(id);
         if (result.IsFailur) return NotFound();
         return View(result.Value);
+    }
+
+
+    public async Task<IActionResult> Info([FromRoute] int id)
+    {
+            var villaResult = await _villaService.GetAllVillaData(id);
+
+            if (!villaResult.IsSuccess)
+            {
+                TempData.SetError(villaResult.Error);
+                return RedirectToAction("Index", "Home");
+            }
+
+            return View(villaResult.Value.Adapt<VillaDetailsViewModel>());    
     }
 }

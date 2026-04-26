@@ -1,0 +1,47 @@
+﻿@{
+    Layout = "_BookingLayout";
+    ViewData["Title"] = "Success - Booking";
+}
+
+@section Styles
+{
+    <link rel="stylesheet" href="~/css/SuccessStyle.css" asp-append-version="true" />
+}
+
+<div class="container success-page">
+
+    <!-- Stepper -->
+    <partial name="_BookingStepperPartialView" model="3" />
+
+    <!-- Content -->
+    <div class="row justify-content-center">
+
+        <div class="col-xl-8 text-center">
+
+            <h1 class="success-title">
+                Yay! Payment Completed
+            </h1>
+
+            <!-- Illustration -->
+            <div class="success-illustration justify-content-center">
+                <img src="~/images/Booking/Payment-Success.png" />
+            </div>
+
+            <!-- Message -->
+            <p class="success-message">
+                Please check your email & phone Message.<br />
+                We have sent all the Information
+            </p>
+
+            <!-- Button -->
+            <a asp-controller="Home"
+                   asp-action="Index"
+                   class="btn-dashboard">
+                Go to Dashboard
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
