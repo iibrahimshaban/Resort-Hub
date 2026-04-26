@@ -1,0 +1,33 @@
+﻿.booking-steps {
+    gap: 0rem;
+}
+
+.step {
+    width: 3rem; /* 48px */
+    height: 3rem; /* 48px */
+    border-radius: 50%;
+    background: #E5E5E5;
+    color: #898989;
+    font-weight: 500;
+    font-size: 1.125rem; /* 18px */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.active-step {
+    background: #1ABC9C;
+    color: var(--white);
+    width: 3.75rem;
+    height: 3.75rem;
+}
+
+    .active-step i {
+        font-size: 2.8rem;
+    }
+
+.step-line {
+    width: 2.8125rem; /* 45px */
+    height: 0.125rem; /* 2px */
+    background: #E5E5E5;
+}

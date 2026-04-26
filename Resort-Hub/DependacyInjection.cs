@@ -1,11 +1,9 @@
-﻿using Mapster;
-using MapsterMapper;
-using Microsoft.EntityFrameworkCore;
-using Resort_Hub.Entities;
+﻿using MapsterMapper;
 using Resort_Hub.Interfaces;
 using Resort_Hub.Persistence;
 using Resort_Hub.Repositories;
 using Resort_Hub.Services;
+using Resort_Hub.Services.Book;
 using System.Reflection;
 
 namespace Resort_Hub;
@@ -21,7 +19,9 @@ public static class DependacyInjection
             .AddDbContextConfiguration(configuration)
             .AddMapsterConfig()
             .AddRepositoryServices()
-            .AddGoogleAuthentication(configuration);
+            .AddGoogleAuthentication(configuration)
+            .AddSession();
+            
 
         return services;
     }
@@ -56,6 +56,7 @@ public static class DependacyInjection
     {
         services.AddTransient<IUnitOfWork, UnitOfWork>();
         services.AddScoped<IVillaService,VillaService>();
+        services.AddScoped<IBookingService,BookingService>();
         services.AddScoped<IAuthService,AuthService>();
 
         return services;
@@ -71,6 +72,19 @@ public static class DependacyInjection
                 options.Scope.Add("profile");
                 options.Scope.Add("email");
             });
+        return services;
+    }
+
+
+    public static IServiceCollection AddSession(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddSession().AddSession(options=>
+        {
+            options.IdleTimeout = TimeSpan.FromMinutes(20);
+            options.Cookie.HttpOnly = true;
+            options.Cookie.IsEssential = true;
+        });
+
         return services;
     }
 }

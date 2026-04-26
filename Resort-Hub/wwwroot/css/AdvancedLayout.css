@@ -1,16 +1,14 @@
-﻿/* ============================================================
-   layout.css  —  LankaStay shared layout styles
-   Place this file at: wwwroot/css/layout.css
-   ============================================================ */
-
-/* ── CSS VARIABLES ─────────────────────────────────────────── */
+﻿/* ── CSS VARIABLES ─────────────────────────────────────────── */
 :root {
-    --primary: #3D5AF1;
-    --primary-dark: #2B46D9;
-    --text-dark: #0D0D0D;
-    --text-muted: #6B7280;
+    --primary: #3252DF;
+    --primary-dark: #152C5B;
+    --text-dark: #152C5B;
+    --text-muted: #B0B0B0;
+    --text-light: #6B7280;
+    --border-light: #E5E7EB;
     --bg-light: #F8F9FF;
-    --border: #E5E7EB;
+    --white: #FFFFFF;
+    --star-yellow: #FFC107;
 }
 
 /* ── BASE ───────────────────────────────────────────────────── */
@@ -21,7 +19,7 @@
 }
 
 body {
-    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-family: 'Poppins', sans-serif;
     color: var(--text-dark);
     background: #fff;
     min-height: 100vh;
@@ -33,6 +31,13 @@ main {
     flex: 1;
 }
 
+.divider {
+    height: 1px;
+    width: 100%;
+    background-color: #E5E5E5;
+}
+
+
 /* ── BRAND (shared by navbar + footer) ─────────────────────── */
 .ls-brand {
     font-size: 1.35rem;
@@ -42,9 +47,9 @@ main {
     text-decoration: none;
 }
 
-    .ls-brand span {
-        color: var(--primary);
-    }
+.ls-brand span {
+    color: var(--primary);
+}
 
 /* ── NAVBAR ─────────────────────────────────────────────────── */
 .ls-navbar {
@@ -56,18 +61,18 @@ main {
     z-index: 1030;
 }
 
-    .ls-navbar .nav-link {
-        font-size: 0.875rem;
-        font-weight: 500;
-        color: var(--text-dark);
-        padding: 0.4rem 0.85rem !important;
-        transition: color 0.2s;
-    }
+.ls-navbar .nav-link {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text-dark);
+    padding: 0.4rem 0.85rem !important;
+    transition: color 0.2s;
+}
 
-        .ls-navbar .nav-link:hover,
-        .ls-navbar .nav-link.active {
-            color: var(--primary);
-        }
+.ls-navbar .nav-link:hover,
+.ls-navbar .nav-link.active {
+    color: var(--primary);
+}
 
 .btn-login {
     background: var(--primary);
@@ -83,10 +88,10 @@ main {
     display: inline-block;
 }
 
-    .btn-login:hover {
-        background: var(--primary-dark);
-        color: #fff;
-    }
+.btn-login:hover {
+    background: var(--primary-dark);
+    color: #fff;
+}
 
 /* ── FOOTER UPPER ───────────────────────────────────────────── */
 .ls-footer-upper {
@@ -129,10 +134,10 @@ main {
     display: inline-block;
 }
 
-    .btn-register:hover {
-        background: var(--primary-dark);
-        color: #fff;
-    }
+.btn-register:hover {
+    background: var(--primary-dark);
+    color: #fff;
+}
 
 /* ── FOOTER BOTTOM ──────────────────────────────────────────── */
 .ls-footer-bottom {
@@ -141,12 +146,12 @@ main {
     text-align: center;
 }
 
-    .ls-footer-bottom p {
-        font-size: 0.8rem;
-        color: rgba(255, 255, 255, 0.85);
-        margin: 0;
-        font-weight: 400;
-    }
+.ls-footer-bottom p {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.85);
+    margin: 0;
+    font-weight: 400;
+}
 
 /* ── ERROR MODAL ────────────────────────────────────────────── */
 .modal-content.error-modal {
@@ -171,10 +176,10 @@ main {
     padding: 1.25rem;
 }
 
-    .error-modal .modal-body p {
-        margin: 0 0 0.4rem;
-        font-size: 0.9rem;
-    }
+.error-modal .modal-body p {
+    margin: 0 0 0.4rem;
+    font-size: 0.9rem;
+}
 
 .error-modal .modal-footer {
     border: none;
