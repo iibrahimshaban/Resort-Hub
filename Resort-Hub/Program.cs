@@ -1,5 +1,6 @@
+using Hangfire;
+using HangfireBasicAuthenticationFilter;
 using Resort_Hub;
-using ResortHub.Services;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,7 +11,6 @@ builder.Services.AddAllDependacies(builder.Configuration);
 builder.Host.UseSerilog((context, configuration) =>
     configuration.ReadFrom.Configuration(context.Configuration)
 );
-builder.Services.AddScoped<IAdminService, AdminService>();
 
 var app = builder.Build();
 
@@ -29,6 +29,19 @@ app.UseRouting();
 app.UseSession();
 
 app.UseAuthorization();
+
+app.UseHangfireDashboard("/jobs", new DashboardOptions
+{
+    Authorization =
+    [
+        new HangfireCustomBasicAuthenticationFilter
+        {
+            User = app.Configuration.GetValue<string>("HangfireSettings:Username"),
+            Pass = app.Configuration.GetValue<string>("HangfireSettings:password")
+        }
+    ],
+    DashboardTitle = "Resort Hub dashboard"
+});
 
 app.MapStaticAssets();
 

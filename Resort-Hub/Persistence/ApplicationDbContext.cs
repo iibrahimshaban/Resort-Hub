@@ -17,4 +17,5 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public virtual DbSet<VillaAmenity> VillaAmenities { get; set; }
     public virtual DbSet<Booking> Bookings { get; set; }
     public virtual DbSet<VillaImage> VillaImages { get; set; }
+    public virtual DbSet<OtpEntry> OtpEntries { get; set; }
 }

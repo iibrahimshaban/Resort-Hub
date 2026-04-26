@@ -1,9 +1,16 @@
 ﻿using MapsterMapper;
+﻿using CloudinaryDotNet;
+using Hangfire;
+using Mapster;
+using MapsterMapper;
+using Microsoft.EntityFrameworkCore;
+using Resort_Hub.Entities;
 using Resort_Hub.Interfaces;
 using Resort_Hub.Persistence;
 using Resort_Hub.Repositories;
 using Resort_Hub.Services;
 using Resort_Hub.Services.Book;
+using Resort_Hub.Settings;
 using System.Reflection;
 
 namespace Resort_Hub;
@@ -15,13 +22,16 @@ public static class DependacyInjection
         services.AddControllersWithViews();
         services.AddRazorPages();
 
+        services.Configure<MailSettings>(configuration.GetSection("MailSettings"));
+
         services
             .AddDbContextConfiguration(configuration)
             .AddMapsterConfig()
             .AddRepositoryServices()
             .AddGoogleAuthentication(configuration)
-            .AddSession();
-            
+            .AddSession();      
+            .AddCloudinaryImageHosting(configuration)
+            .AddHangfireBGJobs(configuration);
 
         return services;
     }
@@ -39,7 +49,8 @@ public static class DependacyInjection
             opt.Password.RequireLowercase = false;
             opt.Password.RequireNonAlphanumeric = false;
         })
-            .AddEntityFrameworkStores<ApplicationDbContext>();
+            .AddEntityFrameworkStores<ApplicationDbContext>()
+            .AddDefaultTokenProviders();
 
         return services;
     }
@@ -57,10 +68,16 @@ public static class DependacyInjection
         services.AddTransient<IUnitOfWork, UnitOfWork>();
         services.AddScoped<IVillaService,VillaService>();
         services.AddScoped<IBookingService,BookingService>();
+        services.AddScoped<IBookingRepository, BookingRepository>();
+        services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IAuthService,AuthService>();
+        services.AddScoped<IAdminService, AdminService>();
+        services.AddScoped<IAccountService, AccountService>();
+        services.AddTransient<ICustomEmailService, EmailService>();
 
         return services;
     }
+  
     public static IServiceCollection AddGoogleAuthentication(this IServiceCollection services,IConfiguration configuration)
     {
         services.AddAuthentication()
@@ -84,6 +101,32 @@ public static class DependacyInjection
             options.Cookie.HttpOnly = true;
             options.Cookie.IsEssential = true;
         });
+    }
+  
+    public static IServiceCollection AddCloudinaryImageHosting(this IServiceCollection services, IConfiguration configuration)
+    {
+        var cloudinarySettings = configuration.GetSection("Cloudinary");
+
+        var account = new Account(
+            cloudinarySettings["CloudName"],
+            cloudinarySettings["ApiKey"],
+            cloudinarySettings["ApiSecret"]
+        );
+        services.AddSingleton(new Cloudinary(account));
+
+        services.AddScoped<ICloudinaryService, CloudinaryService>();
+        return services;
+    }
+  
+    public static IServiceCollection AddHangfireBGJobs(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddHangfire(config => config
+            .SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
+            .UseSimpleAssemblyNameTypeSerializer()
+            .UseRecommendedSerializerSettings()
+            .UseSqlServerStorage(configuration.GetConnectionString("HangfireConnection")));
+
+        services.AddHangfireServer();
 
         return services;
     }

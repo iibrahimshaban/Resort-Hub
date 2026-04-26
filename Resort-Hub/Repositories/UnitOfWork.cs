@@ -1,4 +1,5 @@
-﻿using Resort_Hub.Interfaces;
+﻿using Resort_Hub.Entities;
+using Resort_Hub.Interfaces;
 using Resort_Hub.Persistence;
 
 namespace Resort_Hub.Repositories;
@@ -9,8 +10,10 @@ public class UnitOfWork(ApplicationDbContext context) : IUnitOfWork
 
     private IVillaRepository? _villas = null;
     private IBookingRepository? _bookings = null;
-
-
+    private IBaseRepository<Amenity> _amenities = null;
+    private IUserRepository _users = null;
+    
+    
     public IVillaRepository Villas
     {
         get
@@ -32,13 +35,30 @@ public class UnitOfWork(ApplicationDbContext context) : IUnitOfWork
         }
     }
 
-    public void Dispose()
-    {
-        _context.Dispose();
-    }
 
-    public async Task SaveAsync()
+    public IBaseRepository<Amenity> Amenities 
     {
-        await _context.SaveChangesAsync();
-    }
+        get
+        {
+            if(_amenities is null)
+                _amenities = new BaseRepository<Amenity>(_context);
+
+            return _amenities;
+        }
+    } 
+
+    public IUserRepository Users => 
+    {
+        get
+        {
+            if(_users is null)
+                _users = new UserRepository(_context);
+
+            return _users;
+        }
+    } 
+
+    public void Dispose() => _context.Dispose();
+
+    public async Task SaveAsync() => await _context.SaveChangesAsync();
 }

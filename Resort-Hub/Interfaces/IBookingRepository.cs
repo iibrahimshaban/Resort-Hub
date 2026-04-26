@@ -1,6 +1,8 @@
 ﻿using Elfie.Serialization;
 using Resort_Hub.DTOs.Booking;
 using System.Linq.Expressions;
+﻿using Resort_Hub.Entities;
+using Resort_Hub.Abstraction.Enums;
 
 namespace Resort_Hub.Interfaces
 {
@@ -12,5 +14,12 @@ namespace Resort_Hub.Interfaces
         Task<Booking?> GetBookedAllDataByIdAsync(int bookingId);
         Task<Booking?> GetBookedAllDataByIdAsync(int bookingId, string userId);
         Task<Booking?> GetBookedAllDataByIdAsync(int bookingId, string userId, VillaStatus status);
+        Task<IEnumerable<Booking>> GetBookingsWithDetailsAsync(int skip, int take, string? search = null, VillaStatus? status = null, string? sortBy = null, bool descending = false);
+        Task<int> GetCountWithFilterAsync(string? search = null, VillaStatus? status = null);
+        Task<Booking?> GetBookingWithDetailsAsync(int id);
+        Task<decimal> GetTotalRevenueAsync(DateTime? startDate = null, DateTime? endDate = null, VillaStatus? status = null);
+        Task<Dictionary<DateTime, int>> GetBookingsCountByDateRangeAsync(DateTime startDate, DateTime endDate);
+        Task<int> GetActiveBookingsCountAsync();
+        Task<int> GetBookingsByStatusCountAsync(VillaStatus status);
     }
 }
