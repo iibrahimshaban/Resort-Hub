@@ -1,13 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Resort_Hub.Services;
 using Resort_Hub.ViewModels.Auth;
-using System.Security.Claims;
 
 namespace Resort_Hub.Controllers;
 
-public class AuthController(IAuthService authService) : Controller
+public class AuthController(IAuthService authService, UserManager<ApplicationUser> userManager) : Controller
 {
     private readonly IAuthService _authService = authService;
+    private readonly UserManager<ApplicationUser> _userManager = userManager;
     [HttpGet]
     public async Task<IActionResult> Register()
     {
@@ -44,7 +44,7 @@ public class AuthController(IAuthService authService) : Controller
         var result = await _authService.LoginAsync(model);
         if (result.IsSuccess)
         {
-            return RedirectToAction("Index", "Home");
+            return await RedirectToAdminIfApplicable();
         }
         else
         {
@@ -73,7 +73,10 @@ public class AuthController(IAuthService authService) : Controller
         var result = await _authService.ConfirmEmailAsync(model);
 
         if (result.IsSuccess)
-            return RedirectToAction("Index", "Home");
+        {
+            TempData["ClearHistory"] = true;
+            return RedirectToAction(nameof(Login));
+        }
 
         TempData.SetError(result.Error);
         return View(model);
@@ -85,7 +88,6 @@ public class AuthController(IAuthService authService) : Controller
         CancellationToken cancellationToken)
     {
         await _authService.ReasendEmailConfiramtionCode(email, cancellationToken);
-        TempData["Info"] = "A new code has been sent to your email.";
         return RedirectToAction(nameof(ConfirmEmail), new { email });
     }
 
@@ -121,7 +123,7 @@ public class AuthController(IAuthService authService) : Controller
 
         if (result.IsSuccess)
         {
-            TempData["Info"] = "Password reset successfully. Please log in.";
+            TempData["ClearHistory"] = true;
             return RedirectToAction(nameof(Login));
         }
 
@@ -155,12 +157,32 @@ public class AuthController(IAuthService authService) : Controller
         var result = await _authService.ExternalLoggingCallBackAsync();
         if (result.IsSuccess)
         {
-            return RedirectToAction("index", "Home");
+            return await RedirectToAdminIfApplicable();
         }
         else
         {
             TempData.SetError(result.Error);
             return RedirectToAction(nameof(Login));
         }
+    }
+
+
+
+    private async Task<IActionResult> RedirectToAdminIfApplicable()
+    {
+        var user = await _userManager.GetUserAsync(User);
+        if (user != null)
+        {
+            var roles = await _userManager.GetRolesAsync(user);
+
+            var isAdmin = roles.Contains("Admin");
+
+            if (isAdmin)
+            {
+                return RedirectToAction("Dashboard", "Admin");
+            }
+        }
+
+        return RedirectToAction("Index", "Home");
     }
 }

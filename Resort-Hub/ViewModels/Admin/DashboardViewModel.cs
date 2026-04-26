@@ -26,8 +26,11 @@ namespace Resort_Hub.ViewModels.Admin
 
         public int TotalProperties { get; set; }
         public int ActiveBookings { get; set; }
-        public decimal OccupancyRate { get; set; }
-
+        public double OccupancyRate { get; set; }
+        public int AvailableVillas { get; set; }   
+        public int CompletedBookings { get; set; }
+        public int CancelledBookings { get; set; } 
+        public double BookingCompletionRate { get; set; } 
         public DashboardViewModel()
         {
             ChartData = new ChartDataViewModel();

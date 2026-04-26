@@ -1,0 +1,204 @@
+﻿@using System.Globalization
+@model Resort_Hub.ViewModels.Admin.UserListViewModel
+@{
+    ViewData["Title"] = "User Management";
+    Layout = "_AdminLayout";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/admin-users.css" />
+}
+
+<div class="users-page">
+    <div class="page-header">
+        <div class="header-left">
+            <h2><i class="fas fa-users"></i> User Management</h2>
+            <p class="text-muted">Manage and monitor all registered users</p>
+        </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="filters-card">
+        <form method="get" class="filters-form">
+            <div class="filter-group">
+                <i class="fas fa-search"></i>
+                <input type="text" name="search" placeholder="Search by name or email..." value="@Model.SearchTerm" />
+            </div>
+            <div class="filter-group">
+                <select name="role">
+                    <option value="">All Roles</option>
+                    <option value="Admin" selected="@(Model.RoleFilter == "Admin")">Admin</option>
+                    <option value="Customer" selected="@(Model.RoleFilter == "Customer")">Customer</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <select name="sortBy">
+                    <option value="">Sort By</option>
+                    <option value="fullname"  selected="@(Model.SortBy == "fullname")">Full Name</option>
+                    <option value="email"     selected="@(Model.SortBy == "email")">Email</option>
+                    <option value="createdat" selected="@(Model.SortBy == "createdat")">Join Date</option>
+                    <option value="bookings"  selected="@(Model.SortBy == "bookings")">Bookings Count</option>
+                    <option value="status"    selected="@(Model.SortBy == "status")">Status</option>
+                </select>
+            </div>
+            
+            <button type="submit" class="btn-filter">Apply Filters</button>
+            <a href="/Admin/Users" class="btn-reset">Reset</a>
+        </form>
+    </div>
+
+    <!-- Users Table -->
+    <div class="users-table-container">
+        <table class="users-table">
+            <thead>
+                <tr>
+                    <th><a href="#" class="sort-link" data-sort="fullname">User</a></th>
+                    <th><a href="#" class="sort-link" data-sort="email">Email</a></th>
+                    <th>Phone</th>
+                    <th><a href="#" class="sort-link" data-sort="createdat">Joined Date</a></th>
+                    <th><a href="#" class="sort-link" data-sort="bookings">Bookings</a></th>
+                    <th>Role</th>
+                    <th><a href="#" class="sort-link" data-sort="status">Status</a></th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var user in Model.Users)
+                {
+                    <tr data-user-id="@user.Id">
+                        <td>
+                            <div class="user-info">
+                                <div class="user-avatar @(user.IsActive ? "" : "inactive")">
+                                    <span>@user.AvatarInitial</span>
+                                </div>
+                                <div>
+                                    <div class="user-name">@user.FullName</div>
+                                    @if (!user.EmailConfirmed)
+                                    {
+                                        <span class="badge badge-warning">Email Not Confirmed</span>
+                                    }
+                                </div>
+                            </div>
+                        </td>
+                        <td>@user.Email</td>
+                        <td>@(user.PhoneNumber ?? "Not provided")</td>
+                        <td>@user.CreatedAt.ToString("MMM dd, yyyy")</td>
+                        <td>
+                            <span class="booking-count">@user.BookingsCount.ToString("N0")</span>
+                        </td>
+                        <td>
+                            <div class="role-badge @(user.Roles.Contains("Admin") ? "role-admin" : "role-customer")">
+                                @(user.Roles.Contains("Admin") ? "Admin" : "Customer")
+                            </div>
+                        </td>
+                        <td>
+                            <div class="status-badge @(user.IsActive ? "status-active" : "status-inactive")">
+                                <i class="fas @(user.IsActive ? "fa-check-circle" : "fa-times-circle")"></i>
+                                @(user.IsActive ? "Active" : "Inactive")
+                            </div>
+                        </td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn-icon view-btn"
+                                        onclick="viewUser('@user.Id')"
+                                        title="View Details">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="btn-icon edit-role-btn"
+                                        onclick="editUser('@user.Id')"
+                                        title="Edit Role">
+                                    <i class="fas fa-user-tag"></i>
+                                </button>
+                                <button class="btn-icon @(user.IsActive ? "status-inactive-btn" : "status-active-btn")"
+                                        onclick="toggleUserStatus('@user.Id', @user.IsActive.ToString().ToLower())"
+                                        title="@(user.IsActive ? "Deactivate User" : "Activate User")">
+                                    <i class="fas @(user.IsActive ? "fa-ban" : "fa-check-circle")"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Pagination -->
+    @if (Model.TotalCount > Model.PageSize)
+    {
+        <div class="pagination-container">
+            <div class="pagination-info">
+                Showing @(((Model.CurrentPage - 1) * Model.PageSize) + 1)
+                to @(Math.Min(Model.CurrentPage * Model.PageSize, Model.TotalCount))
+                of @Model.TotalCount users
+            </div>
+            <div class="pagination">
+                @if (Model.CurrentPage > 1)
+                {
+                    <a href="#" data-page="@(Model.CurrentPage - 1)" class="page-link paginate">
+                        <i class="fas fa-chevron-left"></i> Previous
+                    </a>
+                }
+                @for (int i = 1; i <= Math.Ceiling((double)Model.TotalCount / Model.PageSize); i++)
+                {
+                    <a href="#" data-page="@i" class="page-link paginate @(i == Model.CurrentPage ? "active" : "")">@i</a>
+                }
+                @if (Model.CurrentPage < Math.Ceiling((double)Model.TotalCount / Model.PageSize))
+                {
+                    <a href="#" data-page="@(Model.CurrentPage + 1)" class="page-link paginate">
+                        Next <i class="fas fa-chevron-right"></i>
+                    </a>
+                }
+            </div>
+        </div>
+    }
+</div>
+
+<!-- User Details Modal -->
+<div class="modal" id="userDetailsModal">
+    <div class="modal-content modal-lg">
+        <div class="modal-header">
+            <h3><i class="fas fa-user-circle"></i> User Details</h3>
+            <button class="modal-close" onclick="closeModal('userDetailsModal')">&times;</button>
+        </div>
+        <div class="modal-body" id="userDetails"></div>
+    </div>
+</div>
+
+<!-- Edit Role Modal -->
+<div class="modal" id="editRoleModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3><i class="fas fa-user-tag"></i> Edit User Role</h3>
+            <button class="modal-close" onclick="closeModal('editRoleModal')">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="form-group">
+                <label for="userFullName">User</label>
+                <input type="text" id="userFullName" class="form-control" readonly disabled />
+            </div>
+            <div class="form-group">
+                <label for="userRoleSelect">Select Role</label>
+                <select id="userRoleSelect" class="form-control">
+                    <option value="Customer">Customer</option>
+                    <option value="Admin">Admin</option>
+                </select>
+            </div>
+            <div class="modal-actions">
+                <button class="btn-secondary" onclick="closeModal('editRoleModal')">Cancel</button>
+                <button class="btn-primary" onclick="updateUserRole()">Update Role</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Toast Notification -->
+<div id="toast" class="toast hidden">
+    <div class="toast-content">
+        <i class="fas" id="toastIcon"></i>
+        <span id="toastMessage"></span>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/admin-users.js"></script>
+}

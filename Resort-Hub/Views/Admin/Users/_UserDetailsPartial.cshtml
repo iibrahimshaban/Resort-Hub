@@ -1,0 +1,442 @@
+﻿@using System.Globalization
+@model Resort_Hub.ViewModels.Admin.UserViewModel
+@{
+    Layout = null;
+    var englishCulture = new CultureInfo("en-US");
+}
+@{
+    string GetLoyaltyLevel(int bookingsCount)
+    {
+        if (bookingsCount >= 20) return "Platinum";
+        if (bookingsCount >= 10) return "Gold";
+        if (bookingsCount >= 5)  return "Silver";
+        if (bookingsCount >= 1)  return "Bronze";
+        return "New";
+    }
+}
+
+<div class="user-details-container">
+    <div class="details-header-gradient">
+        <div class="header-content">
+            <div class="user-info-header">
+                <div class="user-avatar-large">
+                    <span>@Model.AvatarInitial</span>
+                </div>
+                <div class="user-title">
+                    <span class="user-label">User Profile</span>
+                    <h2 class="user-name-large">@Model.FullName</h2>
+                    <span class="user-role-badge @(Model.Roles.Contains("Admin") ? "role-admin" : "role-user")">
+                        <i class="fas @(Model.Roles.Contains("Admin") ? "fa-shield-alt" : "fa-user")"></i>
+                        @(Model.Roles.Contains("Admin") ? "Administrator" : "Regular User")
+                    </span>
+                </div>
+            </div>
+            <div class="status-container">
+                <span class="status-badge-modern @Model.StatusBadgeClass">
+                    <i class="fas @(Model.IsActive ? "fa-check-circle" : "fa-ban")"></i>
+                    @Model.StatusDisplay
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <div class="details-body">
+
+        <!-- Personal Information -->
+        <div class="details-section-modern personal-section">
+            <div class="section-header">
+                <div class="section-icon personal-icon">
+                    <i class="fas fa-id-card"></i>
+                </div>
+                <h4>Personal Information</h4>
+            </div>
+            <div class="info-grid">
+                <div class="info-item">
+                    <span class="info-label">Full Name</span>
+                    <span class="info-value">@Model.FullName</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Email Address</span>
+                    <span class="info-value">@Model.Email</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Phone Number</span>
+                    <span class="info-value">@(Model.PhoneNumber ?? "Not provided")</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Account Information -->
+        <div class="details-section-modern account-section">
+            <div class="section-header">
+                <div class="section-icon account-icon">
+                    <i class="fas fa-user-cog"></i>
+                </div>
+                <h4>Account Information</h4>
+            </div>
+            <div class="info-grid">
+                <div class="info-item">
+                    <span class="info-label">Joined Date</span>
+                    <span class="info-value">@Model.CreatedAt.ToString("dddd, MMMM dd, yyyy", englishCulture)</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Last Login</span>
+                    <span class="info-value">
+                        @(Model.LastLoginAt?.ToString("dddd, MMMM dd, yyyy 'at' hh:mm tt", englishCulture) ?? "Never")
+                    </span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Email Confirmed</span>
+                    <span class="info-value">
+                        @if (Model.EmailConfirmed)
+                        {
+                            <span class="confirmed-badge"><i class="fas fa-check-circle"></i> Confirmed</span>
+                        }
+                        else
+                        {
+                            <span class="unconfirmed-badge"><i class="fas fa-times-circle"></i> Not Confirmed</span>
+                        }
+                    </span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Account Status</span>
+                    <span class="info-value">
+                        <span class="status-badge @Model.StatusBadgeClass">@Model.StatusDisplay</span>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Activity Summary -->
+        <div class="details-section-modern activity-section">
+            <div class="section-header">
+                <div class="section-icon activity-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <h4>Activity Summary</h4>
+            </div>
+            <div class="activity-stats">
+                <div class="stat-card-mini">
+                    <div class="stat-icon-mini"><i class="fas fa-calendar-check"></i></div>
+                    <div class="stat-info-mini">
+                        <span class="stat-label-mini">Total Bookings</span>
+                        <span class="stat-value-mini">@Model.BookingsCount.ToString("N0")</span>
+                    </div>
+                </div>
+                <div class="stat-card-mini">
+                    <div class="stat-icon-mini"><i class="fas fa-clock"></i></div>
+                    <div class="stat-info-mini">
+                        <span class="stat-label-mini">Days Active</span>
+                        <span class="stat-value-mini">@((DateTime.Now - Model.CreatedAt).Days) days</span>
+                    </div>
+                </div>
+                <div class="stat-card-mini">
+                    <div class="stat-icon-mini"><i class="fas fa-star"></i></div>
+                    <div class="stat-info-mini">
+                        <span class="stat-label-mini">Loyalty Level</span>
+                        <span class="stat-value-mini">@GetLoyaltyLevel(Model.BookingsCount)</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Role Management -->
+        <div class="details-section-modern role-section">
+            <div class="section-header">
+                <div class="section-icon role-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <h4>Role Management</h4>
+            </div>
+            <div class="role-management">
+                <div class="current-roles">
+                    <span class="role-label">Current Role:</span>
+                    <div class="role-badge-large @(Model.Roles.Contains("Admin") ? "role-admin" : "role-user")">
+                        <i class="fas @(Model.Roles.Contains("Admin") ? "fa-shield-alt" : "fa-user")"></i>
+                        @(Model.Roles.Contains("Admin") ? "Administrator" : "Regular User")
+                    </div>
+                </div>
+                <div class="role-actions">
+                    @if (Model.Roles.Contains("Admin"))
+                    {
+                        <button onclick="updateRoleFromModal('@Model.Id', 'Customer')" class="btn-remove-admin">
+                            <i class="fas fa-user-minus"></i> Remove Admin Role
+                        </button>
+                    }
+                    else
+                    {
+                        <button onclick="updateRoleFromModal('@Model.Id', 'Admin')" class="btn-make-admin">
+                            <i class="fas fa-user-shield"></i> Make Administrator
+                        </button>
+                    }
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<style>
+    .user-details-container {
+        font-family: 'Inter', sans-serif;
+        background: #f8f9fa;
+        border-radius: 20px;
+        overflow: hidden;
+    }
+
+    .details-header-gradient {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding: 2rem;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .details-header-gradient::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+        background-size: 50px 50px;
+        animation: moveBackground 20s linear infinite;
+    }
+
+    @@keyframes moveBackground {
+        0%   { transform: translate(0, 0); }
+        100% { transform: translate(50px, 50px); }
+    }
+
+    .header-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        position: relative;
+        z-index: 1;
+    }
+
+    .user-info-header {
+        display: flex;
+        gap: 1.5rem;
+        align-items: center;
+    }
+
+    .user-avatar-large {
+        width: 80px;
+        height: 80px;
+        border-radius: 20px;
+        background: rgba(255,255,255,0.2);
+        backdrop-filter: blur(10px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: white;
+    }
+
+    .user-title { color: white; }
+
+    .user-label {
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        opacity: 0.8;
+        display: block;
+        margin-bottom: 0.25rem;
+    }
+
+    .user-name-large {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin: 0 0 0.5rem 0;
+    }
+
+    .user-role-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        background: rgba(255,255,255,0.2);
+        backdrop-filter: blur(5px);
+    }
+
+    .status-badge-modern {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        border-radius: 50px;
+        font-size: 0.875rem;
+        font-weight: 600;
+        backdrop-filter: blur(10px);
+        background: rgba(255,255,255,0.2);
+        color: white;
+    }
+
+    .details-body { padding: 1.5rem; }
+
+    .details-section-modern {
+        background: white;
+        border-radius: 16px;
+        margin-bottom: 1.5rem;
+        padding: 1.5rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        transition: all 0.3s ease;
+    }
+
+    .details-section-modern:hover { box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+
+    .section-header {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        margin-bottom: 1.5rem;
+        padding-bottom: 0.75rem;
+        border-bottom: 2px solid #f0f0f0;
+    }
+
+    .section-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+    }
+
+    .personal-icon { background: linear-gradient(135deg,#667eea20,#764ba220); color:#667eea; }
+    .account-icon  { background: linear-gradient(135deg,#1cc88a20,#36b9cc20); color:#1cc88a; }
+    .activity-icon { background: linear-gradient(135deg,#f6c23e20,#f39c1220); color:#f6c23e; }
+    .role-icon     { background: linear-gradient(135deg,#e74a3b20,#f39c1220); color:#e74a3b; }
+
+    .section-header h4 { font-size: 1.125rem; font-weight: 600; color: #2c3e50; margin: 0; }
+
+    .info-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+
+    .info-item { display: flex; flex-direction: column; }
+
+    .info-label {
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: #6c757d;
+        margin-bottom: 0.25rem;
+    }
+
+    .info-value { font-size: 0.875rem; font-weight: 600; color: #2c3e50; }
+
+    .confirmed-badge   { color: #1cc88a; }
+    .unconfirmed-badge { color: #e74a3b; }
+
+    .activity-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+
+    .stat-card-mini {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 1rem;
+        background: #f8f9fa;
+        border-radius: 12px;
+        transition: all 0.3s ease;
+    }
+
+    .stat-icon-mini {
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        background: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+        color: #667eea;
+    }
+
+    .stat-info-mini  { display: flex; flex-direction: column; }
+    .stat-label-mini { font-size: 0.75rem; color: #6c757d; }
+    .stat-value-mini { font-size: 1.125rem; font-weight: 700; color: #2c3e50; }
+
+    .role-management {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .current-roles { display: flex; align-items: center; gap: 1rem; }
+    .role-label    { font-size: 0.875rem; color: #6c757d; }
+
+    .role-badge-large {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        border-radius: 10px;
+        font-size: 0.875rem;
+        font-weight: 600;
+    }
+
+    .btn-make-admin, .btn-remove-admin {
+        padding: 0.5rem 1rem;
+        border: none;
+        border-radius: 8px;
+        font-size: 0.875rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .btn-make-admin   { background: linear-gradient(135deg,#667eea,#764ba2); color: white; }
+    .btn-remove-admin { background: #e74a3b; color: white; }
+
+    .btn-make-admin:hover, .btn-remove-admin:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    @@media (max-width: 768px) {
+        .info-grid, .activity-stats { grid-template-columns: 1fr; }
+        .user-info-header { flex-direction: column; text-align: center; }
+        .header-content   { flex-direction: column; gap: 1rem; }
+        .role-management  { flex-direction: column; align-items: flex-start; }
+    }
+</style>
+
+<script>
+    
+    function updateRoleFromModal(userId, role) {
+        const label = role === 'Admin' ? 'make this user an Administrator' : 'remove Admin and set role to Customer';
+        if (!confirm(`Are you sure you want to ${label}?`)) return;
+
+        fetch('/Admin/UpdateUserRole', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]')?.value ?? ''
+            },
+            body: JSON.stringify({ userId: userId, role: role })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                const modal = document.getElementById('userDetailsModal');
+                if (modal) modal.classList.remove('show');
+                document.body.style.overflow = 'auto';
+                location.reload();
+            } else {
+                alert('Failed to update role: ' + (data.message || 'Unknown error'));
+            }
+        })
+        .catch(err => alert('Network error: ' + err.message));
+    }
+</script>

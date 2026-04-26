@@ -17,7 +17,7 @@ namespace Resort_Hub.Persistence.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "10.0.6")
+                .HasAnnotation("ProductVersion", "10.0.7")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -231,6 +231,9 @@ namespace Resort_Hub.Persistence.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
                     b.Property<string>("LastName")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -294,6 +297,7 @@ namespace Resort_Hub.Persistence.Migrations
                             Email = "Admin@ResortHub.com",
                             EmailConfirmed = true,
                             FirstName = "Admin",
+                            IsActive = true,
                             LastName = "User",
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@RESORTHUB.COM",
@@ -322,6 +326,11 @@ namespace Resort_Hub.Persistence.Migrations
 
                     b.Property<DateOnly>("CheckOutDate")
                         .HasColumnType("date");
+
+                    b.Property<int>("PaymentStatus")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
@@ -554,7 +563,7 @@ namespace Resort_Hub.Persistence.Migrations
             modelBuilder.Entity("Resort_Hub.Entities.VillaImage", b =>
                 {
                     b.HasOne("Resort_Hub.Entities.Villa", "Villa")
-                        .WithMany()
+                        .WithMany("VillaImages")
                         .HasForeignKey("VillaId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -570,6 +579,8 @@ namespace Resort_Hub.Persistence.Migrations
             modelBuilder.Entity("Resort_Hub.Entities.Villa", b =>
                 {
                     b.Navigation("VillaAmenity");
+
+                    b.Navigation("VillaImages");
                 });
 #pragma warning restore 612, 618
         }

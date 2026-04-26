@@ -108,7 +108,7 @@ public class AuthService(UserManager<ApplicationUser> userManager, SignInManager
         user.EmailConfirmed = true;
         await _userManager.UpdateAsync(user);
         await _userManager.AddToRoleAsync(user, DefaultRoles.Customer.Name);
-        await _signInManager.SignInAsync(user, isPersistent: true);
+        await _signInManager.SignInAsync(user, isPersistent: false);
 
         return Result.Success();
     }

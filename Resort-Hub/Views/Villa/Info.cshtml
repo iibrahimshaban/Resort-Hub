@@ -1,0 +1,249 @@
+﻿@using Resort_Hub.ViewModels.Villa
+@model VillaDetailsViewModel
+
+@{
+    ViewData["Title"] = $"{Model.Name} - Details";
+}
+
+@section Styles
+{
+    <link rel="stylesheet" href="~/css/DetailsPage.css" asp-append-version="true" />
+}
+
+<div class="container py-4 py-md-5">
+    <!-- Breadcrumb -->
+    <div class="mb-4">
+        <a asp-controller="Home" asp-action="Index" class="text-decoration-none breadcrumb-link">Home</a>
+        <span class="breadcrumb-separator">/</span>
+        <span class="breadcrumb-current">@Model.Name</span>
+    </div>
+
+    <!-- Main Header -->
+    <div class="d-flex flex-wrap align-items-center justify-content-center mb-4">
+        <div>
+            <h1 class="villa-title mb-2">@Model.Name</h1>
+        </div>
+    </div>
+
+    @if (Model.VillaImages.Count > 0)
+    {
+        <div class="row g-2 g-md-3 mb-5">
+            @if (Model.VillaImages.Count == 1)
+            {
+                <!-- Single Image - Full Width -->
+                <div class="col-12">
+                    <div class="gallery-single">
+                        <img src="@Model.VillaImages[0].ImageUrl"
+                             alt="@Model.Name"
+                             class="gallery-img" />
+                    </div>
+                </div>
+            }
+            else if (Model.VillaImages.Count == 2)
+            {
+                <!-- Two Images - Side by Side -->
+                <div class="col-md-6">
+                    <div class="gallery-split">
+                        <img src="@Model.VillaImages[0].ImageUrl"
+                             alt="@Model.Name - Image 1"
+                             class="gallery-img" />
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="gallery-split">
+                        <img src="@Model.VillaImages[1].ImageUrl"
+                             alt="@Model.Name - Image 2"
+                             class="gallery-img" />
+                    </div>
+                </div>
+            }
+            else
+            {
+                <!-- Three or More Images - Main + Stacked -->
+                <div class="col-md-8">
+                    <div class="gallery-main">
+                        <img src="@Model.VillaImages[0].ImageUrl"
+                             alt="@Model.Name - Main"
+                             class="gallery-img" />
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="row g-2 g-md-1 h-100">
+                        <div class="col-12 h-50">
+                            <div class="gallery-secondary">
+                                <img src="@Model.VillaImages[1].ImageUrl"
+                                     alt="@Model.Name - Image 2"
+                                     class="gallery-img" />
+                            </div>
+                        </div>
+                        <div class="col-12 h-50">
+                            <div class="gallery-secondary position-relative">
+                                <img src="@Model.VillaImages[2].ImageUrl"
+                                     alt="@Model.Name - Image 3"
+                                     class="gallery-img" />
+                                @if (Model.VillaImages.Count > 3)
+                                {
+                                    <div class="view-more-overlay" data-bs-toggle="modal" data-bs-target="#galleryModal">
+                                        <span>+@(Model.VillaImages.Count - 3) more</span>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+
+    <!-- Two Column Layout using Bootstrap Grid -->
+    <div class="row g-4 g-xl-5">
+        <!-- Left Column -->
+        <div class="col-lg-8">
+            <!-- About Section -->
+            <div class="mb-5">
+                <h3 class="section-heading">About the place</h3>
+                <p class="about-text">
+                    @Model.Description
+                </p>
+            </div>
+
+            <!-- Amenities Grid using Bootstrap Grid -->
+            <div class="mb-5">
+                <h3 class="section-heading">Amenities & Details</h3>
+                <div class="row g-3">
+                    @foreach (var amenity in Model.VillaAmenities)
+                    {
+                        <div class="col-6 col-md-3">
+                            <div class="amenity-item">
+                                <i class="@amenity.Icon amenity-icon"></i>
+                                <span>@amenity.Name</span>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <!-- Treasure to Choose using Bootstrap Grid -->
+            <div class="mb-5">
+                <h3 class="section-heading">Treasure to Choose</h3>
+                <div class="row g-4">
+                    <div class="col-6 col-md-3">
+                        <div class="treasure-item">
+                            <div class="treasure-image">
+                                <img src="https://images.pexels.com/photos/2577274/pexels-photo-2577274.jpeg?auto=compress&cs=tinysrgb&w=400"
+                                     alt="Green Lake Nature" />
+                            </div>
+                            <div class="treasure-content">
+                                <h6>Green Lake Nature</h6>
+                                <p>Scenic trails</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <div class="treasure-item">
+                            <div class="treasure-image">
+                                <img src="https://images.pexels.com/photos/333083/pexels-photo-333083.jpeg?auto=compress&cs=tinysrgb&w=400"
+                                     alt="Dog Clubs" />
+                            </div>
+                            <div class="treasure-content">
+                                <h6>Dog Clubs</h6>
+                                <p>Pet friendly</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <div class="treasure-item">
+                            <div class="treasure-image">
+                                <img src="https://images.pexels.com/photos/264636/pexels-photo-264636.jpeg?auto=compress&cs=tinysrgb&w=400"
+                                     alt="Labour and Wait" />
+                            </div>
+                            <div class="treasure-content">
+                                <h6>Labour and Wait</h6>
+                                <p>Shopping</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <div class="treasure-item">
+                            <div class="treasure-image">
+                                <img src="https://images.pexels.com/photos/1021072/pexels-photo-1021072.jpeg?auto=compress&cs=tinysrgb&w=400"
+                                     alt="Snorkeling Beach" />
+                            </div>
+                            <div class="treasure-content">
+                                <h6>Snorkeling Beach</h6>
+                                <p>Coral reef</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column: Booking Card -->
+        <div class="col-lg-4">
+            <div class="booking-panel sticky-top" style="top: 100px;">
+                <div class="d-flex booking-title">
+                    Start Booking
+                </div>
+                <div class="d-flex align-items-center justify-content-between mb-4">
+                    <div class="d-flex align-items-baseline gap-1">
+                        <span class="price-large">$@Model.PricePerNight</span>
+                        <span class="price-night">per Day</span>
+                    </div>
+                </div>
+
+                <form asp-action="Index" asp-controller="Book" asp-route-id="@Model.Id" method="post" asp-antiforgery="true">
+                    @* <input asp-for="Id" type="hidden" />
+                    <input name="Name" value="@Model.Name" type="hidden"/>
+                    <input name="PricePerNight" value="@Model.PricePerNight" type="hidden" />
+                    <input name="Image" value="@Model.VillaImages[0].ImageUrl" type ="hidden" /> *@
+
+                    <button asp-controller="Book" asp-action="Index" asp-route-id="@Model.Id" type="submit" class="book-button">
+                        <i class="bi bi-calendar-check me-2"></i>Book Now!
+                    </button>
+                </form>
+
+
+                @* <a asp-controller="Book" asp-action="Index" asp-route-id="@Model.Id" class="book-button btn">
+                    <i class="bi bi-calendar-check me-2"></i>Book Now!
+                </a> *@
+
+                <p class="charge-notice">You won't be charged yet</p>
+
+                <div class="booking-footer">
+                    <i class="bi bi-shield-check me-1"></i>
+                    <span>Secure booking · Free cancellation</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Gallery Modal for additional images -->
+@if (Model.VillaImages.Count > 3)
+{
+    <div class="modal fade" id="galleryModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title fw-bold">@Model.Name - Gallery</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row g-3">
+                        @foreach (var image in Model.VillaImages.Skip(3))
+                        {
+                            <div class="col-md-4">
+                                <img src="@image.ImageUrl"
+                                     alt="Gallery image"
+                                     class="img-fluid rounded-3 w-100"
+                                     style="height: 200px; object-fit: cover;" />
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}

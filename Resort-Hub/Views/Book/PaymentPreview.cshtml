@@ -1,0 +1,121 @@
+﻿@using Resort_Hub.ViewModels.Booking
+@model BookingPaymentPageViewModel
+
+@{
+    Layout = "_BookingLayout";
+    ViewData["Title"] = "Payment";
+}
+
+@section Styles
+{
+    <link rel="stylesheet" href="~/css/PaymentStyle.css" asp-append-version="true" />
+}
+
+<div class="container payment-page">
+
+    <!-- STEP INDICATOR -->
+    <partial name="_BookingStepperPartialView" model="2" />
+
+    <!-- TITLE -->
+    <div class="text-center mt-5">
+        <h1 class="payment-title">Payment</h1>
+        <p class="payment-subtitle">Kindly follow the instructions below</p>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="row justify-content-center mt-5">
+
+        <div class="col-xl-10">
+
+            <form asp-action="ProcessPayment" asp-controller="Book" method="post" asp-antiforgery="true">
+
+                <input asp-for="VillaId" type="hidden" />
+
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <div class="row g-5 align-items-start">
+
+                    <!-- LEFT SUMMARY -->
+                    <div class="col-lg-6 payment-summary">
+
+                        <h4 class="summary-title">Transfer ResortHub:</h4>
+
+                        <p class="summary-text">
+                            @Model.Summary.Duration Days at @Model.Summary.Name,<br />
+                            Galle, Sri Lanka
+                        </p>
+
+                        <div class="summary-price">
+                            <span>Total:</span>
+                            <strong>$@(Model.Summary.PricePerNight * Model.Summary.Duration) USD</strong>
+                        </div>
+
+                    </div>
+
+                    <!-- RIGHT FORM -->
+                    <div class="col-lg-6 payment-form">
+
+                        <!-- Card name -->
+                        <div class="mb-4">
+                            <label class="form-label">Card Name</label>
+                            <input asp-for="Payment.CardHolderName" type="text"
+                                   class="form-control payment-input"
+                                   placeholder="Payment card name" />
+                            <span class="text-danger" asp-validation-for="Payment.CardHolderName"></span>
+                        </div>
+
+                        <!-- Card Number -->
+                        <div class="mb-4">
+                            <label class="form-label">Card Number</label>
+                            <input asp-for="Payment.CardNumber" type="text"
+                                   class="form-control payment-input"
+                                   placeholder="Payment card number" />
+                            <span class="text-danger" asp-validation-for="Payment.CardNumber"></span>
+                        </div>
+
+                        <!-- Exp -->
+                        <div class="mb-4">
+                            <label class="form-label">Exp Date</label>
+                            <input asp-for="Payment.ValidationDate" type="text"
+                                   class="form-control payment-input"
+                                   placeholder="Validation date" />
+                            <span class="text-danger" asp-validation-for="Payment.ValidationDate"></span>
+                        </div>
+
+                        <!-- CVV -->
+                        <div class="mb-4">
+                            <label class="form-label">CVV</label>
+                            <input asp-for="Payment.CVV" type="password"
+                                   class="form-control payment-input"
+                                   placeholder="Beside the card" />
+                            <span class="text-danger" asp-validation-for="Payment.CVV"></span>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- BUTTONS -->
+                <div class="row justify-content-center mt-5">
+                    <div class="col-lg-4 col-md-6">
+                        <button type="submit" class="btn-pay">
+                            Pay Now
+                        </button>
+
+                        <a asp-controller="Villa"
+                               asp-action="Details"
+                               asp-route-id="@Model.VillaId"
+                               class="btn-cancel mt-3">
+                            Cancel
+                        </a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
