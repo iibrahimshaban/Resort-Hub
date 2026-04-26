@@ -47,7 +47,7 @@ public class UnitOfWork(ApplicationDbContext context) : IUnitOfWork
         }
     } 
 
-    public IUserRepository Users => 
+    public IUserRepository Users
     {
         get
         {

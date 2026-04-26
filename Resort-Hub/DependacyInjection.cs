@@ -1,10 +1,6 @@
 ﻿using MapsterMapper;
 ﻿using CloudinaryDotNet;
 using Hangfire;
-using Mapster;
-using MapsterMapper;
-using Microsoft.EntityFrameworkCore;
-using Resort_Hub.Entities;
 using Resort_Hub.Interfaces;
 using Resort_Hub.Persistence;
 using Resort_Hub.Repositories;
@@ -29,7 +25,7 @@ public static class DependacyInjection
             .AddMapsterConfig()
             .AddRepositoryServices()
             .AddGoogleAuthentication(configuration)
-            .AddSession();      
+            .AddSession()     
             .AddCloudinaryImageHosting(configuration)
             .AddHangfireBGJobs(configuration);
 
@@ -92,7 +88,6 @@ public static class DependacyInjection
         return services;
     }
 
-
     public static IServiceCollection AddSession(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddSession().AddSession(options=>
@@ -101,6 +96,8 @@ public static class DependacyInjection
             options.Cookie.HttpOnly = true;
             options.Cookie.IsEssential = true;
         });
+
+        return services;
     }
   
     public static IServiceCollection AddCloudinaryImageHosting(this IServiceCollection services, IConfiguration configuration)
