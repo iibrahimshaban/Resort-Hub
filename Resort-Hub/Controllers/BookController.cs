@@ -1,13 +1,12 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Resort_Hub.Abstraction.Consts;
 using Resort_Hub.DTOs.Booking;
 using Resort_Hub.Services.Book;
 using Resort_Hub.ViewModels.Booking;
 
 namespace Resort_Hub.Controllers
 {
-    //[Authorize]
+    [Authorize]
     [Route("book")]
     public class BookController : Controller
     {
@@ -18,6 +17,8 @@ namespace Resort_Hub.Controllers
             _bookingService = bookingService;
             _userManager = userManager;
         }
+
+
 
 
         [HttpPost]

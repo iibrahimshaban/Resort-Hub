@@ -8,6 +8,7 @@ using Resort_Hub.Services;
 using Resort_Hub.Services.Book;
 using Resort_Hub.Settings;
 using System.Reflection;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace Resort_Hub;
 
@@ -45,8 +46,14 @@ public static class DependacyInjection
             opt.Password.RequireLowercase = false;
             opt.Password.RequireNonAlphanumeric = false;
         })
-            .AddEntityFrameworkStores<ApplicationDbContext>()
-            .AddDefaultTokenProviders();
+        .AddEntityFrameworkStores<ApplicationDbContext>()
+        .AddDefaultTokenProviders();
+
+        services.ConfigureApplicationCookie(options =>
+        {
+            options.LoginPath = "/Auth/Login";
+            options.AccessDeniedPath = "/Auth/Login";
+        });
 
         return services;
     }
