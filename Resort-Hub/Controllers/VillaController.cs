@@ -7,17 +7,16 @@ namespace Resort_Hub.Controllers;
 
 public class VillaController(
     IUnitOfWork unitOfWork,
-    IVillaService _villaService,
-    IWebHostEnvironment env) : Controller
+    IVillaService villaService,
+    ICloudinaryService cloudinaryService) : Controller
+
 {
-   
     public IActionResult Index()
     {
         var villas = unitOfWork.Villas.GetAll();
         return View(villas);
     }
 
-  
     public IActionResult Create()
     {
         var vm = new VillaFormVM
@@ -52,36 +51,36 @@ public class VillaController(
         foreach (var amenityId in vm.SelectedAmenityIds)
             villa.VillaAmenity.Add(new VillaAmenity { AmenityId = amenityId });
 
-        // Images
+        // save villa 
+        unitOfWork.Villas.Add(villa);
+        await unitOfWork.SaveAsync();
+
+        // upload img to cloude
         if (vm.NewImages != null && vm.NewImages.Count > 0)
         {
             int order = 1;
             foreach (var img in vm.NewImages)
             {
-                var fileName = $"{Guid.NewGuid()}{Path.GetExtension(img.FileName)}";
-                var folder = Path.Combine(env.WebRootPath, "images", "villas");
-                Directory.CreateDirectory(folder);
-
-                using var stream = new FileStream(Path.Combine(folder, fileName), FileMode.Create);
-                await img.CopyToAsync(stream);
+                var publicId = $"resort-hub/villas/villa_{villa.Id}_{order}";
+                var imageUrl = await cloudinaryService.UploadImageAsync(img, "resort-hub/villas", publicId);
 
                 villa.VillaImages.Add(new VillaImage
                 {
-                    ImageUrl = $"/images/villas/{fileName}",
+                    VillaId = villa.Id,
+                    ImageUrl = imageUrl,
                     IsMain = (order - 1) == vm.MainImageIndex,
                     DispalayOrder = order++
                 });
             }
-        }
 
-        unitOfWork.Villas.Add(villa);
-        await unitOfWork.SaveAsync();
+            unitOfWork.Villas.Update(villa);
+            await unitOfWork.SaveAsync();
+        }
 
         TempData["Success"] = "Villa created successfully!";
         return RedirectToAction(nameof(Index));
     }
 
-    
     public async Task<IActionResult> Edit(int id)
     {
         var result = await _villaService.ValidateVilla(id);
@@ -105,7 +104,6 @@ public class VillaController(
         return View(vm);
     }
 
-    
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Edit(int id, VillaFormVM vm)
@@ -130,35 +128,50 @@ public class VillaController(
         villa.IsAvilable = vm.IsAvilable;
         villa.UpdatedDate = DateTime.Now;
 
-        
+        // Amenities
         villa.VillaAmenity.Clear();
         foreach (var amenityId in vm.SelectedAmenityIds)
             villa.VillaAmenity.Add(new VillaAmenity { VillaId = id, AmenityId = amenityId });
 
-        
+        // delete img - Cloudinary & DB
+        if (vm.DeletedImageIds.Any())
+        {
+            foreach (var imageId in vm.DeletedImageIds)
+            {
+                var image = villa.VillaImages.FirstOrDefault(i => i.Id == imageId);
+                if (image != null)
+                {
+                    // delete from Cloudinary
+                    var order = image.DispalayOrder;
+                    var publicId = $"resort-hub/villas/villa_{id}_{order}";
+                    await cloudinaryService.DeleteImageAsync(publicId);
+
+                    // delete from DB
+                    villa.VillaImages.Remove(image);
+                }
+            }
+        }
+
+        // update main
         if (vm.MainExistingImageId.HasValue)
         {
             foreach (var image in villa.VillaImages)
                 image.IsMain = image.Id == vm.MainExistingImageId.Value;
         }
 
-      
+        // uploade new img - Cloudinary
         if (vm.NewImages != null && vm.NewImages.Count > 0)
         {
             int order = villa.VillaImages.Count + 1;
             foreach (var img in vm.NewImages)
             {
-                var fileName = $"{Guid.NewGuid()}{Path.GetExtension(img.FileName)}";
-                var folder = Path.Combine(env.WebRootPath, "images", "villas");
-                Directory.CreateDirectory(folder);
-
-                using var stream = new FileStream(Path.Combine(folder, fileName), FileMode.Create);
-                await img.CopyToAsync(stream);
+                var publicId = $"resort-hub/villas/villa_{id}_{order}";
+                var imageUrl = await cloudinaryService.UploadImageAsync(img, "resort-hub/villas", publicId);
 
                 villa.VillaImages.Add(new VillaImage
                 {
                     VillaId = id,
-                    ImageUrl = $"/images/villas/{fileName}",
+                    ImageUrl = imageUrl,
                     IsMain = false,
                     DispalayOrder = order++
                 });
@@ -172,7 +185,6 @@ public class VillaController(
         return RedirectToAction(nameof(Index));
     }
 
-   
     public async Task<IActionResult> Delete(int id)
     {
         var result = await _villaService.ValidateVilla(id);
@@ -187,7 +199,17 @@ public class VillaController(
         var result = await _villaService.ValidateVilla(id);
         if (result.IsFailur) return NotFound();
 
-        unitOfWork.Villas.Delete(result.Value);
+        var villa = result.Value;
+
+        // delete from Cloudinary
+        int order = 1;
+        foreach (var image in villa.VillaImages)
+        {
+            var publicId = $"resort-hub/villas/villa_{id}_{order++}";
+            await cloudinaryService.DeleteImageAsync(publicId);
+        }
+
+        unitOfWork.Villas.Delete(villa);
         await unitOfWork.SaveAsync();
 
         TempData["Success"] = "Villa deleted successfully!";

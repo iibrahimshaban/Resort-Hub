@@ -50,7 +50,7 @@ public class AccountService(UserManager<ApplicationUser> userManager, ICloudinar
         var pictureUrl = await _cloudinaryService.UploadImageAsync(
             file: Picture,
             folder: "resort-hub/avatars",
-            publicId: $"avatar_{UserId}"       
+            publicId: $"avatar_{UserId}"      
         );
 
         await _userManager.Users
