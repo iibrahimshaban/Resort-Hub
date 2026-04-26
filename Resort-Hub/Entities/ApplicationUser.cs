@@ -6,4 +6,5 @@ public class ApplicationUser : IdentityUser
     public string LastName { get; set; } = string.Empty;
     public string? ProfilePictureUrl { get; set; }
     public DateTime CreatedAt { get; set; }
+    public bool IsActive { get; set; } = true;
 }

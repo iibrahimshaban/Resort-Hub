@@ -70,6 +70,7 @@ namespace Resort_Hub.Repositories
                 "fullname" => descending ? query.OrderByDescending(u => u.FirstName).ThenByDescending(u => u.LastName) : query.OrderBy(u => u.FirstName).ThenBy(u => u.LastName),
                 "email" => descending ? query.OrderByDescending(u => u.Email) : query.OrderBy(u => u.Email),
                 "createdat" => descending ? query.OrderByDescending(u => u.CreatedAt) : query.OrderBy(u => u.CreatedAt),
+                "status" => descending ? query.OrderByDescending(u => u.IsActive) : query.OrderBy(u => u.IsActive),
                 _ => query.OrderByDescending(u => u.CreatedAt)
             };
 
@@ -109,8 +110,11 @@ namespace Resort_Hub.Repositories
         {
             var user = await _context.Users.FindAsync(userId);
             if (user == null) return false;
+            user.IsActive = !user.IsActive;
 
-           
+            _context.Users.Update(user);
+
+
             await _context.SaveChangesAsync();
             return true;
         }
@@ -119,31 +123,24 @@ namespace Resort_Hub.Repositories
             var user = await _context.Users.FindAsync(userId);
             if (user == null) return false;
 
-            var currentRoles = await GetUserRolesAsync(user);
+            var role = await _context.Roles.FirstOrDefaultAsync(r => r.Name == roleName);
+            if (role == null) return false;
 
-            var userRoles = await _context.UserRoles
+            var existingRoles = await _context.UserRoles
                 .Where(ur => ur.UserId == userId)
                 .ToListAsync();
+            _context.UserRoles.RemoveRange(existingRoles);
 
-            _context.UserRoles.RemoveRange(userRoles);
-
-            if (roleName != "User")
+            _context.UserRoles.Add(new IdentityUserRole<string>
             {
-                var role = await _context.Roles.FirstOrDefaultAsync(r => r.Name == roleName);
-                if (role != null)
-                {
-                    _context.UserRoles.Add(new IdentityUserRole<string>
-                    {
-                        UserId = userId,
-                        RoleId = role.Id
-                    });
-                }
-            }
+                UserId = userId,
+                RoleId = role.Id
+            });
 
             await _context.SaveChangesAsync();
             return true;
         }
-    
+
         public async Task<int> GetUserBookingsCountAsync(string userId)
         {
             return await _context.Bookings.CountAsync(b => b.UserId == userId);

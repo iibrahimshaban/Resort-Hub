@@ -16,5 +16,7 @@ namespace Resort_Hub.Services
         Task<UserViewModel?> GetUserByIdAsync(string userId);
         Task<bool> UpdateUserRoleAsync(string userId, string role);
         Task<bool> ToggleUserStatusAsync(string userId);
+        Task<int> GetUserBookingsCountAsync(string userId);   
+
     }
 }
