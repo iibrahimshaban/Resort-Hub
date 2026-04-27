@@ -10,4 +10,11 @@ public static class TempDataExtensions
         tempData["ErrorDescription"] = error.Description;
         tempData["ErrorType"] = error.Type.ToString();
     }
+
+    public static void SetMessageModal(this ITempDataDictionary tempData, ModalMessage msg)
+    {
+        tempData["ModalTitle"] = msg.Title;
+        tempData["ModalMessage"] = msg.Message;
+        tempData["ModalType"] = msg.Type.ToString();
+    }
 }
