@@ -71,8 +71,6 @@ public static class DependacyInjection
         services.AddTransient<IUnitOfWork, UnitOfWork>();
         services.AddScoped<IVillaService,VillaService>();
         services.AddScoped<IBookingService,BookingService>();
-        services.AddScoped<IBookingRepository, BookingRepository>();
-        services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IAuthService,AuthService>();
         services.AddScoped<IAdminService, AdminService>();
         services.AddScoped<IAccountService, AccountService>();

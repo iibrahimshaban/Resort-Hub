@@ -1,9 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Resort_Hub.Abstraction.Enums;
-using Resort_Hub.Entities;
 using Resort_Hub.Services;
 using Resort_Hub.ViewModels.Admin;
 

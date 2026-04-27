@@ -19,8 +19,6 @@ namespace Resort_Hub.Controllers
         }
 
 
-
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route("/Booking/{id:int}")]

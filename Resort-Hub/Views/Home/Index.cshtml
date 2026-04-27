@@ -1,9 +1,243 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@using Resort_Hub.ViewModels.Home
+@model HomeVM
+
+@{
+    ViewData["Title"] = "Home";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
-<a class="btn btn-primary" asp-controller="Home" asp-action="Test">See Error</a>
+@section Styles {
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link href="~/css/Home.css" rel="stylesheet" />
+}
+
+<!-- ── HERO ── -->
+<section class="hero">
+    <div class="hero-content">
+        <div class="hero-badge">
+            <i class="bi bi-stars"></i> #1 Villa Booking Platform
+        </div>
+        <h1 class="hero-title">
+            Forget Busy Work,<br>
+            Start Your Next <span>Vacation</span>
+        </h1>
+        <p class="hero-sub">
+            We provide what you need to enjoy your holiday with family.
+            Time to make another memorable memory.
+        </p>
+        <a asp-controller="Home" asp-action="SearchVilla"
+               class="btn btn-primary rounded-pill px-4 py-2 fw-semibold"
+               style="animation: fadeUp 0.8s ease both;">
+            Show More <i class="bi bi-arrow-right ms-1"></i>
+        </a>
+
+        <div class="hero-stats">
+            <div>
+                <span class="stat-number">@Model.TotalUsers</span>
+                <span class="stat-label">Users</span>
+            </div>
+            <div>
+                <span class="stat-number">@Model.TotalProperties</span>
+                <span class="stat-label">Properties</span>
+            </div>
+            <div>
+                <span class="stat-number">@Model.TotalVillas</span>
+                <span class="stat-label">Villas</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="hero-image-wrap">
+        @{
+            var featuredImage = Model.MostPickedVillas?.FirstOrDefault()?.MainImageUrl;
+        }
+        @if (!string.IsNullOrEmpty(featuredImage))
+        {
+            <img src="@featuredImage" alt="Featured Villa" />
+        }
+        else
+        {
+            <img src="~/images/hero-placeholder.jpg" alt="Resort" />
+        }
+        <div class="hero-image-badge">
+            <div class="badge-icon">🏆</div>
+            <div class="badge-text">
+                <strong>Top Rated</strong>
+                <span>@Model.TotalVillas+ Villas Available</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ══════════════════════════════════════
+     SEARCH BAR
+══════════════════════════════════════ -->
+<section class="search-section">
+    <form asp-controller="Home" asp-action="SearchVilla" method="get">
+        <div class="search-bar">
+            <div class="search-field">
+                <i class="bi bi-calendar3"></i>
+                <div style="flex:1">
+                    <label>Check In</label>
+                    <input type="date" name="checkInDate"
+                           min="@DateTime.Today.ToString("yyyy-MM-dd")"
+                           value="@Context.Request.Query["checkInDate"]" />
+                </div>
+            </div>
+            <div class="search-field">
+                <i class="bi bi-people"></i>
+                <div style="flex:1">
+                    <label>Guests</label>
+                    <select name="personCount">
+                        @for (int i = 1; i <= 10; i++)
+                        {
+                            <option value="@i"
+                                    selected="@(Context.Request.Query["personCount"] == i.ToString() ? "selected" : null)">
+                                @i Person@(i > 1 ? "s" : "")
+                            </option>
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="search-field">
+                <i class="bi bi-geo-alt"></i>
+                <div style="flex:1">
+                    <label>Location</label>
+                    <input type="text" name="location" placeholder="Where are you going?"
+                           value="@Context.Request.Query["location"]" />
+                </div>
+            </div>
+            <button type="submit" class="search-btn">
+                <i class="bi bi-search"></i> Search
+            </button>
+        </div>
+    </form>
+</section>
+
+<!-- ══════════════════════════════════════
+     MOST PICKED
+══════════════════════════════════════ -->
+<section class="home-section">
+    <div class="section-header">
+        <h2 class="section-title">Most <span>Picked</span></h2>
+        <a asp-controller="Home" asp-action="SearchVilla" class="view-all">
+            View All <i class="bi bi-arrow-right"></i>
+        </a>
+    </div>
+
+    @if (Model.MostPickedVillas != null && Model.MostPickedVillas.Any())
+    {
+        <div class="most-picked-grid">
+            @foreach (var villa in Model.MostPickedVillas.Take(5))
+            {
+                <a asp-controller="Villa" asp-action="Info"
+                       asp-route-id="@villa.Id" class="villa-card">
+                    @if (!string.IsNullOrEmpty(villa.MainImageUrl))
+                    {
+                        <img src="@villa.MainImageUrl" alt="@villa.Name" loading="lazy" />
+                    }
+                    else
+                    {
+                        <div class="no-image">🏡</div>
+                    }
+                    <div class="villa-card-overlay"></div>
+                    <div class="price-badge">$@villa.PricePerNight.ToString("0")/night</div>
+                    @if (villa.IsPopularChoice)
+                    {
+                        <div class="popular-badge">⭐ Popular</div>
+                    }
+                    <div class="villa-card-info">
+                        <h3>@villa.Name</h3>
+                        @if (!string.IsNullOrEmpty(villa.Location))
+                        {
+                            <div class="location">
+                                <i class="bi bi-geo-alt-fill"></i> @villa.Location
+                            </div>
+                        }
+                    </div>
+                </a>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="empty-state">
+            <i class="bi bi-house-slash"></i>
+            <p>No villas available at the moment. Check back soon!</p>
+        </div>
+    }
+</section>
+
+<!-- ══════════════════════════════════════
+     POPULAR CHOICES
+══════════════════════════════════════ -->
+<section class="home-section" style="padding-top:0">
+    <div class="section-header">
+        <h2 class="section-title">Popular <span>Choices</span></h2>
+        <a asp-controller="Home" asp-action="SearchVilla" class="view-all">
+            View All <i class="bi bi-arrow-right"></i>
+        </a>
+    </div>
+
+    @if (Model.PopularVillas != null && Model.PopularVillas.Any())
+    {
+        <div class="popular-grid">
+            @foreach (var villa in Model.PopularVillas.Take(8))
+            {
+                <a asp-controller="Villa" asp-action="Info"
+                       asp-route-id="@villa.Id" class="villa-card">
+                    @if (!string.IsNullOrEmpty(villa.MainImageUrl))
+                    {
+                        <img src="@villa.MainImageUrl" alt="@villa.Name" loading="lazy" />
+                    }
+                    else
+                    {
+                        <div class="no-image">🏡</div>
+                    }
+                    <div class="villa-card-overlay"></div>
+                    @if (villa.IsPopularChoice)
+                    {
+                        <div class="popular-badge">Popular Choice</div>
+                    }
+                    <div class="villa-card-info">
+                        <h3>@villa.Name</h3>
+                        @if (!string.IsNullOrEmpty(villa.Location))
+                        {
+                            <div class="location">
+                                <i class="bi bi-geo-alt-fill"></i> @villa.Location
+                            </div>
+                        }
+                    </div>
+                </a>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="empty-state">
+            <i class="bi bi-house-slash"></i>
+            <p>No popular villas found yet.</p>
+        </div>
+    }
+</section>
+
+@section Scripts {
+    <script>
+        // Staggered scroll-reveal for villa cards
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.08 });
+
+        document.querySelectorAll('.villa-card').forEach((el, i) => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(20px)';
+            el.style.transition = `opacity 0.4s ease ${i * 0.07}s, transform 0.4s ease ${i * 0.07}s`;
+            observer.observe(el);
+        });
+    </script>
+}

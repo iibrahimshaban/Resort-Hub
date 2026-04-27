@@ -167,7 +167,6 @@ public class AuthController(IAuthService authService, UserManager<ApplicationUse
     }
 
 
-
     private async Task<IActionResult> RedirectToAdminIfApplicable()
     {
         var user = await _userManager.GetUserAsync(User);
