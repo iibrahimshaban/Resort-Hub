@@ -184,4 +184,8 @@ public class AuthController(IAuthService authService, UserManager<ApplicationUse
 
         return RedirectToAction("Index", "Home");
     }
+    public IActionResult AccessDenied()
+    {
+        return View();
+    }
 }

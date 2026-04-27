@@ -261,5 +261,48 @@ namespace Resort_Hub.Controllers
 
             return Json(result.Value);
         }
+        [HttpGet]
+        public async Task<IActionResult> MyBookings()
+        {
+
+            var userId = _userManager.GetUserId(User);
+
+            var bookings = await _bookingService.MyBookings(userId);
+
+            if (!bookings.IsSuccess)
+            {
+                TempData.SetError(bookings.Error);
+                return RedirectToAction("Index", "Home");
+            }
+
+            return View(bookings.Value);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("Book/Cancel")]
+        public async Task<IActionResult> Cancel(int bookingId)
+        {
+            var userId = _userManager.GetUserId(User);
+            var booking = await _bookingService.GetBookingById(bookingId);
+
+            if (!booking.IsSuccess || booking.Value.UserId != userId)
+            {
+                TempData["Error"] = "Booking not found.";
+                return RedirectToAction(nameof(MyBookings));
+            }
+
+            if (booking.Value.Status != VillaStatus.Pending &&
+                booking.Value.Status != VillaStatus.Approved)
+            {
+                TempData["Error"] = "This booking cannot be cancelled.";
+                return RedirectToAction(nameof(MyBookings));
+            }
+
+            booking.Value.Status = VillaStatus.Cancelled;
+            _bookingService.Update(booking.Value);
+
+            TempData["Success"] = "Booking cancelled successfully.";
+            return RedirectToAction(nameof(MyBookings));
+        }
     }
 }

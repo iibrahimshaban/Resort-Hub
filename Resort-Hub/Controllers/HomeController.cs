@@ -9,9 +9,10 @@ using System.Diagnostics;
 
 namespace Resort_Hub.Controllers;
 
-public class HomeController(IUnitOfWork unitOfWork) : Controller
+public class HomeController(IUnitOfWork unitOfWork, UserManager<ApplicationUser> userManager) : Controller
 {
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
+    private readonly UserManager<ApplicationUser> _userManager = userManager;
 
     public async Task<IActionResult> Index()
     {
@@ -23,6 +24,8 @@ public class HomeController(IUnitOfWork unitOfWork) : Controller
             MostPickedVillas = villas.Take(5).ToList(),
             PopularVillas = villas,
             TotalVillas = villas.Count,
+            TotalUsers = await _userManager.Users.CountAsync(),     
+            TotalProperties = await _unitOfWork.Villas.CountAsync(),
         };
 
         return View(homeVM);

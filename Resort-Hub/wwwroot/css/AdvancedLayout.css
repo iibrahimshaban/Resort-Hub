@@ -388,3 +388,187 @@ main {
     margin-bottom: 5px;
     font-weight: 500;
 }
+
+/* ── Navbar Auth Buttons ─────────────────────────── */
+
+.btn-dashboard {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.45rem 1rem;
+    border-radius: 8px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: #fff;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    border: none;
+    text-decoration: none;
+    transition: all 0.25s ease;
+    white-space: nowrap;
+}
+
+    .btn-dashboard:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 14px rgba(102, 126, 234, 0.45);
+        color: #fff;
+    }
+
+    .btn-dashboard i {
+        font-size: 0.95rem;
+    }
+
+.btn-logout-outline {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.45rem 1rem;
+    border-radius: 8px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: #e74a3b;
+    background: transparent;
+    border: 1.5px solid #e74a3b !important;
+    transition: all 0.25s ease;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+    .btn-logout-outline:hover {
+        background: #e74a3b;
+        color: #fff;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 14px rgba(231, 74, 59, 0.35);
+    }
+
+/* ── Avatar button polish ────────────────────────── */
+.ls-avatar-btn {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+    .ls-avatar-btn:hover {
+        transform: scale(1.08);
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.3);
+        border-radius: 50%;
+    }
+
+/* ── User Dropdown Pill ───────────────────────────── */
+.ls-user-dropdown {
+    position: relative;
+}
+
+.ls-user-pill {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    background: rgba(255, 255, 255, 0.07);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 50px;
+    padding: 0.3rem 0.75rem 0.3rem 0.3rem;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    color: inherit;
+}
+
+    .ls-user-pill:hover {
+        background: rgba(255, 255, 255, 0.13);
+        border-color: rgba(255, 255, 255, 0.3);
+    }
+
+    /* remove bootstrap's default dropdown caret gap */
+    .ls-user-pill::after {
+        margin-left: 0.4rem;
+        opacity: 0.6;
+    }
+
+.ls-avatar-img {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid rgba(255,255,255,0.3);
+}
+
+.ls-avatar-initials {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: #fff;
+    font-size: 0.8rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.ls-user-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    line-height: 1.2;
+}
+
+.ls-user-name {
+    font-size: 0.82rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.ls-user-role {
+    font-size: 0.7rem;
+    opacity: 0.65;
+}
+
+/* ── Dropdown Menu ───────────────────────────────── */
+.ls-dropdown-menu {
+    min-width: 180px;
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+    padding: 0.4rem;
+    margin-top: 0.5rem !important;
+}
+
+.ls-dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.55rem 0.85rem;
+    border-radius: 8px;
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: #2c3e50;
+    transition: all 0.2s ease;
+    background: none;
+    border: none;
+    width: 100%;
+    text-align: left;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+    .ls-dropdown-item i {
+        font-size: 1rem;
+        color: #667eea;
+        width: 18px;
+    }
+
+    .ls-dropdown-item:hover {
+        background: #f0f2ff;
+        color: #667eea;
+    }
+
+.ls-logout-item i {
+    color: #e74a3b;
+}
+
+.ls-logout-item:hover {
+    background: #fff0ef;
+    color: #e74a3b;
+}
+
+.dropdown-divider {
+    margin: 0.25rem 0.5rem;
+    opacity: 0.1;
+}

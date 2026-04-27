@@ -16,5 +16,6 @@ namespace Resort_Hub.Interfaces
         Task<Dictionary<DateTime, int>> GetBookingsCountByDateRangeAsync(DateTime startDate, DateTime endDate);
         Task<int> GetActiveBookingsCountAsync();
         Task<int> GetBookingsByStatusCountAsync(VillaStatus status);
+        Task<IEnumerable<Booking>> GetUserBookingsWithVillas(string userId);
     }
 }

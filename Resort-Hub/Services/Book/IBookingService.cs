@@ -1,4 +1,5 @@
 ﻿using Resort_Hub.DTOs.Booking;
+using Resort_Hub.ViewModels.Booking;
 using System.Linq.Expressions;
 
 namespace Resort_Hub.Services.Book
@@ -15,5 +16,7 @@ namespace Resort_Hub.Services.Book
         public Task SaveChangesAsync();
         public void Update(Booking booking);
         public Task<Result<Booking>> GetDraftBookingAsync(int villaId, string userId);
+        Task<Result<IEnumerable<UserBookingVM>>> MyBookings(string userId);
+        Task<Result<Booking>> GetBookingById(int bookingId);
     }
 }
