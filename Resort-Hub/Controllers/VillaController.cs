@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Resort_Hub.Interfaces;
 using Resort_Hub.Services;
 using Resort_Hub.ViewModels.Villa;
 
 namespace Resort_Hub.Controllers;
 
+[Authorize]
 public class VillaController(IUnitOfWork unitOfWork,IVillaService villaService, ICloudinaryService cloudinaryService) : Controller
 {
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
@@ -223,7 +225,7 @@ public class VillaController(IUnitOfWork unitOfWork,IVillaService villaService, 
         return View(result.Value);
     }
 
-
+    [AllowAnonymous]
     public async Task<IActionResult> Info([FromRoute] int id)
     {
             var villaResult = await _villaService.GetAllVillaData(id);

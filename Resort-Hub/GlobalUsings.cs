@@ -6,3 +6,4 @@ global using Resort_Hub.Abstraction.Enums;
 global using Resort_Hub.Errors;
 global using Resort_Hub.Abstraction;
 global using Mapster;
+global using Resort_Hub.Abstraction.Consts;
