@@ -43,9 +43,12 @@
 
                             <div class="d-flex justify-content-between mt-3">
                                 <h4 class="villa-name">@Model.Name</h4>
-                                @* <span class="villa-location">
-                                    Galle, Sri Lanka
-                                </span> *@
+                                <div class="d-flex justify-content-between align-items-center mt-3">
+                                    <h4 class="villa-name">@Model.Name</h4>
+                                    <span class="villa-location">
+                                        <i class="bi bi-geo-alt-fill"></i> @Model.Location
+                                    </span>
+                                </div>
                             </div>
 
                         </div>

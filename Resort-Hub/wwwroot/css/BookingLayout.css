@@ -1,33 +1,67 @@
-﻿.booking-steps {
-    gap: 0rem;
+﻿/* ── Shared booking layout ── */
+body {
+    font-family: 'DM Sans', 'Poppins', sans-serif;
+    background-color: #f5f8ff;
+    color: #1a2540;
+}
+
+.ls-navbar {
+    background: #ffffff;
+    border-bottom: 1px solid rgba(58, 143, 216, 0.12);
+    padding: 1rem 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.ls-brand {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: #155f9e;
+    text-decoration: none;
+    letter-spacing: -0.02em;
+}
+
+    .ls-brand span {
+        color: #3a8fd8;
+    }
+
+.divider {
+    height: 3px;
+    background: linear-gradient(90deg, #155f9e 0%, #3a8fd8 60%, #c5ddf7 100%);
+}
+
+/* ── Stepper ── */
+.booking-steps {
+    gap: 0;
+    padding: 2rem 0 1rem;
 }
 
 .step {
-    width: 3rem; /* 48px */
-    height: 3rem; /* 48px */
+    width: 36px;
+    height: 36px;
     border-radius: 50%;
-    background: #E5E5E5;
-    color: #898989;
-    font-weight: 500;
-    font-size: 1.125rem; /* 18px */
     display: flex;
     align-items: center;
     justify-content: center;
+    font-size: 13px;
+    font-weight: 600;
+    background: #ffffff;
+    color: #3a8fd8;
+    border: 2px solid #c5ddf7;
+    transition: all 0.25s ease;
 }
 
 .active-step {
-    background: #1ABC9C;
-    color: var(--white);
-    width: 3.75rem;
-    height: 3.75rem;
+    background: #1a6fb5;
+    color: #ffffff;
+    border-color: #1a6fb5;
+    box-shadow: 0 0 0 4px rgba(26, 111, 181, 0.15);
 }
 
-    .active-step i {
-        font-size: 2.8rem;
-    }
-
 .step-line {
-    width: 2.8125rem; /* 45px */
-    height: 0.125rem; /* 2px */
-    background: #E5E5E5;
+    width: 60px;
+    height: 2px;
+    background: #c5ddf7;
 }
