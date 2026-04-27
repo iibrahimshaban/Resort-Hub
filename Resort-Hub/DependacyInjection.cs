@@ -8,7 +8,6 @@ using Resort_Hub.Services;
 using Resort_Hub.Services.Book;
 using Resort_Hub.Settings;
 using System.Reflection;
-using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace Resort_Hub;
 

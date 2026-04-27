@@ -110,17 +110,17 @@
                     <div class="ls-brand ls-footer-brand">Resort<span>Hub</span>.</div>
                     <p>We kaboom your beauty holiday<br />instantly and memorable.</p>
                 </div>
-                    @if (User.Identity != null && User.Identity.IsAuthenticated)
+                @if (User.Identity == null || !User.Identity.IsAuthenticated)
                     {
                     <div class="ls-footer-cta text-md-end">
-                        <h6>Become hotel Owner</h6>
+                        <h6>Become a Family Member </h6>
                         <a asp-controller="Auth" asp-action="Register" class="btn-register">Register Now</a>
                     </div>
                     }
             </div>
         </div>
         <div class="ls-footer-bottom">
-            <p>Copyright 2024 &bull; All rights reserved &bull; Salman Faris</p>
+            <p>Copyright 2026 &bull; All rights reserved &bull; Resort_Hub</p>
         </div>
     </footer>
 

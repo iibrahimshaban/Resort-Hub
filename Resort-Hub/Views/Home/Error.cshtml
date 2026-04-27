@@ -1,0 +1,20 @@
+﻿@using Resort_Hub.ViewModels.Home
+@model ErrorVM
+
+<h1>Oops! Something went wrong.</h1>
+<p>An unexpected error occurred. Please try again later.</p>
+
+@if (Model.ShowRequestId)
+{
+    <p><strong>Request ID:</strong> <code>@Model.RequestId</code></p>
+}
+
+@* Show details only in Development *@
+@if (Model.ExceptionMessage != null)
+{
+    <details>
+        <summary>Error Details</summary>
+        <p><strong>Type:</strong> @Model.ExceptionType</p>
+        <p><strong>Message:</strong> @Model.ExceptionMessage</p>
+    </details>
+}

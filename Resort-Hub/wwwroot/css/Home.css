@@ -153,7 +153,6 @@
     display: grid;
     grid-template-columns: 1fr 1fr 1fr auto;
     align-items: stretch;
-    overflow: hidden;
     border: 1px solid rgba(27,63,228,0.08);
 }
 
@@ -380,6 +379,32 @@
         margin-bottom: 0.8rem;
         opacity: 0.4;
     }
+.search-field {
+    position: relative;
+}
+
+.suggestions-list {
+    position: absolute;
+    background: white;
+    border: 1px solid #ddd;
+    width: 80%;
+    list-style: none;
+    padding: 0;
+    margin-top: 4px;
+    border-radius: 8px;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 1000;
+}
+
+    .suggestions-list li {
+        padding: 10px;
+        cursor: pointer;
+    }
+
+        .suggestions-list li:hover {
+            background: #f0f4ff;
+        }
 
 /* ── ANIMATIONS ── */
 @@keyframes fadeUp {

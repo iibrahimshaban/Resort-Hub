@@ -91,6 +91,16 @@ public class VillaRepository(ApplicationDbContext dbContext)
             })
             .ToListAsync();
     }
+    public async Task<List<string>> GetLocationsAsync(string term)
+    {
+        return await _context.Villas
+        .Where(v => v.Location != null &&
+                    EF.Functions.Like(v.Location, $"%{term}%"))
+        .Select(v => v.Location)
+        .Distinct()
+        .Take(5)
+        .ToListAsync();
+    }
 
     public async Task<Villa?> GetVillaAsNoTracking(int id)
     {

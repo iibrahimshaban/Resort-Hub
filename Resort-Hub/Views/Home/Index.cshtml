@@ -102,8 +102,11 @@
                 <i class="bi bi-geo-alt"></i>
                 <div style="flex:1">
                     <label>Location</label>
-                    <input type="text" name="location" placeholder="Where are you going?"
-                           value="@Context.Request.Query["location"]" />
+                    <input type="text" id="locationInput" name="location"
+                           placeholder="Where are you going?"
+                           autocomplete="off" />
+       
+                    <ul id="locationSuggestions" class="suggestions-list"></ul>
                 </div>
             </div>
             <button type="submit" class="search-btn">
@@ -221,6 +224,50 @@
 </section>
 
 @section Scripts {
+    <script>
+                let debounceTimer;
+
+        const input = document.getElementById("locationInput");
+        const list  = document.getElementById("locationSuggestions");
+
+        input.addEventListener("input", () => {
+            clearTimeout(debounceTimer);
+
+            debounceTimer = setTimeout(async () => {
+                const value = input.value.trim();
+
+                if (value.length < 2) {
+                    list.innerHTML = "";
+                    return;
+                }
+
+                try {
+                    const res = await fetch(`/Home/GetLocations?term=${encodeURIComponent(value)}`);
+
+                    if (!res.ok) throw new Error("Request failed");
+
+                    const data = await res.json();
+
+                    list.innerHTML = "";
+
+                    data.forEach(loc => {
+                        const li = document.createElement("li");
+                        li.textContent = loc;
+
+                        li.onclick = () => {
+                            input.value = loc;
+                            list.innerHTML = "";
+                        };
+
+                        list.appendChild(li);
+                    });
+
+                } catch (err) {
+                    console.error("Error fetching locations:", err);
+                }
+            }, 300); // debounce (300ms)
+        });
+    </script>
     <script>
         // Staggered scroll-reveal for villa cards
         const observer = new IntersectionObserver((entries) => {
