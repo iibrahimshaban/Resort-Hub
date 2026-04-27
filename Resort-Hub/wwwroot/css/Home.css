@@ -1,0 +1,461 @@
+﻿:root {
+    --primary: #1B3FE4;
+    --primary-dark: #1230b0;
+    --accent: #F5A623;
+    --dark: #0D1B2A;
+    --gray: #6B7280;
+    --radius: 16px;
+    --card-shadow: 0 4px 24px rgba(27,63,228,0.10);
+}
+
+/* ── HERO ── */
+.hero {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    gap: 3rem;
+    padding: 5rem 6rem 4rem;
+    position: relative;
+    overflow: hidden;
+}
+
+    .hero::before {
+        content: '';
+        position: absolute;
+        top: -120px;
+        right: -120px;
+        width: 500px;
+        height: 500px;
+        background: radial-gradient(circle, rgba(27,63,228,0.07) 0%, transparent 70%);
+        border-radius: 50%;
+        pointer-events: none;
+    }
+
+.hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(27,63,228,0.08);
+    color: var(--primary);
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 6px 14px;
+    border-radius: 100px;
+    margin-bottom: 1.2rem;
+    animation: fadeUp 0.5s ease both;
+}
+
+.hero-title {
+    font-size: clamp(2.4rem, 4vw, 3.8rem);
+    font-weight: 700;
+    line-height: 1.1;
+    color: var(--dark);
+    margin-bottom: 1rem;
+    animation: fadeUp 0.6s ease both;
+}
+
+    .hero-title span {
+        color: var(--primary);
+    }
+
+.hero-sub {
+    font-size: 1rem;
+    color: var(--gray);
+    line-height: 1.7;
+    max-width: 400px;
+    margin-bottom: 1.8rem;
+    animation: fadeUp 0.7s ease both;
+}
+
+.hero-stats {
+    display: flex;
+    gap: 2.5rem;
+    margin-top: 2rem;
+    animation: fadeUp 0.9s ease both;
+}
+
+.stat-number {
+    display: block;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--primary);
+    line-height: 1;
+}
+
+.stat-label {
+    font-size: 0.75rem;
+    color: var(--gray);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.hero-image-wrap {
+    position: relative;
+    animation: fadeIn 0.9s ease both 0.3s;
+}
+
+    .hero-image-wrap img {
+        width: 100%;
+        height: 440px;
+        object-fit: cover;
+        border-radius: 24px;
+        box-shadow: 0 24px 64px rgba(27,63,228,0.15);
+    }
+
+.hero-image-badge {
+    position: absolute;
+    bottom: 24px;
+    left: -20px;
+    background: #fff;
+    border-radius: 14px;
+    padding: 14px 20px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.badge-icon {
+    width: 40px;
+    height: 40px;
+    background: rgba(27,63,228,0.1);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+}
+
+.badge-text strong {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--dark);
+}
+
+.badge-text span {
+    font-size: 0.75rem;
+    color: var(--gray);
+}
+
+/* ── SEARCH BAR ── */
+.search-section {
+    padding: 0 6rem 4rem;
+}
+
+.search-bar {
+    background: #fff;
+    border-radius: var(--radius);
+    box-shadow: 0 4px 32px rgba(27,63,228,0.12);
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr auto;
+    align-items: stretch;
+    overflow: hidden;
+    border: 1px solid rgba(27,63,228,0.08);
+}
+
+.search-field {
+    padding: 16px 22px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-right: 1px solid #E5E7EB;
+}
+
+    .search-field i {
+        color: var(--primary);
+        font-size: 1rem;
+        flex-shrink: 0;
+    }
+
+    .search-field label {
+        display: block;
+        font-size: 0.7rem;
+        font-weight: 600;
+        color: var(--gray);
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        margin-bottom: 3px;
+    }
+
+    .search-field input,
+    .search-field select {
+        border: none;
+        outline: none;
+        font-family: 'Poppins', sans-serif;
+        font-size: 0.88rem;
+        color: var(--dark);
+        background: transparent;
+        width: 100%;
+    }
+
+.search-btn {
+    background: var(--primary);
+    color: #fff;
+    padding: 0 28px;
+    border: none;
+    cursor: pointer;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: background 0.2s;
+}
+
+    .search-btn:hover {
+        background: var(--primary-dark);
+    }
+
+/* ── SECTION COMMONS ── */
+.home-section {
+    padding: 3rem 6rem;
+}
+
+.section-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 1.8rem;
+}
+
+.section-title {
+    font-size: 1.9rem;
+    font-weight: 700;
+    color: var(--dark);
+    margin: 0;
+}
+
+    .section-title span {
+        color: var(--primary);
+    }
+
+.view-all {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--primary);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: gap 0.2s;
+}
+
+    .view-all:hover {
+        gap: 10px;
+        color: var(--primary-dark);
+    }
+
+/* ── MOST PICKED GRID ── */
+.most-picked-grid {
+    display: grid;
+    grid-template-columns: 1.6fr 1fr;
+    grid-template-rows: 240px 240px;
+    gap: 14px;
+}
+
+    .most-picked-grid .villa-card:first-child {
+        grid-row: 1 / 3;
+    }
+
+/* ── POPULAR GRID ── */
+.popular-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+}
+
+    .popular-grid .villa-card {
+        height: 230px;
+    }
+
+/* ── VILLA CARD ── */
+.villa-card {
+    position: relative;
+    border-radius: var(--radius);
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.3s, box-shadow 0.3s;
+    box-shadow: var(--card-shadow);
+    display: block;
+    text-decoration: none;
+}
+
+    .villa-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 16px 40px rgba(27,63,228,0.18);
+        text-decoration: none;
+    }
+
+    .villa-card img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        transition: transform 0.4s;
+    }
+
+    .villa-card:hover img {
+        transform: scale(1.05);
+    }
+
+.villa-card-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(13,27,42,0.72) 0%, transparent 55%);
+}
+
+.villa-card-info {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 18px;
+    color: #fff;
+}
+
+    .villa-card-info h3 {
+        font-size: 1.05rem;
+        font-weight: 600;
+        margin-bottom: 3px;
+    }
+
+    .villa-card-info .location {
+        font-size: 0.75rem;
+        opacity: 0.85;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+
+.price-badge {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: var(--primary);
+    color: #fff;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 4px 11px;
+    border-radius: 100px;
+}
+
+.popular-badge {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background: var(--accent);
+    color: #fff;
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 100px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.no-image {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #e0e7ff, #c7d2fe);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 4rem;
+    color: var(--gray);
+}
+
+    .empty-state i {
+        font-size: 2.5rem;
+        display: block;
+        margin-bottom: 0.8rem;
+        opacity: 0.4;
+    }
+
+/* ── ANIMATIONS ── */
+@@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(22px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+/* ── RESPONSIVE ── */
+@@media (max-width: 1100px) {
+    .hero, .search-section, .home-section {
+        padding-left: 2rem;
+        padding-right: 2rem;
+    }
+
+    .popular-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@@media (max-width: 768px) {
+    .hero {
+        grid-template-columns: 1fr;
+        padding-top: 2.5rem;
+    }
+
+    .hero-image-wrap {
+        display: none;
+    }
+
+    .search-bar {
+        grid-template-columns: 1fr;
+    }
+
+    .search-field {
+        border-right: none;
+        border-bottom: 1px solid #E5E7EB;
+    }
+
+    .most-picked-grid {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto;
+    }
+
+        .most-picked-grid .villa-card:first-child {
+            grid-row: auto;
+            height: 240px;
+        }
+
+    .popular-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@@media (max-width: 480px) {
+    .popular-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .hero-stats {
+        gap: 1.5rem;
+    }
+}

@@ -23,6 +23,9 @@ public class AmenityController(IUnitOfWork unitOfWork) : Controller
         if (!ModelState.IsValid)
             return View(amenity);
 
+        if (!string.IsNullOrEmpty(amenity.Icon))
+            amenity.Icon = amenity.Icon.Replace("bi bi-", "fa-solid fa-");
+
         unitOfWork.Amenities.Add(amenity);
         await unitOfWork.SaveAsync();
 
