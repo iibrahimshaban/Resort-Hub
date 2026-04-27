@@ -222,45 +222,140 @@
 
 /* Booking Panel */
 .booking-panel {
-    background: var(--white);
-    border-radius: 24px;
-    border: 1px solid var(--border-light);
-    padding: 1.75rem;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
+    background: #ffffff;
+    border-radius: 28px;
+    padding: 1.5rem;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.06);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    transition: var(--transition, all 0.3s ease);
+    backdrop-filter: blur(0px);
 }
+
+    .booking-panel:hover {
+        box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.12);
+    }
 
 .booking-title {
     font-weight: 500;
-    font-size: 1.25rem;
-    color: var(--primary-dark);
+    font-size: 1rem;
+    letter-spacing: 0.3px;
+    color: #6c7a89;
+    text-transform: uppercase;
+    margin-bottom: 0.75rem;
 }
 
 .price-large {
-    font-weight: 500;
-    color: #1ABC9C;
-    font-size: 2.25rem;
+    font-weight: 600;
+    color: #2c3e50;
+    font-size: 1.5rem;
+    letter-spacing: -0.3px;
 }
 
 .price-night {
-    font-weight: 200;
-    font-size: 2.25rem;
-    color: var(--text-muted);
-}
-
-.star-icon {
-    color: var(--star-yellow);
-    font-size: 0.9rem;
-}
-
-.rating-value {
-    font-weight: 600;
-    color: var(--text-dark);
-}
-
-.rating-count {
     font-weight: 400;
-    color: var(--text-muted);
-    font-size: 0.85rem;
+    font-size: 0.8rem;
+    color: #8e9eae;
+}
+
+.book-button {
+    width: 100%;
+    padding: 0.85rem;
+    background: linear-gradient(135deg, #2c3e50 0%, #1a2a3a 100%);
+    color: white;
+    border: none;
+    border-radius: 14px;
+    font-weight: 500;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+    .book-button i {
+        font-size: 1rem;
+        transition: transform 0.2s ease;
+    }
+
+    .book-button:hover {
+        background: linear-gradient(135deg, #1a2a3a 0%, #0f1a24 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 14px rgba(26, 42, 58, 0.25);
+    }
+
+    .book-button:active {
+        transform: translateY(0);
+    }
+
+.charge-notice {
+    text-align: center;
+    font-weight: 400;
+    font-size: 0.7rem;
+    color: #9aaebf;
+    margin-top: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.booking-footer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    font-weight: 400;
+    font-size: 0.7rem;
+    color: #8e9eae;
+    padding-top: 0.75rem;
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+    .booking-footer i {
+        color: #7cb342;
+        font-size: 0.8rem;
+    }
+
+.booking-panel-alt {
+    background: #ffffff;
+    border-radius: 24px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+    border-left: 3px solid #e8b86b;
+}
+
+
+
+/* Responsive adjustments */
+@media (max-width: 992px) {
+    .booking-panel {
+        position: relative !important;
+        top: 0 !important;
+        margin-top: 1.5rem;
+    }
+
+    .price-large {
+        font-size: 1.35rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .booking-panel {
+        padding: 1.25rem;
+    }
+
+    .booking-title {
+        font-size: 0.85rem;
+    }
+
+    .price-large {
+        font-size: 1.25rem;
+    }
+
+    .book-button {
+        padding: 0.75rem;
+        font-size: 0.85rem;
+    }
 }
 
 /* Date Selector */

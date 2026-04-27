@@ -1,133 +1,149 @@
-﻿/* ===============================
-   PAGE
-=================================*/
-
+﻿/* ── Payment Page ── */
 .payment-page {
-    padding-top: 3rem;
-    padding-bottom: 5rem;
+    padding: 1rem 1rem 4rem;
 }
 
-/* ===============================
-   TITLE
-=================================*/
-
 .payment-title {
-    font-size: 3rem;
-    font-weight: 700;
-    color: #162b61;
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 2rem;
+    font-weight: 600;
+    color: #0a2d55;
+    margin-bottom: 0.4rem;
 }
 
 .payment-subtitle {
-    color: #bdbdbd;
-    font-size: 1.125rem;
+    font-size: 0.875rem;
+    color: #6b7a99;
 }
 
-/* ===============================
-   LEFT SUMMARY
-=================================*/
-
+/* Summary */
 .payment-summary {
-    border-right: 1px solid #eee;
-    padding-right: 3rem;
+    background: #ffffff;
+    border: 1px solid rgba(58, 143, 216, 0.15);
+    border-radius: 16px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 24px rgba(26, 111, 181, 0.08);
 }
 
 .summary-title {
-    font-size: 1.5rem;
-    color: #17305f;
+    font-size: 0.75rem;
     font-weight: 600;
-    margin-bottom: 1.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #3a8fd8;
+    margin-bottom: 0.75rem;
 }
 
 .summary-text {
-    font-size: 1.25rem;
-    color: #17305f;
-    line-height: 1.8;
+    font-size: 0.95rem;
+    color: #1a2540;
+    line-height: 1.6;
+    margin-bottom: 1.25rem;
 }
 
 .summary-price {
-    margin-top: 2rem;
-    font-size: 1.5rem;
-    color: #17305f;
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+    padding-top: 1rem;
+    border-top: 1px solid #eaf3fc;
 }
 
-    .summary-price strong {
-        margin-left: 0.5rem;
+    .summary-price span {
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: #6b7a99;
+        font-weight: 600;
     }
 
-.summary-initial {
-    margin-top: 1rem;
-    font-size: 1.5rem;
-    color: #17305f;
-}
+    .summary-price strong {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #155f9e;
+    }
 
-/* ===============================
-   FORM
-=================================*/
-
+/* Payment form */
 .payment-form {
-    padding-left: 2rem;
+    background: #ffffff;
+    border: 1px solid rgba(58, 143, 216, 0.15);
+    border-radius: 16px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 24px rgba(26, 111, 181, 0.08);
 }
 
-.form-label {
-    font-size: 1.125rem;
-    font-weight: 500;
-    color: #17305f;
-    margin-bottom: 0.5rem;
-}
+    .payment-form .form-label {
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: #6b7a99;
+        margin-bottom: 0.4rem;
+    }
 
 .payment-input {
-    height: 3.5rem;
-    border-radius: 0.5rem;
-    border: 1px solid #e5e5e5;
-    font-size: 1.125rem;
-    padding: 0 1rem;
-    background: #f5f6fa;
+    border: 1px solid rgba(58, 143, 216, 0.2) !important;
+    border-radius: 10px !important;
+    padding: 0.7rem 1rem !important;
+    font-family: inherit !important;
+    font-size: 0.9rem !important;
+    color: #1a2540 !important;
+    background: #f5f8ff !important;
+    transition: border-color 0.2s, box-shadow 0.2s !important;
 }
 
     .payment-input:focus {
-        border-color: #1543ff;
-        box-shadow: none;
-        outline: none;
+        border-color: #3a8fd8 !important;
+        box-shadow: 0 0 0 3px rgba(58, 143, 216, 0.15) !important;
+        background: #ffffff !important;
+        outline: none !important;
     }
 
-/* ===============================
-   BUTTONS
-=================================*/
+    .payment-input::placeholder {
+        color: #9aaac2 !important;
+    }
 
+/* Buttons */
 .btn-pay {
-    width: 18rem;
-    height: 4rem;
-    background: #1543ff;
-    color: white;
-    font-size: 1.5rem;
+    display: block;
+    width: 100%;
+    padding: 0.875rem 1.5rem;
+    background: linear-gradient(135deg, #1a6fb5 0%, #3a8fd8 100%);
+    color: #ffffff;
+    font-family: inherit;
+    font-size: 0.95rem;
+    font-weight: 600;
     border: none;
-    border-radius: 0.625rem;
+    border-radius: 12px;
+    text-align: center;
+    cursor: pointer;
+    letter-spacing: 0.01em;
+    transition: transform 0.15s, box-shadow 0.15s;
+    box-shadow: 0 4px 16px rgba(26, 111, 181, 0.30);
 }
+
+    .btn-pay:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 6px 20px rgba(26, 111, 181, 0.38);
+    }
 
 .btn-cancel {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 18rem;
-    height: 3.5rem;
-    background: #efefef;
-    color: #9b9b9b;
+    display: block;
+    width: 100%;
+    padding: 0.75rem 1.5rem;
+    background: transparent;
+    color: #6b7a99;
+    font-family: inherit;
+    font-size: 0.9rem;
+    font-weight: 500;
+    border: 1px solid rgba(58, 143, 216, 0.2);
+    border-radius: 12px;
+    text-align: center;
     text-decoration: none;
-    border-radius: 0.625rem;
+    transition: background 0.15s;
 }
 
-/* ===============================
-   RESPONSIVE
-=================================*/
-
-@media (max-width: 992px) {
-
-    .payment-summary {
-        border-right: none;
-        padding-right: 0;
+    .btn-cancel:hover {
+        background: #f5f8ff;
+        color: #1a2540;
     }
-
-    .payment-form {
-        padding-left: 0;
-    }
-}

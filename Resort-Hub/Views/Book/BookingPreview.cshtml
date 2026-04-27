@@ -9,6 +9,7 @@
 @section Styles
 {
     <link rel="stylesheet" href="~/css/BookingStyle.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 }
 
 <div id="main-container" class="container booking-page d-none">
@@ -43,9 +44,12 @@
 
                             <div class="d-flex justify-content-between mt-3">
                                 <h4 class="villa-name">@Model.Name</h4>
-                                @* <span class="villa-location">
-                                    Galle, Sri Lanka
-                                </span> *@
+                                <div class="d-flex justify-content-between align-items-center mt-3">
+                                    <h4 class="villa-name">@Model.Name</h4>
+                                    <span class="villa-location">
+                                        <i class="bi bi-geo-alt-fill"></i> @Model.Location
+                                    </span>
+                                </div>
                             </div>
 
                         </div>
@@ -139,7 +143,7 @@
                         </button>
                         
                         <a asp-controller="Villa"
-                               asp-action="Details"
+                               asp-action="Info"
                                asp-route-id="@Model.Id"
                                class="btn-cancel-book mt-3">
                             Cancel
@@ -158,7 +162,6 @@
 
 @section Scripts
 {
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
     <script src="~/js/booking.js" type="module"></script>

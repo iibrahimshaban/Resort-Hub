@@ -6,5 +6,7 @@
         public required string Name { get; set; }
         public double PricePerNight { get; set; }
         public required string Image { get; set; }
+
+        public string Location { get; set; } = string.Empty;
     }
 }

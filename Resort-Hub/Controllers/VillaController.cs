@@ -5,14 +5,12 @@ using Resort_Hub.ViewModels.Villa;
 
 namespace Resort_Hub.Controllers;
 
-public class VillaController(IUnitOfWork unitOfWork,IVillaService villaService,
-    ICloudinaryService cloudinaryService) : Controller
-
+public class VillaController(IUnitOfWork unitOfWork,IVillaService villaService, ICloudinaryService cloudinaryService) : Controller
 {
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
     private readonly IVillaService _villaService = villaService;
     private readonly ICloudinaryService _cloudinaryService = cloudinaryService;
-
+    
     public IActionResult Index()
     {
         var villas = _unitOfWork.Villas.GetAll();

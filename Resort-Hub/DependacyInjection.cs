@@ -1,11 +1,15 @@
-﻿using MapsterMapper;
-﻿using CloudinaryDotNet;
+﻿﻿using CloudinaryDotNet;
 using Hangfire;
+using MapsterMapper;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Resort_Hub.Configuration;
 using Resort_Hub.Interfaces;
 using Resort_Hub.Persistence;
 using Resort_Hub.Repositories;
 using Resort_Hub.Services;
+using Resort_Hub.Services.Amenity;
 using Resort_Hub.Services.Book;
+using Resort_Hub.Services.FontAwesome;
 using Resort_Hub.Settings;
 using System.Reflection;
 
@@ -19,15 +23,15 @@ public static class DependacyInjection
         services.AddRazorPages();
 
         services.Configure<MailSettings>(configuration.GetSection("MailSettings"));
+        services.Configure<FontAwesomeOptions>(configuration.GetSection("FontAwesome"));
 
-        services
-            .AddDbContextConfiguration(configuration)
-            .AddMapsterConfig()
-            .AddRepositoryServices()
-            .AddGoogleAuthentication(configuration)
-            .AddSession()     
-            .AddCloudinaryImageHosting(configuration)
-            .AddHangfireBGJobs(configuration);
+        services.AddDbContextConfiguration(configuration)
+                .AddMapsterConfig()
+                .AddRepositoryServices()
+                .AddGoogleAuthentication(configuration)
+                .AddSession()     
+                .AddCloudinaryImageHosting(configuration)
+                .AddHangfireBGJobs(configuration);
 
         return services;
     }
@@ -74,6 +78,8 @@ public static class DependacyInjection
         services.AddScoped<IAdminService, AdminService>();
         services.AddScoped<IAccountService, AccountService>();
         services.AddTransient<ICustomEmailService, EmailService>();
+        services.AddScoped<IAmenityService, AmenityService>();
+        services.AddHttpClient<IFontAwesomeService, FontAwesomeService>();
 
         return services;
     }

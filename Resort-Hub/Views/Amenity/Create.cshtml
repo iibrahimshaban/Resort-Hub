@@ -52,18 +52,19 @@
 
                     <div class="mb-4">
                         <label asp-for="Icon" class="form-label fw-600 small">
-                            Font Awesome Icon Class
-                            <a href="https://fontawesome.com/icons" target="_blank"
-                                   class="ms-1 small" style="color:#3252DF;">
-                                <i class="bi bi-box-arrow-up-right"></i> browse
-                            </a>
+                            Icon
                         </label>
-                        <input asp-for="Icon" class="form-control" id="icon-input"
-                               style="border-radius:10px;border-color:#dce3ff;border-width:1.5px;"
-                               placeholder="e.g. bi bi-water"
-                               oninput="previewIcon(this.value)" />
-                        <div class="small text-muted mt-1">
-                            e.g. <code>bi bi-wifi</code> &bull; <code>bi bi-water</code> &bull; <code>bi bi-car-front</code>
+                        <div class="position-relative">
+                            <input asp-for="Icon"
+                                   id="icon-input"
+                                   class="form-control"
+                                   autocomplete="off"
+                                   placeholder="Search Font Awesome icon (e.g. user, car, home)..." />
+
+                            <div id="icon-results"
+                                 class="shadow bg-white border rounded mt-1 p-2"
+                                 style="display:none;position:absolute;z-index:1000;width:100%;max-height:300px;overflow:auto;">
+                            </div>
                         </div>
                     </div>
 
@@ -85,12 +86,5 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
-    <script>
-        function previewIcon(val) {
-            const el = document.getElementById('icon-preview');
-            el.className = val.trim() ? val.trim() : 'bi bi-tag-fill';
-            el.style.fontSize = '1.8rem';
-            el.style.color = '#003DFC';
-        }
-    </script>
+    <script src="~/js/admin-amenity.js" type="module"></script>
 }
