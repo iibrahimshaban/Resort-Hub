@@ -1,9 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Resort_Hub.Entities;
-using Resort_Hub.Interfaces;
 using Resort_Hub.Services.Amenity;
 using Resort_Hub.Services.FontAwesome;
-using System.Globalization;
 
 namespace Resort_Hub.Controllers;
 
@@ -42,7 +39,8 @@ public class AmenityController : Controller
         _amenityService.Add(amenity);
         await _amenityService.SaveChangesAsync();
 
-        TempData["Success"] = "Amenity created successfully!";
+        TempData.SetMessageModal(new ModalMessage("Success", "Amenity created successfully!", ModalType.Success));
+
         return RedirectToAction(nameof(Index));
     }
 
@@ -66,7 +64,8 @@ public class AmenityController : Controller
         _amenityService.Update(amenity);
         await _amenityService.SaveChangesAsync();
 
-        TempData["Success"] = "Amenity updated successfully!";
+        TempData.SetMessageModal(new ModalMessage("Success", "Amenity updated successfully!", ModalType.Success));
+
         return RedirectToAction(nameof(Index));
     }
 
@@ -75,12 +74,16 @@ public class AmenityController : Controller
     public async Task<IActionResult> Delete(int id)
     {
         var amenity = _amenityService.GetById(id);
-        if (amenity is null) return NotFound();
+
+        if (amenity is null) 
+            return NotFound();
 
         _amenityService.Delete(amenity);
         await _amenityService.SaveChangesAsync();
 
-        TempData["Success"] = "Amenity deleted successfully!";
+        TempData.SetMessageModal(new ModalMessage("Success", "Amenity deleted successfully!", ModalType.Success));
+
+
         return RedirectToAction(nameof(Index));
     }
 

@@ -55,8 +55,8 @@
                             Icon
                         </label>
                         <div class="position-relative">
-                            <input asp-for="Icon"
-                                   id="icon-input"
+                            <input type="hidden" id="icon-value" asp-for="Icon"/>
+                            <input id="icon-input"
                                    class="form-control"
                                    autocomplete="off"
                                    placeholder="Search Font Awesome icon (e.g. user, car, home)..." />

@@ -113,10 +113,17 @@
         </main>
     </div>
 
+    <partial name="_MessageModal" />
+
+
     <!-- Scripts -->
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/admin-layout.js"></script>
+    <script src="~/js/app-modal.js"></script>
+
     @await RenderSectionAsync("Scripts", required: false)
+
+
 </body>
 </html>

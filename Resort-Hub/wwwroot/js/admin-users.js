@@ -182,11 +182,32 @@ async function updateUserRole() {
 }
 
 
-async function toggleUserStatus(userId, currentIsActive) {
+function toggleUser(userId, currentIsActive)
+{
     const action = currentIsActive ? 'deactivate' : 'activate';
 
-    if (!confirm(`Are you sure you want to ${action} this user?`)) return;
+    AppModal.show({
+        titleText: "Delete Amenity",
+        bodyText: `Are you sure you want to ${action} this user?`,
+        type: "warning",
+        buttons: [
+            {
+                text: "Cancel",
+                className: "btn btn-secondary",
+                dismiss: true
+            },
+            {
+                text: "Yes",
+                className: "btn btn-success Text-white",
+                onClick: () => toggleUserStatus(userId, currentIsActive)
+            }
+        ]
+    });
+}
 
+
+async function toggleUserStatus(userId, currentIsActive) {
+              
     try {
         const response = await fetch('/Admin/ToggleUserStatus', {
             method: 'POST',
@@ -206,7 +227,6 @@ async function toggleUserStatus(userId, currentIsActive) {
             showToast(result.message || 'Failed to update status', 'error');
         }
     } catch (error) {
-        console.error('Error toggling user status:', error);
         showToast('Error updating user status', 'error');
     }
 }

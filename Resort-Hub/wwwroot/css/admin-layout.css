@@ -17,6 +17,15 @@ body {
     min-height: 100vh;
 }
 
+.modal-backdrop.show {
+    opacity: .45;
+    z-index: 1990 !important;
+}
+
+.modal.show {
+    z-index: 2000 !important;
+}
+
 /* Sidebar Styles */
 .admin-sidebar {
     width: 280px;

@@ -3,7 +3,7 @@
 
     const input = document.getElementById("icon-input");
     const results = document.getElementById("icon-results");
-
+    const value = document.getElementById("icon-value");
 
     input.addEventListener("input", async function () {
 
@@ -55,6 +55,7 @@
                 `;
 
                 item.onclick = () => {
+                    value.value = `${icon.prefix} fa-${icon.id}`
                     input.value = icon.label;
                     previewIcon(icon);
                     results.style.display = "none";

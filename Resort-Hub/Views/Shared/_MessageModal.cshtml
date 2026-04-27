@@ -1,0 +1,35 @@
+﻿<div id="app-modal" class="modal fade" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title" id="modal-title"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body" id="modal-body"></div>
+
+            <div class="modal-footer" id="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    Close
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@if (TempData["ModalMessage"] != null)
+{
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+
+            AppModal.show({
+                titleText: '@TempData["ModalTitle"]',
+                bodyText: '@TempData["ModalMessage"]',
+                type: '@TempData["ModalType"]'
+            });
+
+        });
+    </script>
+}

@@ -110,7 +110,7 @@
                                     <i class="fas fa-user-tag"></i>
                                 </button>
                                 <button class="btn-icon @(user.IsActive ? "status-inactive-btn" : "status-active-btn")"
-                                        onclick="toggleUserStatus('@user.Id', @user.IsActive.ToString().ToLower())"
+                                        onclick="toggleUser('@user.Id', @user.IsActive.ToString().ToLower())"
                                         title="@(user.IsActive ? "Deactivate User" : "Activate User")">
                                     <i class="fas @(user.IsActive ? "fa-ban" : "fa-check-circle")"></i>
                                 </button>
