@@ -1,5 +1,4 @@
-﻿using Microsoft.Identity.Client;
-using Resort_Hub.Interfaces;
+﻿using Resort_Hub.Interfaces;
 using Resort_Hub.Persistence;
 using Resort_Hub.ViewModels.Home;
 
