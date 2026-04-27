@@ -1,0 +1,102 @@
+﻿@{
+    ViewData["Title"] = "Access Denied";
+}
+<style>
+    /* ── Access Denied ───────────────────────────── */
+
+    .access-card {
+        max-width: 520px;
+        margin: 4rem auto;
+        padding: 3rem 2rem;
+        background: var(--card-bg);
+        border-radius: 24px;
+        text-align: center;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+        border: 1px solid var(--border);
+        animation: fadeUp 0.4s ease;
+    }
+
+    .access-icon {
+        font-size: 4rem;
+        margin-bottom: 1rem;
+        background: rgba(231,74,59,0.1);
+        color: var(--danger);
+        width: 90px;
+        height: 90px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        margin-inline: auto;
+    }
+
+    .access-title {
+        font-size: 1.6rem;
+        font-weight: 800;
+        color: var(--text);
+        margin-bottom: 0.5rem;
+    }
+
+    .access-sub {
+        font-size: 0.9rem;
+        color: var(--muted);
+        margin-bottom: 2rem;
+        line-height: 1.5;
+    }
+
+    .access-actions {
+        display: flex;
+        gap: 0.75rem;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    /* secondary button */
+    .btn-secondary {
+        padding: 0.55rem 1.25rem;
+        border-radius: 10px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        text-decoration: none;
+        border: 1px solid var(--border);
+        color: var(--text);
+        background: #fff;
+        transition: all 0.2s ease;
+    }
+
+        .btn-secondary:hover {
+            background: #f5f7fb;
+            transform: translateY(-2px);
+        }
+</style>
+<div class="bookings-wrapper">
+
+    <div class="access-card">
+
+        <!-- Icon -->
+        <div class="access-icon">
+            🚫
+        </div>
+
+        <!-- Content -->
+        <h1 class="access-title">Access Denied</h1>
+
+        <p class="access-sub">
+            You don’t have permission to access this page.
+            If you think this is a mistake, contact support.
+        </p>
+
+        <!-- Actions -->
+        <div class="access-actions">
+            <a asp-controller="Home" asp-action="Index" class="btn-secondary">
+                Go Home
+            </a>
+
+            <a asp-controller="Home" asp-action="SearchVilla" class="btn-secondary">
+                Explore Villas
+            </a>
+        </div>
+
+    </div>
+
+</div>

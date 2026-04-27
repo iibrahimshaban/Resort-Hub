@@ -1,4 +1,5 @@
-﻿using Resort_Hub.DTOs.Booking;
+﻿using Microsoft.AspNetCore.Mvc;
+using Resort_Hub.DTOs.Booking;
 using Resort_Hub.Interfaces;
 using Resort_Hub.ViewModels.Booking;
 using System.Linq.Expressions;
@@ -98,11 +99,42 @@ namespace Resort_Hub.Services.Book
         public void Update(Booking booking)
         {
             _unitOfWork.Bookings.Update(booking);
+            _unitOfWork.SaveAsync();
+        }
+        public async Task<Result<IEnumerable<UserBookingVM>>> MyBookings(string userId)
+        {
+
+            var bookings = await _unitOfWork.Bookings
+                .GetUserBookingsWithVillas(userId);
+
+            if (bookings is null || !bookings.Any())
+                return Result.Failure<IEnumerable<UserBookingVM>>(BookingErrors.NotFound);
+
+            var viewModel = bookings.Select(b => new UserBookingVM
+            {
+                Id = b.Id,
+                VillaId = b.VillaId,
+                VillaName = b.Villa.Name,
+                VillaImage = b.Villa.VillaImages
+               .FirstOrDefault(img => img.IsMain)?.ImageUrl,
+                VillaLocation = b.Villa.Location,
+                CheckInDate = b.CheckInDate,
+                CheckOutDate = b.CheckOutDate,
+                TotalCost = b.TotalCost,
+                Status = b.Status,
+                BookingDate = b.BookingDate,
+            }).ToList();
+
+            return Result.Success<IEnumerable<UserBookingVM>>(viewModel);
+        }
+        public async Task<Result<Booking>> GetBookingById(int bookingId)
+        {
+            var result = await _unitOfWork.Bookings.GetBookingWithDetailsAsync(bookingId);
+
+            if (result is null)
+                return Result.Failure<Booking>(BookingErrors.NotFound);
+            return Result.Success(result);
         }
 
-        //private bool IsOverlapping(BookedDateDTO currentBookingDate, List<BookedDateDTO> listOfBookedDates)
-        //{
-        //    return listOfBookedDates.Any(b => currentBookingDate.CheckInDate < b.CheckOutDate && currentBookingDate.CheckOutDate >= b.CheckInDate);
-        //}
     }
 }

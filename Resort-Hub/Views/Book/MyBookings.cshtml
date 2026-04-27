@@ -1,0 +1,353 @@
+﻿@using Resort_Hub.ViewModels.Booking
+@model IEnumerable<UserBookingVM>
+@{
+    ViewData["Title"] = "My Bookings";
+}
+
+@section Styles {
+    <link href="~/css/MyBookings.css" rel="stylesheet" />
+}
+
+<div class="bookings-wrapper">
+
+    <!-- Header -->
+    <div class="bookings-header">
+        <div>
+            <h1 class="bookings-title">My Bookings</h1>
+            <p class="bookings-sub">Track and manage all your villa reservations</p>
+        </div>
+        <a asp-controller="Home" asp-action="SearchVilla" class="btn-explore">
+            <i class="bi bi-search"></i> Explore Villas
+        </a>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert-toast success">
+            <i class="bi bi-check-circle-fill"></i>
+            @TempData["Success"]
+        </div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert-toast error">
+            <i class="bi bi-exclamation-circle-fill"></i>
+            @TempData["Error"]
+        </div>
+    }
+
+    @if (!Model.Any())
+    {
+        <!-- Empty State -->
+        <div class="empty-state">
+            <div class="empty-icon">🏡</div>
+            <h3>No bookings yet</h3>
+            <p>You haven't made any reservations. Start exploring our villas!</p>
+            <a asp-controller="Home" asp-action="SearchVilla" class="btn-explore">
+                Browse Villas
+            </a>
+        </div>
+    }
+    else
+    {
+        <!-- Stats Row -->
+        <div class="stats-row">
+            <div class="stat-chip">
+                <span class="stat-val">@Model.Count()</span>
+                <span class="stat-lbl">Total</span>
+            </div>
+            <div class="stat-chip active">
+                <span class="stat-val">@Model.Count(b => b.Status == VillaStatus.Approved || b.Status == VillaStatus.Pending)</span>
+                <span class="stat-lbl">Active</span>
+            </div>
+            <div class="stat-chip completed">
+                <span class="stat-val">@Model.Count(b => b.Status == VillaStatus.Completed)</span>
+                <span class="stat-lbl">Completed</span>
+            </div>
+            <div class="stat-chip cancelled">
+                <span class="stat-val">@Model.Count(b => b.Status == VillaStatus.Cancelled)</span>
+                <span class="stat-lbl">Cancelled</span>
+            </div>
+        </div>
+
+        <!-- Booking Cards -->
+        <div class="bookings-list">
+            @foreach (var booking in Model)
+            {
+                <div class="booking-card @booking.Status.ToString().ToLower()">
+
+                    <!-- Villa Image -->
+                    <div class="booking-img-wrap">
+                        @if (!string.IsNullOrEmpty(booking.VillaImage))
+                        {
+                            <img src="@booking.VillaImage" alt="@booking.VillaName" class="booking-img" />
+                        }
+                        else
+                        {
+                            <div class="booking-img-placeholder">🏡</div>
+                        }
+                        <span class="status-pill @booking.Status.ToString().ToLower()">
+                            @{
+                                var statusText = booking.Status switch
+                                {
+                                    VillaStatus.Pending => "⏳ Pending",
+                                    VillaStatus.Approved => "✅ Approved",
+                                    VillaStatus.CheckedIn => "🔑 Checked In",
+                                    VillaStatus.Completed => "🏁 Completed",
+                                    VillaStatus.Cancelled => "❌ Cancelled",
+                                    _ => booking.Status.ToString()
+                                };
+                            }
+                            <span class="status-pill @booking.Status.ToString().ToLower()">
+                                @statusText
+                            </span>
+                        </span>
+                    </div>
+
+                    <!-- Booking Info -->
+                    <div class="booking-body">
+                        <div class="booking-main">
+                            <h3 class="villa-name">@booking.VillaName</h3>
+                            @if (!string.IsNullOrEmpty(booking.VillaLocation))
+                            {
+                                <p class="villa-location">
+                                    <i class="bi bi-geo-alt-fill"></i> @booking.VillaLocation
+                                </p>
+                            }
+
+                            <div class="booking-dates">
+                                <div class="date-block">
+                                    <span class="date-label">Check In</span>
+                                    <span class="date-val">@booking.CheckInDate.ToString("MMM dd, yyyy")</span>
+                                </div>
+                                <div class="date-arrow"><i class="bi bi-arrow-right"></i></div>
+                                <div class="date-block">
+                                    <span class="date-label">Check Out</span>
+                                    <span class="date-val">@booking.CheckOutDate.ToString("MMM dd, yyyy")</span>
+                                </div>
+                                <div class="date-block nights">
+                                    <span class="date-label">Nights</span>
+                                    <span class="date-val">@booking.Nights</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="booking-side">
+                            <div class="booking-cost">
+                                <span class="cost-label">Total Paid</span>
+                                <span class="cost-val">$@booking.TotalCost.ToString("0.00")</span>
+                            </div>
+                            <span class="booked-on">
+                                Booked on @booking.BookingDate.ToString("MMM dd, yyyy")
+                            </span>
+
+                            <!-- Actions -->
+                            <div class="booking-actions">
+                                @if (booking.CanCancel)
+                                {
+                                    <button type="button"
+                                            class="btn-action cancel"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#cancelModal"
+                                            data-booking-id="@booking.Id">
+                                        <i class="bi bi-x-circle"></i> Cancel
+                                    </button>
+                                }
+                                @if (booking.CanReview)
+                                {
+                                    <button type="button"
+                                            class="btn-action review"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#reviewModal"
+                                            data-villa-id="@booking.VillaId"
+                                            data-villa-name="@booking.VillaName">
+                                        <i class="bi bi-star-fill"></i> Review
+                                    </button>
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            }
+        </div>
+
+        <div id="pagination" class="pagination-wrap"></div>
+
+    }
+
+</div>
+
+<div class="modal fade" id="reviewModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="border-radius:16px;">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Leave a Review</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <form asp-controller="Book" asp-action="MyBookings" method="get">
+                @Html.AntiForgeryToken()
+
+                <div class="modal-body">
+
+                    <input type="hidden" name="VillaId" id="modalVillaId" />
+
+                    <p id="modalVillaName" style="font-weight:600;"></p>
+
+                    <!-- Rating -->
+                    <div style="margin-bottom:1rem;">
+                        <label class="date-label">Rating</label>
+                        <select name="Rating" class="form-control" required>
+                            <option value="">Select rating</option>
+                            <option value="5">⭐⭐⭐⭐⭐</option>
+                            <option value="4">⭐⭐⭐⭐</option>
+                            <option value="3">⭐⭐⭐</option>
+                            <option value="2">⭐⭐</option>
+                            <option value="1">⭐</option>
+                        </select>
+                    </div>
+
+                    <!-- Comment -->
+                    <div>
+                        <label class="date-label">Comment</label>
+                        <textarea name="Comment"
+                                  class="form-control"
+                                  rows="3"
+                                  placeholder="Write your experience..."></textarea>
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn-action" data-bs-dismiss="modal">
+                        Cancel
+                    </button>
+
+                    <button type="submit" class="btn-action review">
+                        Submit Review
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="cancelModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="border-radius:16px;">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Cancel Booking</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+                <p style="font-weight:600;">
+                    Are you sure you want to cancel this booking?
+                </p>
+                <p style="font-size:0.85rem; color:#6c757d;">
+                    This action cannot be undone.
+                </p>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn-action" data-bs-dismiss="modal">
+                    No, keep it
+                </button>
+
+                <form id="cancelForm" asp-controller="Book" asp-action="Cancel" method="post">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="bookingId" id="modalBookingId" />
+
+                    <button type="submit" class="btn-action cancel">
+                        Yes, cancel
+                    </button>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        const cancelModal = document.getElementById('cancelModal');
+
+        cancelModal.addEventListener('show.bs.modal', function (event) {
+            const button = event.relatedTarget;
+
+            const bookingId = button.getAttribute('data-booking-id');
+
+            document.getElementById('modalBookingId').value = bookingId;
+        });
+    </script>
+    <script>
+        const reviewModal = document.getElementById('reviewModal');
+
+        reviewModal.addEventListener('show.bs.modal', function (event) {
+            const button = event.relatedTarget;
+
+            const villaId = button.getAttribute('data-villa-id');
+            const villaName = button.getAttribute('data-villa-name');
+
+            document.getElementById('modalVillaId').value = villaId;
+            document.getElementById('modalVillaName').innerText = villaName;
+        });
+    </script>
+    <script>
+        const PAGE_SIZE = 3;
+        let currentPage = 1;
+
+        const cards = Array.from(document.querySelectorAll('.booking-card'));
+        const totalPages = Math.ceil(cards.length / PAGE_SIZE);
+
+        function renderPage(page) {
+            currentPage = page;
+
+            cards.forEach((card, i) => {
+                const start = (page - 1) * PAGE_SIZE;
+                const end   = page * PAGE_SIZE;
+                card.style.display = (i >= start && i < end) ? 'flex' : 'none';
+            });
+
+            renderPagination();
+        }
+
+        function renderPagination() {
+            const container = document.getElementById('pagination');
+            if (totalPages <= 1) { container.style.display = 'none'; return; }
+
+            container.innerHTML = '';
+
+            // Prev
+            const prev = document.createElement('button');
+            prev.className = 'page-btn' + (currentPage === 1 ? ' disabled' : '');
+            prev.innerHTML = '<i class="bi bi-chevron-left"></i>';
+            prev.disabled = currentPage === 1;
+            prev.onclick = () => renderPage(currentPage - 1);
+            container.appendChild(prev);
+
+            // Page numbers
+            for (let i = 1; i <= totalPages; i++) {
+                const btn = document.createElement('button');
+                btn.className = 'page-btn' + (i === currentPage ? ' active' : '');
+                btn.textContent = i;
+                btn.onclick = () => renderPage(i);
+                container.appendChild(btn);
+            }
+
+            // Next
+            const next = document.createElement('button');
+            next.className = 'page-btn' + (currentPage === totalPages ? ' disabled' : '');
+            next.innerHTML = '<i class="bi bi-chevron-right"></i>';
+            next.disabled = currentPage === totalPages;
+            next.onclick = () => renderPage(currentPage + 1);
+            container.appendChild(next);
+        }
+
+        renderPage(1);
+    </script>
+}

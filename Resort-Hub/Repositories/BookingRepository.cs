@@ -158,5 +158,14 @@ namespace Resort_Hub.Repositories
         {
             return await _context.Bookings.CountAsync(b => b.Status == status);
         }
+        public async Task<IEnumerable<Booking>> GetUserBookingsWithVillas(string userId)
+        {
+            return await _context.Bookings
+                .Include(b => b.Villa)
+                    .ThenInclude(v => v.VillaImages)  // ← include images
+                .Where(b => b.UserId == userId)
+                .OrderByDescending(b => b.BookingDate)
+                .ToListAsync();
+        }
     }
 }

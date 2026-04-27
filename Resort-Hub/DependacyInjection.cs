@@ -55,7 +55,7 @@ public static class DependacyInjection
         services.ConfigureApplicationCookie(options =>
         {
             options.LoginPath = "/Auth/Login";
-            options.AccessDeniedPath = "/Auth/Login";
+            options.AccessDeniedPath = "/Auth/AccessDenied";
         });
 
         return services;
