@@ -35,7 +35,7 @@ namespace Resort_Hub.Controllers
                 return RedirectToAction("BookingPreview", new { id });
             }
             else
-                return RedirectToAction("Details", "Villa", new { id });
+                return RedirectToAction("Info", "Villa", new { id });
         }
 
 
@@ -48,7 +48,7 @@ namespace Resort_Hub.Controllers
 
             if ((data is null || data == false) || (HttpContext.Session.GetInt32("draftVillaId") != id || HttpContext.Session.GetInt32("draftVillaId") is null))
             {
-                return RedirectToAction("Details", "Villa", new { id });
+                return RedirectToAction("Info", "Villa", new { id });
             }
 
             var result = await _bookingService.GetVillaByIdWithPicsAsync(id);
@@ -74,17 +74,17 @@ namespace Resort_Hub.Controllers
                 if (sessionId is not null && sessionId != bookingPaymentViewModel.Id)
                 {
                     TempData.SetError(BookingErrors.IdError);
-                    return RedirectToAction("Details", "Villa", new { id = sessionId });
+                    return RedirectToAction("Info", "Villa", new { id = sessionId });
                 }
 
                 var result = await _bookingService.IsBookOverlapping(b => b.VillaId == bookingPaymentViewModel.Id &&
-                                                                               (b.Status == VillaStatus.CheckedIn || b.Status == VillaStatus.Approved) &&
-                                                                               bookingPaymentViewModel.DateStart < b.CheckOutDate &&
-                                                                               bookingPaymentViewModel.DateEnd >= b.CheckInDate);
+                                                                               (b.Status == VillaStatus.CheckedIn || b.Status == VillaStatus.Approved || b.Status == VillaStatus.Confirmed) &&
+                                                                               (bookingPaymentViewModel.DateStart < b.CheckOutDate &&
+                                                                               bookingPaymentViewModel.DateEnd >= b.CheckInDate));
                 if(!result.IsSuccess)
                 {
                     TempData.SetError(result.Error);
-                    return RedirectToAction("Details", "Villa", new { id = bookingPaymentViewModel.Id });
+                    return RedirectToAction("Info", "Villa", new { id = bookingPaymentViewModel.Id });
                 }
 
 
@@ -140,7 +140,7 @@ namespace Resort_Hub.Controllers
                 return RedirectToAction("PaymentPreview", new { id = bookingPaymentViewModel.Id});
             }
             
-            return RedirectToAction("Details", "Villa", new { id= bookingPaymentViewModel.Id });
+            return RedirectToAction("Info", "Villa", new { id= bookingPaymentViewModel.Id });
         }
 
 
@@ -154,7 +154,7 @@ namespace Resort_Hub.Controllers
 
             if ((data is null || data == false) || (HttpContext.Session.GetInt32("draftVillaId") != id || HttpContext.Session.GetInt32("draftVillaId") is null) || draftBookingId is null)
             {
-                return RedirectToAction("Details", "Villa", new { id });
+                return RedirectToAction("Info", "Villa", new { id });
             }
 
             var user = await _userManager.GetUserAsync(User);
@@ -169,7 +169,7 @@ namespace Resort_Hub.Controllers
             if (!result.IsSuccess)
             {
                 TempData.SetError(result.Error);
-                return RedirectToAction("Details", "Villa", new { id });
+                return RedirectToAction("Info", "Villa", new { id });
             }
 
             return View(result.Value.Adapt<BookingPaymentPageViewModel>());
@@ -183,7 +183,7 @@ namespace Resort_Hub.Controllers
             if (!ModelState.IsValid )
             {
                 TempData.SetError(BookingErrors.PaymentFailed);
-                return RedirectToAction("Details", "Villa", new { id = viewModel.VillaId });
+                return RedirectToAction("Info", "Villa", new { id = viewModel.VillaId });
             }
 
             int? draftBookingId = HttpContext.Session.GetInt32("draftBookingId");
@@ -191,7 +191,7 @@ namespace Resort_Hub.Controllers
             if(draftBookingId is null)
             {
                 TempData.SetError(BookingErrors.NotFound);
-                return RedirectToAction("Details", "Villa", new { id = viewModel.VillaId });
+                return RedirectToAction("Info", "Villa", new { id = viewModel.VillaId });
             }
 
             var user = await _userManager.GetUserAsync(User);
@@ -208,14 +208,14 @@ namespace Resort_Hub.Controllers
 
             var overlap = await _bookingService.IsBookOverlapping(b => b.Id != result.Value.Id &&
                                                                   b.VillaId == result.Value.VillaId &&
-                                                                  (b.Status == VillaStatus.CheckedIn || b.Status == VillaStatus.Approved) &&
+                                                                  (b.Status == VillaStatus.CheckedIn || b.Status == VillaStatus.Approved || b.Status == VillaStatus.Confirmed) &&
                                                                   result.Value.CheckInDate < b.CheckOutDate &&
                                                                   result.Value.CheckOutDate > b.CheckInDate);
 
             if (!overlap.IsSuccess) 
             {
                 TempData.SetError(overlap.Error);
-                return RedirectToAction("Details", "Villa", new { id = result.Value.VillaId });
+                return RedirectToAction("Info", "Villa", new { id = result.Value.VillaId });
             }
 
             result.Value.Status = VillaStatus.Confirmed;

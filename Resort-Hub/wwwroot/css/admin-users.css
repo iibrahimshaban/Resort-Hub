@@ -266,6 +266,8 @@
     border-radius: var(--radius-lg);
     overflow-x: auto;
     box-shadow: var(--shadow-card);
+    -webkit-overflow-scrolling: touch;
+    width: 100%;
 }
 
 /* ── Table ───────────────────────────────────────────────────── */
@@ -275,21 +277,21 @@
     min-width: 800px;
 }
 
-    .users-table thead {
-        border-bottom: 1px solid var(--border);
-    }
+.users-table thead {
+    border-bottom: 1px solid var(--border);
+}
 
-    .users-table th {
-        padding: 1rem 1.25rem;
-        text-align: left;
-        font-size: 0.7rem;
-        font-weight: 600;
-        color: var(--text-muted);
-        text-transform: uppercase;
-        letter-spacing: 0.1em;
-        background: rgba(0, 0, 0, 0.02);
-        white-space: nowrap;
-    }
+.users-table th {
+    padding: 1rem 1.25rem;
+    text-align: left;
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    background: rgba(0, 0, 0, 0.02);
+    white-space: nowrap;
+}
 
 .sort-link {
     color: var(--text-muted);

@@ -13,7 +13,7 @@ namespace Resort_Hub.Repositories
         public async Task<List<BookedDateDTO>> GetBookedDatesByVillaIdAsync(int villaId)
         {
             return await context.Bookings.Where(b => b.VillaId == villaId &&
-                                               (b.Status == VillaStatus.Approved ||b.Status == VillaStatus.CheckedIn))
+                                               (b.Status == VillaStatus.Approved ||b.Status == VillaStatus.CheckedIn || b.Status == VillaStatus.Confirmed))
                                          .Select(b => new BookedDateDTO
                                          {
                                              CheckInDate = b.CheckInDate,
