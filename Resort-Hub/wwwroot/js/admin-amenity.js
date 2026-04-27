@@ -46,7 +46,7 @@
                 item.style.cursor = "pointer";
 
                 item.innerHTML = `
-                    <i class="${icon.prefix} fa-${icon.id}"></i>
+                    <i class="${icon.prefix} fa-${icon.id}" style="color:#003DFC;"></i>
 
                     <div class="d-flex flex-column">
                         <span>${icon.label}</span>
