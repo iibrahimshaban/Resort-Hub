@@ -1,9 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+
 using Resort_Hub.Services.Amenity;
 using Resort_Hub.Services.FontAwesome;
 
 namespace Resort_Hub.Controllers;
 
+[Authorize(Roles =DefaultRoles.Admin.Name)]
 public class AmenityController : Controller
 {
     private readonly IAmenityService _amenityService;

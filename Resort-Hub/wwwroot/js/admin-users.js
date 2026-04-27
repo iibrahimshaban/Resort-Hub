@@ -187,7 +187,7 @@ function toggleUser(userId, currentIsActive)
     const action = currentIsActive ? 'deactivate' : 'activate';
 
     AppModal.show({
-        titleText: "Delete Amenity",
+        titleText: `${action.charAt(0).toUpperCase() + action.slice(1)} User`,
         bodyText: `Are you sure you want to ${action} this user?`,
         type: "warning",
         buttons: [

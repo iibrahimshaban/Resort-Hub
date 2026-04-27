@@ -1,4 +1,8 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Identity
+@inject UserManager<ApplicationUser> UserManager
+@inject SignInManager<ApplicationUser> SignInManager
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -26,6 +30,11 @@
     @await RenderSectionAsync("Styles", required: false)
 </head>
 <body>
+
+    @{
+        var user = await UserManager.GetUserAsync(User);
+    }
+
     <div class="admin-app">
         <!-- Sidebar -->
         <aside class="admin-sidebar">
@@ -38,7 +47,7 @@
             </div>
             
             <nav class="sidebar-nav">
-                <a asp-controller="Admin" asp-action="Dashboard" class="nav-link active">
+                <a asp-controller="Admin" asp-action="Dashboard" class="nav-link ">
                     <i class="fas fa-chart-line"></i>
                     <span>Dashboard</span>
                 </a>
@@ -92,16 +101,31 @@
                 <div class="topbar-right">
                    
                     
-   
-                    <div class="admin-profile">
+                     <div class="admin-profile">
                         <div class="profile-info">
-                            <span class="profile-name">Admin User</span>
-                            <span class="profile-role">Administrator</span>
+                            <span class="profile-name">
+                                @($"{user?.FirstName} {user?.LastName}" ?? user?.UserName)
+                            </span>
+
+                            <span class="profile-role">
+                                @(User.IsInRole("Admin") ? "Administrator" : "User")
+                            </span>
                         </div>
+
                         <div class="profile-avatar">
-                            <i class="fas fa-user-circle"></i>
+                            @if (!string.IsNullOrEmpty(user?.ProfilePictureUrl))
+                            {
+                                <img src="@user.ProfilePictureUrl"
+                                     alt="Profile"
+                                     style="width:40px;height:40px;border-radius:50%;object-fit:cover;" />
+                            }
+                            else
+                            {
+                                <i class="fas fa-user-circle"></i>
+                            }
                         </div>
                     </div>
+
                 </div>
             </div>
 
@@ -120,6 +144,21 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/admin-layout.js"></script>
     <script src="~/js/app-modal.js"></script>
+    <script>
+                    document.addEventListener("DOMContentLoaded", function () {
+
+                const links = document.querySelectorAll(".sidebar-nav .nav-link");
+                const currentPath = window.location.pathname.toLowerCase();
+
+                links.forEach(link => {
+                    const linkPath = new URL(link.href).pathname.toLowerCase();
+
+                    if (currentPath.startsWith(linkPath)) {
+                        link.classList.add("active");
+                    }
+                });
+            });
+    </script>
 
     @await RenderSectionAsync("Scripts", required: false)
 

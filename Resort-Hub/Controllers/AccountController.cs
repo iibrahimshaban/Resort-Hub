@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Resort_Hub.Services;
 using Resort_Hub.ViewModels.Account;
 using System.Security.Claims;
 
 namespace Resort_Hub.Controllers;
 
+[Authorize]
 public class AccountController(IAccountService accountService) : Controller
 {
     private readonly IAccountService _accountService = accountService;

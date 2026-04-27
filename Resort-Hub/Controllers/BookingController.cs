@@ -5,7 +5,7 @@ using Resort_Hub.Services;
 
 namespace Resort_Hub.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = DefaultRoles.Admin.Name)]
     [Route("Admin/Bookings")]
     public class BookingController : Controller
     {

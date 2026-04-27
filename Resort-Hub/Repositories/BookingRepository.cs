@@ -60,6 +60,7 @@ namespace Resort_Hub.Repositories
             var query = _context.Bookings
                 .Include(b => b.User)
                 .Include(b => b.Villa)
+                .ThenInclude(v => v.VillaImages)
                 .AsQueryable();
 
             // Apply search filter

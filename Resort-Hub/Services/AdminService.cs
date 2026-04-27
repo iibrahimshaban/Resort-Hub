@@ -145,7 +145,7 @@ namespace Resort_Hub.Services
                 Status = b.Status,
                 VillaId = b.VillaId,
                 VillaName = b.Villa?.Name ?? "N/A",
-                VillaImageUrl = "/images/resort-bg.jpg",
+                VillaImageUrl = b.Villa?.VillaImages.FirstOrDefault(x => x.IsMain)?.ImageUrl ?? "/images/resort-bg.jpg",
                 UserId = b.UserId,
                 UserFullName = $"{b.User?.FirstName} {b.User?.LastName}",
                 UserEmail = b.User?.Email ?? string.Empty

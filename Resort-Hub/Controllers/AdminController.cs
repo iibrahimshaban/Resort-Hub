@@ -1,12 +1,13 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Resort_Hub.Abstraction.Consts;
 using Resort_Hub.Services;
 using Resort_Hub.ViewModels.Admin;
 
 namespace Resort_Hub.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = DefaultRoles.Admin.Name)]
     public class AdminController : Controller
     {
         private readonly IAdminService _adminService;
